@@ -1,0 +1,2798 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DS4手柄改装订单系统</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px 0;
+        }
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            letter-spacing: 1px;
+        }
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        .nav-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+        .nav-btn {
+            padding: 11px 28px;
+            border: none;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+        .nav-btn.prev {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+        }
+        .nav-btn.prev:hover:not(:disabled) {
+            background: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        .nav-btn.next {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+        }
+        .nav-btn.next:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+        }
+        .nav-btn:disabled {
+            background: rgba(255,255,255,0.4);
+            color: rgba(0,0,0,0.3);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .progress {
+            text-align: center;
+            font-size: 15px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+        .section {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.5);
+            display: none;
+            overflow: hidden;
+        }
+        .section.active {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .section-title {
+            font-size: 19px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            padding-left: 16px;
+            border-bottom: 2px solid #e2e8f0;
+            border-left: 4px solid #667eea;
+            background: linear-gradient(90deg, rgba(102,126,234,0.05) 0%, transparent 100%);
+        }
+        .item {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .item:hover {
+            background: rgba(247,250,252,0.6);
+            border-color: rgba(226,232,240,0.8);
+            transform: translateX(4px);
+        }
+        .item-left {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            flex: 1;
+        }
+        .item input[type="checkbox"], .item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+            margin-top: 2px;
+            transition: all 0.2s;
+        }
+        .item-name {
+            font-size: 15px;
+            cursor: pointer;
+            color: #2d3748;
+            font-weight: 500;
+        }
+        .item-note {
+            font-size: 12px;
+            color: #e53e3e;
+            margin-left: 6px;
+        }
+        .item-price {
+            font-size: 16px;
+            color: #ed8936;
+            font-weight: 700;
+            min-width: 70px;
+            text-align: right;
+        }
+        .item-desc {
+            display: none;
+            font-size: 13px;
+            color: #718096;
+            background: #f7fafc;
+            padding: 12px 16px;
+            margin-top: 8px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+            animation: slideIn 0.3s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .item-desc.show {
+            display: block;
+        }
+        .user-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+        .form-group label {
+            font-size: 14px;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .form-group input, .form-group textarea {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.15);
+            background: #fff;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .summary-box {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid #e2e8f0;
+            margin-top: 24px;
+        }
+        .summary-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #2d3748;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .summary-list {
+            max-height: 220px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            font-size: 14px;
+            background: #fff;
+            padding: 16px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .summary-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .summary-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .summary-list::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 3px;
+        }
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e2e8f0;
+            transition: background 0.2s;
+        }
+        .summary-item:hover {
+            background: #f7fafc;
+            padding-left: 8px;
+            padding-right: 8px;
+            margin: 0 -8px;
+            border-radius: 4px;
+        }
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        .total-price {
+            font-size: 26px;
+            color: #e53e3e;
+            font-weight: 800;
+            text-align: right;
+            margin: 20px 0;
+            padding-top: 16px;
+            border-top: 2px solid #e2e8f0;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(72,187,120,0.3);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(72,187,120,0.4);
+        }
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        .btn-submit:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .modal {
+            background: #fff;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 520px;
+            width: 92%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 80px rgba(0,0,0,0.25);
+            animation: scaleIn 0.3s ease;
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #2d3748;
+            font-size: 22px;
+            font-weight: 700;
+        }
+        .modal-summary {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 2;
+            border: 1px solid #e2e8f0;
+        }
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .modal-buttons button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-copy {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
+        }
+        .btn-copy:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102,126,234,0.4);
+        }
+        .btn-cancel {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        .btn-cancel:hover {
+            background: #cbd5e0;
+        }
+        .message {
+            text-align: center;
+            padding: 14px 20px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            display: none;
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .message.success {
+            display: block;
+            background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+            color: #276749;
+            border: 1px solid #68d391;
+        }
+        .message.error {
+            display: block;
+            background: linear-gradient(135deg, #fed7d7, #fc8181);
+            color: #742a2a;
+            border: 1px solid #fc8181;
+        }
+        .section-hint {
+            font-size: 13px;
+            color: #d69e2e;
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, #fffaf0, #fef3c7);
+            border-radius: 8px;
+            border-left: 3px solid #d69e2e;
+        }
+        .shell-module {
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255,255,255,0.4);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+        }
+        .shell-module:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .shell-module.selected {
+            border-color: #667eea;
+            background: #f5f7ff;
+            box-shadow: 0 4px 20px rgba(102,126,234,0.15);
+        }
+        .shell-options {
+            padding-left: 42px;
+            margin-top: 10px;
+            display: none;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        [data-module].selected .shell-options {
+            display: flex;
+        }
+        .option-label {
+            font-size: 14px;
+            color: #4a5568;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        .option-label:hover {
+            background: #f7fafc;
+        }
+        .option-label input:disabled {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+        .option-label input:not(:disabled):checked {
+            accent-color: #667eea;
+        }
+        .backkey-count-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: rgba(247,250,252,0.5);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border-radius: 10px;
+        }
+        .backkey-count-options {
+            display: flex;
+            gap: 36px;
+            flex: 1;
+        }
+        .backkey-count-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            color: #2d3748;
+        }
+        .backkey-count-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #667eea;
+            margin-top: 2px;
+        }
+        .divider-line {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            margin: 16px 0;
+        }
+        .keycap-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .keycap-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: 2px solid rgba(255,255,255,0.4);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        .keycap-item:hover {
+            background: rgba(245,247,255,0.6);
+            border-color: #9f7aea;
+        }
+        .keycap-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #667eea;
+        }
+        .keycap-item input:disabled {
+            cursor: not-allowed;
+            opacity: 0.4;
+        }
+        @media (max-width: 640px) {
+            .user-info { grid-template-columns: 1fr; }
+            .nav-bar { gap: 10px; }
+            .nav-btn { padding: 10px 16px; font-size: 13px; }
+            .section { padding: 16px; }
+            .item { padding: 10px 12px; }
+            .container { padding: 0 12px; }
+            h1 { font-size: 22px; }
+            .progress-steps { padding: 8px 12px; }
+        }
+
+        /* Progress bar */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 28px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .progress-bar-container {
+            width: 100%;
+            max-width: 750px;
+            height: 10px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            border-radius: 5px;
+            transition: width 0.4s ease;
+            box-shadow: 0 0 10px rgba(72,187,120,0.5);
+        }
+
+        /* Footer note */
+        .footer-note {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            margin-top: 36px;
+            padding: 16px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Image container styling */
+        .accessory-images {
+            display: flex;
+            gap: 16px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .accessory-images > img,
+        .accessory-images > .img-wrapper {
+            width: calc(50% - 8px);
+            max-width: 280px;
+            min-width: 140px;
+        }
+        .accessory-images img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .accessory-images > .img-wrapper {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        .accessory-images > img:hover,
+        .accessory-images > .img-wrapper:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        #shell-image > img,
+        #shell-image > .img-wrapper,
+        #shoulder-images > img,
+        #shoulder-images > .img-wrapper,
+        #trigger-images > img,
+        #trigger-images > .img-wrapper {
+            width: 100%;
+            max-width: 560px;
+            min-width: 280px;
+        }
+
+        /* 图片点击放大预览 */
+        .image-tip {
+            text-align: center;
+            font-size: 13px;
+            color: #805ad5;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .img-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .img-wrapper img {
+            display: block;
+            cursor: pointer;
+        }
+        .img-label {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            text-align: center;
+            font-family: 'SimHei', 'Microsoft YaHei', sans-serif;
+            font-weight: bold;
+            color: #805ad5;
+            background: linear-gradient(to top, rgba(255,255,255,0.85), rgba(255,255,255,0.6));
+            padding: 6px 8px;
+            font-size: 10%;
+            line-height: 1.2;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+            text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+        }
+        .image-preview-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            cursor: pointer;
+            animation: fadeIn 0.3s ease;
+        }
+        .image-preview-overlay.active {
+            display: flex;
+        }
+        .image-preview-overlay img {
+            max-width: 90%;
+            max-height: 90vh;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: scaleIn 0.3s ease;
+        }
+
+        /* Checkbox/Radio custom styling */
+        input[type="checkbox"]:checked,
+        input[type="radio"]:checked {
+            transform: scale(1.1);
+        }
+
+        /* Selection highlight */
+        .item input:checked + .item-name {
+            color: #667eea;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DS4手柄改装订单系统</h1>
+        <p class="subtitle">请按照步骤选择需要的改装项目，配置完成后可复制订单信息，点击图片可放大查看细节</p>
+
+        <div id="message" class="message"></div>
+
+        <div class="progress-steps" id="progressSteps"></div>
+        <div class="progress" id="progress">第 1/10 步：手柄主板</div>
+
+        <!-- Step 1: 手柄主板 -->
+        <div class="section active" id="section-0">
+            <div class="section-title">【手柄主板】</div>
+            <div class="section-hint">请选择主板类型（单选，必选项）</div>
+            <label class="item">
+                <div class="item-left">
+                    <input type="radio" name="motherboard" data-name="氦闪主板" data-price="290" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <span class="item-name">氦闪主板</span>
+                </div>
+                <span class="item-price">290元</span>
+            </label>
+            <div class="item-desc" id="desc-helishan">8K回报，12bit摇杆，8键背键自定义(无线性扳机、震动、触摸板、陀螺仪)，不带摇杆</div>
+            
+            <label class="item">
+                <div class="item-left">
+                    <input type="radio" name="motherboard" data-name="GNS明日香主板" data-price="220" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <span class="item-name">GNS明日香主板</span>
+                </div>
+                <span class="item-price">220元</span>
+            </label>
+            <div class="item-desc" id="desc-gns">支持PS、XSX系列主机。1K回报，16bit摇杆，全键+12背键自定义(含线性扳机、陀螺仪、2键触摸板选装，无震动)，不带摇杆</div>
+            
+            <label class="item">
+                <div class="item-left">
+                    <input type="radio" name="motherboard" data-name="速跃主板" data-price="220" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <span class="item-name">速跃主板</span>
+                </div>
+                <span class="item-price">220元</span>
+            </label>
+            <div class="item-desc" id="desc-suyue">8K回报，14bit摇杆，8键背键自定义(无线性扳机、震动、触摸板、陀螺仪)，不带摇杆</div>
+            
+            <label class="item">
+                <div class="item-left">
+                    <input type="radio" name="motherboard" data-name="自备主板" data-price="0" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <span class="item-name">自备主板</span>
+                </div>
+                <span class="item-price">0元</span>
+            </label>
+
+            <div class="accessory-images" id="motherboard-image" style="display:none;">
+                <img id="mb-img" src="" alt="主板图片">
+            </div>
+
+            <div style="margin-top:20px; text-align:center;">
+                <button type="button" onclick="toggleGallery()" id="gallery-btn" style="padding:10px 24px;border:none;border-radius:25px;font-size:15px;font-weight:600;cursor:pointer;background:linear-gradient(135deg, #667eea, #764ba2);color:#fff;box-shadow:0 4px 15px rgba(0,0,0,0.1);transition:all 0.3s ease;">📷 成品欣赏</button>
+            </div>
+
+            <div id="gallery-container" style="display:none;">
+                <div class="accessory-images" data-no-label="true">
+                    <img src="pic/1.jpg" alt="成品欣赏">
+                    <img src="pic/2.jpg" alt="成品欣赏">
+                    <img src="pic/3.jpg" alt="成品欣赏">
+                    <img src="pic/4.jpg" alt="成品欣赏">
+                    <img src="pic/5.jpg" alt="成品欣赏">
+                    <img src="pic/6.jpg" alt="成品欣赏">
+                    <img src="pic/7.jpg" alt="成品欣赏">
+                    <img src="pic/8.jpg" alt="成品欣赏">
+                    <img src="pic/dse.jpg" alt="成品欣赏">
+                    <img src="pic/4key.jpg" alt="成品欣赏">
+                    <img src="pic/slice.jpg" alt="成品欣赏">
+                    <img src="pic/round1.jpg" alt="成品欣赏">
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: 外壳板块 -->
+        <div class="section" id="section-1">
+            <div class="section-title">【壳体选择】</div>
+
+            <div class="shell-module">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">手柄中框选择（二选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="midframe" data-name="原装中框按键" data-price="50" data-section="1" onchange="updateSelection()"><span class="item-name">原装中框按键</span></div><span class="item-price">50元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="midframe" data-name="国产中框按键" data-price="35" data-section="1" onchange="updateSelection()"><span class="item-name">国产中框按键</span></div><span class="item-price">35元</span></label>
+            </div>
+
+            <div class="shell-module">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">外壳选择（四选一）</div>
+
+                <div data-module="zfy">
+                    <label class="item">
+                        <div class="item-left">
+                            <input type="radio" name="shell" data-name="振飞扬国产外壳" data-price="50" data-image="pic/zfy.jpg" data-section="1" onchange="toggleShellModule(this)">
+                            <span class="item-name">振飞扬国产外壳</span>
+                        </div>
+                        <span class="item-price">50元</span>
+                    </label>
+                    <div class="shell-options">
+                        <label class="option-label"><input type="radio" name="shell-color-zfy" value="黑色" disabled onchange="updateSelection()"> 黑色</label>
+                        <label class="option-label"><input type="radio" name="shell-color-zfy" value="白色" disabled onchange="updateSelection()"> 白色</label>
+                    </div>
+                    <div class="item-desc" style="display:none;">国产塑料壳，无类肤，自带TYPEC口，无需额外选择</div>
+                </div>
+
+                <div data-module="ost">
+                    <label class="item">
+                        <div class="item-left">
+                            <input type="radio" name="shell" data-name="欧升腾国产类肤壳" data-price="50" data-image="pic/ost.jpg" data-section="1" onchange="toggleShellModule(this)">
+                            <span class="item-name">欧升腾国产类肤壳</span>
+                        </div>
+                        <span class="item-price">50元</span>
+                    </label>
+                    <div class="shell-options">
+                        <label class="option-label"><input type="radio" name="shell-color-ost" value="黑色" disabled onchange="updateSelection()"> 黑色</label>
+                        <label class="option-label"><input type="radio" name="shell-color-ost" value="白色" disabled onchange="updateSelection()"> 白色</label>
+                        <label class="option-label"><input type="radio" name="shell-color-ost" value="紫色" disabled onchange="updateSelection()"> 紫色</label>
+                    </div>
+                    <div class="item-desc" style="display:none;">国产类肤壳，非TYPEC口</div>
+                </div>
+
+                <div data-module="bo5">
+                    <label class="item">
+                        <div class="item-left">
+                            <input type="radio" name="shell" data-name="BO5国产外壳" data-price="120" data-image="pic/bo5.jpg" data-section="1" onchange="toggleShellModule(this)">
+                            <span class="item-name">BO5国产外壳</span>
+                        </div>
+                        <span class="item-price">120元</span>
+                    </label>
+                    <div class="item-desc" style="display:none;">BO5外壳，看图有现货，请告知UP主选择，非TYPEC口</div>
+                </div>
+
+                <div data-module="self">
+                    <label class="item">
+                        <div class="item-left">
+                            <input type="radio" name="shell" data-name="自备外壳" data-price="0" data-section="1" onchange="toggleShellModule(this)">
+                            <span class="item-name">自备外壳</span>
+                        </div>
+                        <span class="item-price">0元</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="accessory-images" id="shell-image" style="display:none;">
+                <img id="shell-img" src="" alt="外壳图片">
+            </div>
+        </div>
+
+        <!-- Step 3: 其他配件板块 -->
+        <div class="section" id="section-2">
+            <div class="section-title">【其他配件】</div>
+
+            <div class="shell-module">
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="微动排线插座升级" data-price="50" data-section="2" onchange="toggleSocketDesc(this); toggleAccessoryImage(this, 'img-plug'); updateSelection()"><span class="item-name">微动排线插座升级</span></div><span class="item-price">50元</span></label>
+                <div class="item-desc" id="socket-desc">花明楼排线自带插座，无需选择。仅为老排线升级使用。</div>
+                <label class="item"><div class="item-left"><input type="checkbox" id="typec-checkbox" data-name="TYPEC接口制作" data-price="50" data-section="2" onchange="toggleAccessoryImage(this, 'img-typec'); updateSelection()"><span class="item-name">TYPEC接口制作</span></div><span class="item-price">50元</span></label>
+                <div class="item-desc" id="typec-notice" style="display:none;">振飞扬外壳自带TYPEC接口，无需额外制作</div>
+                <div class="item-desc" id="typec-required-notice" style="display:none;">该外壳需制作TYPEC接口，默认勾选且不可取消</div>
+                <label class="item"><div class="item-left"><input type="checkbox" id="joystick-microswitch" data-name="摇杆下压微动" data-price="60" data-section="2" onchange="toggleAccessoryImage(this, 'img-joystick-down'); updateSelection()"><span class="item-name">摇杆下压微动</span></div><span class="item-price" id="joystick-microswitch-price">60元</span></label>
+                <label class="item" id="menu-microswitch-label"><div class="item-left"><input type="checkbox" id="menu-microswitch" data-name="菜单背包微动" data-price="40" data-section="2" onchange="toggleAccessoryImage(this, 'img-share'); updateSelection()"><span class="item-name">菜单背包微动</span></div><span class="item-price">40元</span></label>
+                <div class="item-desc" id="menu-microswitch-notice">GNS主板自带菜单背包微动</div>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="触摸板改微动" data-price="40" data-section="2" onchange="updateSelection()"><span class="item-name">触摸板改微动</span></div><span class="item-price">40元</span></label>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="PS键微动" data-price="30" data-section="2" onchange="toggleAccessoryImage(this, 'img-ps'); updateSelection()"><span class="item-name">PS键微动</span></div><span class="item-price">30元</span></label>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="智慧核心摇杆帽" data-price="85" data-section="2" onchange="toggleAccessoryImage(this, 'img-stick'); updateSelection()"><span class="item-name">智慧核心摇杆帽</span></div><span class="item-price">85元</span></label>
+                <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="GNS主板显示屏" data-price="50" data-section="2" onchange="toggleGnsExclusive(this); toggleAccessoryImage(this, 'img-screen'); updateSelection()"><span class="item-name">GNS主板显示屏</span></div><span class="item-price">50元</span></label>
+                <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="GNS主板2键触摸板" data-price="60" data-section="2" onchange="toggleGnsExclusive(this); updateSelection()"><span class="item-name">GNS主板2键触摸板</span></div><span class="item-price">60元</span></label>
+                <div class="accessory-images">
+                    <img id="img-plug" src="pic/plug.jpg" alt="微动排线插座升级" style="display:none;">
+                    <img id="img-typec" src="pic/typec.jpg" alt="TYPEC接口制作" style="display:none;">
+                    <img id="img-stick" src="pic/stick.jpg" alt="智慧核心摇杆帽" style="display:none;">
+                    <img id="img-screen" src="pic/screen.jpg" alt="GNS主板显示屏" style="display:none;">
+                    <img id="img-joystick-down" src="pic/LR3-down.jpg" alt="摇杆下压微动" style="display:none;">
+                    <img id="img-share" src="pic/share.jpg" alt="菜单背包微动" style="display:none;">
+                    <img id="img-ps" src="pic/PS.jpg" alt="PS键微动" style="display:none;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: 摇杆选配 -->
+        <div class="section" id="section-3">
+            <div class="section-title">【摇杆选配】</div>
+            <div class="section-hint">请选择摇杆类型</div>
+
+            <div class="shell-module">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">摇杆本体（四选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="alps蓝边摇杆" data-price="60" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">alps蓝边摇杆</span></div><span class="item-price">60元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="DS13MAX摇杆" data-price="80" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">DS13MAX摇杆</span></div><span class="item-price">80元</span></label>
+                <div class="item-desc" id="ds13-desc" style="display:none;">阻尼略小，约alps原装阻尼-20%，中心阻力均匀</div>
+                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="JS13PRO+摇杆" data-price="80" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">JS13PRO+摇杆</span></div><span class="item-price">80元</span></label>
+                <div class="item-desc" id="js13-desc" style="display:none;">阻尼略大，接近alps原装阻尼，中心阻力略有变化</div>
+                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="锦富霍尔摇杆" data-price="60" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">锦富霍尔摇杆</span></div><span class="item-price">60元</span></label>
+            </div>
+
+            <div class="shell-module">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">摇杆减阻尼（五选一）</div>
+                <div class="item-desc" id="tmr-notice" style="display:none;">TMR摇杆暂不支持减阻尼改装</div>
+                <label class="item"><div class="item-left"><input type="radio" name="damping" data-name="原装阻尼" data-price="0" data-section="3" onchange="updateSelection()"><span class="item-name">原装阻尼</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="damping" data-name="-15%阻尼" data-price="40" data-section="3" onchange="updateSelection()"><span class="item-name">-15%</span></div><span class="item-price">40元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="damping" data-name="-20%阻尼" data-price="40" data-section="3" onchange="updateSelection()"><span class="item-name">-20%</span></div><span class="item-price">40元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="damping" data-name="-30%阻尼" data-price="40" data-section="3" onchange="updateSelection()"><span class="item-name">-30%</span></div><span class="item-price">40元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="damping" data-name="-40%阻尼" data-price="40" data-section="3" onchange="updateSelection()"><span class="item-name">-40%</span></div><span class="item-price">40元</span></label>
+            </div>
+        </div>
+
+        <!-- Step 5: 十字键改装 -->
+        <div class="section" id="section-4">
+            <div class="section-title">【十字键改装】</div>
+            <div class="section-hint">请选择十字键改装方案</div>
+
+            <div class="shell-module">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">微动类型（四选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-type" data-name="凯隆小微动" data-price="80" data-section="4" onchange="toggleDpadModules(this); updateSelection()"><span class="item-name">凯隆小微动</span></div><span class="item-price">80元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-type" data-name="热插拔大微动" data-price="150" data-section="4" onchange="toggleDpadModules(this); updateSelection()"><span class="item-name">热插拔大微动</span></div><span class="item-price">150元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-type" data-name="模块微动" data-price="120" data-section="4" onchange="toggleDpadModules(this); updateSelection()"><span class="item-name">模块微动</span></div><span class="item-price">120元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-type" data-name="原装软胶垫" data-price="10" data-section="4" onchange="toggleDpadModules(this); updateSelection()"><span class="item-name">原装软胶垫</span></div><span class="item-price">10元</span></label>
+            </div>
+
+            <div class="shell-module" id="dpad-force-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">微动力度选择（四选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-force" data-name="65g" data-price="0" data-section="4" onchange="updateSelection()"><span class="item-name">65g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-force" data-name="90g" data-price="0" data-section="4" onchange="updateSelection()"><span class="item-name">90g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-force" data-name="120g" data-price="0" data-section="4" onchange="updateSelection()"><span class="item-name">120g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-force" data-name="160g" data-price="0" data-section="4" onchange="updateSelection()"><span class="item-name">160g</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="shell-module" id="dpad-config-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">大微动配置选择（二选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-config" data-name="标配TTC金+青龙" data-price="0" data-section="4" onchange="updateSelection()"><span class="item-name">标配TTC金+青龙</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-config" data-name="自备微动" data-price="0" data-section="4" onchange="updateSelection()"><span class="item-name">自备微动</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="shell-module" id="dpad-color-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">按键颜色（二选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-color" data-name="黑色" data-price="0" data-section="4" onchange="updateDpadColorImage(); updateSelection()"><span class="item-name">黑色</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="dpad-color" data-name="白色" data-price="0" data-section="4" onchange="updateDpadColorImage(); updateSelection()"><span class="item-name">白色</span></div><span class="item-price">0元</span></label>
+                <label class="item" id="dpad-original-option" style="display:none;"><div class="item-left"><input type="radio" name="dpad-color" data-name="原装按键" data-price="0" data-section="4" onchange="updateDpadColorImage(); updateSelection()"><span class="item-name">原装按键</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="accessory-images" id="dpad-images">
+                <img id="img-dpad-type" src="" alt="十字键微动类型" style="display:none;">
+                <img id="img-dpad-color" src="" alt="十字键按键颜色" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Step 6: 交互键改装 -->
+        <div class="section" id="section-5">
+            <div class="section-title">【交互键改装】</div>
+            <div class="section-hint">请选择交互键改装方案</div>
+
+            <div class="shell-module">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">微动类型（四选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-type" data-name="凯隆小微动" data-price="80" data-section="5" onchange="toggleInteractModules(this); updateSelection()"><span class="item-name">凯隆小微动</span></div><span class="item-price">80元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-type" data-name="热插拔大微动" data-price="150" data-section="5" onchange="toggleInteractModules(this); updateSelection()"><span class="item-name">热插拔大微动</span></div><span class="item-price">150元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-type" data-name="模块微动" data-price="120" data-section="5" onchange="toggleInteractModules(this); updateSelection()"><span class="item-name">模块微动</span></div><span class="item-price">120元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-type" data-name="原装软胶垫" data-price="10" data-section="5" onchange="toggleInteractModules(this); updateSelection()"><span class="item-name">原装软胶垫</span></div><span class="item-price">10元</span></label>
+            </div>
+
+            <div class="shell-module" id="interact-force-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">微动力度选择（四选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-force" data-name="65g" data-price="0" data-section="5" onchange="updateSelection()"><span class="item-name">65g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-force" data-name="90g" data-price="0" data-section="5" onchange="updateSelection()"><span class="item-name">90g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-force" data-name="120g" data-price="0" data-section="5" onchange="updateSelection()"><span class="item-name">120g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-force" data-name="160g" data-price="0" data-section="5" onchange="updateSelection()"><span class="item-name">160g</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="shell-module" id="interact-config-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">大微动配置选择（二选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-config" data-name="标配TTC金+青龙" data-price="0" data-section="5" onchange="updateSelection()"><span class="item-name">标配TTC金+青龙</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-config" data-name="自备微动" data-price="0" data-section="5" onchange="updateSelection()"><span class="item-name">自备微动</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="shell-module" id="interact-color-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">按键颜色（二选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-color" data-name="黑色" data-price="0" data-section="5" onchange="updateInteractColorImage(); updateSelection()"><span class="item-name">黑色</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="interact-color" data-name="白色" data-price="0" data-section="5" onchange="updateInteractColorImage(); updateSelection()"><span class="item-name">白色</span></div><span class="item-price">0元</span></label>
+                <label class="item" id="interact-original-option" style="display:none;"><div class="item-left"><input type="radio" name="interact-color" data-name="原装按键" data-price="0" data-section="5" onchange="updateInteractColorImage(); updateSelection()"><span class="item-name">原装按键</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="accessory-images" id="interact-images">
+                <img id="img-interact-type" src="" alt="交互键微动类型" style="display:none;">
+                <img id="img-interact-color" src="" alt="交互键按键颜色" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Step 7: 肩键改装 -->
+        <div class="section" id="section-6">
+            <div class="section-title">【肩键改装】</div>
+            <div class="section-hint">请选择肩键改装方案（四选一）</div>
+            <label class="item"><div class="item-left"><input type="radio" name="shoulder" data-name="肩键改装 凯隆普通微动" data-price="30" data-section="6" onchange="toggleShoulderModules(this); updateShoulderImage(); updateSelection()"><span class="item-name">凯隆普通微动</span></div><span class="item-price">30元</span></label>
+            <label class="item"><div class="item-left"><input type="radio" name="shoulder" data-name="肩键改装 凯隆弹片微动" data-price="60" data-section="6" onchange="toggleShoulderModules(this); updateShoulderImage(); updateSelection()"><span class="item-name">凯隆弹片微动</span></div><span class="item-price">60元</span></label>
+            <label class="item"><div class="item-left"><input type="radio" name="shoulder" data-name="肩键改装 热插拔大微动" data-price="150" data-section="6" onchange="toggleShoulderModules(this); updateShoulderImage(); updateSelection()"><span class="item-name">热插拔大微动</span></div><span class="item-price">150元</span></label>
+            <label class="item"><div class="item-left"><input type="radio" name="shoulder" data-name="肩键改装 保留原装硅胶垫" data-price="10" data-section="6" onchange="toggleShoulderModules(this); updateShoulderImage(); updateSelection()"><span class="item-name">保留原装硅胶垫</span></div><span class="item-price">10元</span></label>
+
+            <div class="shell-module" id="shoulder-force-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">微动力度选择（四选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="shoulder-force" data-name="65g" data-price="0" data-section="6" onchange="updateSelection()"><span class="item-name">65g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="shoulder-force" data-name="90g" data-price="0" data-section="6" onchange="updateSelection()"><span class="item-name">90g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="shoulder-force" data-name="120g" data-price="0" data-section="6" onchange="updateSelection()"><span class="item-name">120g</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="shoulder-force" data-name="160g" data-price="0" data-section="6" onchange="updateSelection()"><span class="item-name">160g</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="shell-module" id="shoulder-config-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">大微动配置选择（二选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="shoulder-config" data-name="青龙微动" data-price="0" data-section="6" onchange="updateSelection()"><span class="item-name">青龙微动</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="shoulder-config" data-name="自备微动" data-price="0" data-section="6" onchange="updateSelection()"><span class="item-name">自备微动</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="accessory-images" id="shoulder-images">
+                <img id="img-shoulder" src="" alt="肩键改装" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Step 8: 扳机键改装 -->
+        <div class="section" id="section-7">
+            <div class="section-title">【扳机键改装】</div>
+            <div class="section-hint">请选择扳机键改装方案（五选一）</div>
+            <label class="item"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 凯隆普通微动" data-price="40" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">凯隆普通微动</span></div><span class="item-price">40元</span></label>
+            <div class="item-desc" id="trigger-normal-notice">肩键使用弹片微动时不可选择普通微动扳机</div>
+            <label class="item"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 凯隆弹片微动" data-price="60" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">凯隆弹片微动</span></div><span class="item-price">60元</span></label>
+            <label class="item"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 热插拔大微动" data-price="80" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">热插拔大微动</span></div><span class="item-price">80元</span></label>
+            <label class="item" id="trigger-dual-label"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 双切热插拔微动" data-price="150" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">双切热插拔微动</span></div><span class="item-price">150元</span></label>
+            <div class="item-desc" id="trigger-dual-notice">所选主板无线性扳机，不支持双切微动</div>
+            <label class="item"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 保留原装线性扳机" data-price="20" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">保留原装线性扳机</span></div><span class="item-price">20元</span></label>
+
+            <div class="shell-module" id="trigger-config-module" style="display:none;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">大微动配置选择（二选一）</div>
+                <label class="item"><div class="item-left"><input type="radio" name="trigger-config" data-name="TTC金微动" data-price="0" data-section="7" onchange="updateSelection()"><span class="item-name">TTC金微动</span></div><span class="item-price">0元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="trigger-config" data-name="自备微动" data-price="0" data-section="7" onchange="updateSelection()"><span class="item-name">自备微动</span></div><span class="item-price">0元</span></label>
+            </div>
+
+            <div class="accessory-images" id="trigger-images">
+                <img id="img-trigger" src="" alt="扳机键改装" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Step 9: 背键改装方案 -->
+        <div class="section" id="section-8">
+            <div class="section-title">【背键改装方案】</div>
+            <div class="section-hint">请选择背键配置（如不需要背键可跳过）</div>
+
+            <div class="shell-module">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">额外肩键</div>
+                <label class="item"><div class="item-left"><input type="checkbox" data-group="extra-shoulder" data-name="2键蝶式微动肩键" data-price="100" data-section="8" onchange="toggleExclusiveCheckbox(this); updateBackkeyImages(); updateSelection()"><span class="item-name">2键蝶式微动肩键</span></div><span class="item-price">100元</span></label>
+                <label class="item"><div class="item-left"><input type="checkbox" data-group="extra-shoulder" data-name="4键蝶式微动肩键" data-price="160" data-section="8" onchange="toggleExclusiveCheckbox(this); updateBackkeyImages(); updateSelection()"><span class="item-name">4键蝶式微动肩键</span></div><span class="item-price">160元</span></label>
+            </div>
+
+            <div class="shell-module" style="margin-top:20px;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">微动背键</div>
+
+                <div class="backkey-count-row">
+                    <div class="backkey-count-options">
+                        <label class="backkey-count-option">
+                            <input type="checkbox" data-group="backkey-count" value="2" data-name="2个背键" data-price="100" onchange="toggleExclusiveCheckbox(this); onBackkeyCountChange(this)">
+                            <span>2个背键</span>
+                        </label>
+                        <label class="backkey-count-option">
+                            <input type="checkbox" data-group="backkey-count" value="4" data-name="4个背键" data-price="160" onchange="toggleExclusiveCheckbox(this); onBackkeyCountChange(this)">
+                            <span>4个背键</span>
+                        </label>
+                    </div>
+                    <span class="item-price" id="backkey-count-price">0元</span>
+                </div>
+
+                <div class="divider-line"></div>
+
+                <div class="backkey-keycap-section" id="backkey-keycap-section" style="display:none;">
+                    <div class="section-title" style="font-size:14px;margin-bottom:10px;color:#555;">键帽选择</div>
+                    <div class="keycap-grid">
+                        <label class="keycap-item">
+                            <input type="checkbox" data-name="刀片键帽" data-price="0" onchange="onKeycapChange(this)">
+                            <span>刀片键帽</span>
+                        </label>
+                        <label class="keycap-item">
+                            <input type="checkbox" data-name="大圆点键帽" data-price="0" onchange="onKeycapChange(this)">
+                            <span>大圆点键帽</span>
+                        </label>
+                        <label class="keycap-item">
+                            <input type="checkbox" data-name="DSE豆子键帽" data-price="0" onchange="onKeycapChange(this)">
+                            <span>DSE豆子键帽</span>
+                        </label>
+                        <label class="keycap-item">
+                            <input type="checkbox" data-name="嵌入圆点键帽" data-price="0" onchange="onKeycapChange(this)">
+                            <span>嵌入圆点键帽</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="divider-line"></div>
+
+                <div class="backkey-position-section" id="backkey-position-section" style="display:none;">
+                    <div class="section-title" style="font-size:14px;margin-bottom:10px;color:#555;">背键位置</div>
+                    <label class="item"><div class="item-left"><input type="checkbox" data-name="背键34号位置" data-price="0" data-section="8" onchange="onBackkeyPositionChange(this); updateBackkeyImages(); updateSelection()"><span class="item-name">背键34号位置</span></div></label>
+                    <label class="item"><div class="item-left"><input type="checkbox" data-name="背键56号位置" data-price="0" data-section="8" onchange="onBackkeyPositionChange(this); updateBackkeyImages(); updateSelection()"><span class="item-name">背键56号位置</span></div></label>
+                    <label class="item"><div class="item-left"><input type="checkbox" data-name="背键78号位置" data-price="0" data-section="8" onchange="onBackkeyPositionChange(this); updateBackkeyImages(); updateSelection()"><span class="item-name">背键78号位置</span></div></label>
+                </div>
+            </div>
+
+            <div class="shell-module" style="margin-top:20px;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">特殊背键</div>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属豆子背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">DSE金属豆子背键</span></div><span class="item-price">120元</span></label>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属拨片背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">DSE金属拨片背键</span></div><span class="item-price">120元</span></label>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="FN摇杆微动背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">FN摇杆微动背键</span></div><span class="item-price">120元</span></label>
+                <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="麦克风微动背键" data-price="100" data-section="8" onchange="updateSelection()"><span class="item-name">麦克风微动背键</span></div><span class="item-price">100元</span></label>
+            </div>
+
+            <div class="shell-module" style="margin-top:20px;">
+                <div class="section-title" style="font-size:16px;margin-bottom:10px;">背键芯片</div>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="HEN版本芯片" data-price="100" data-section="8" onchange="toggleHenChipDesc(this); updateSelection()"><span class="item-name">HEN版本芯片</span></div><span class="item-price">100元</span></label>
+                <div class="item-desc" id="desc-hen-chip">改装主板自带背键映射芯片，但本芯片可以额外支持8背键，并支持按键连发、组合键、宏编辑</div>
+            </div>
+
+            <div class="accessory-images" id="backkey-images">
+                <img id="img-2key" src="pic/2key.jpg" alt="2键蝶式微动肩键" style="display:none;">
+                <img id="img-4key" src="pic/4key.jpg" alt="4键蝶式微动肩键" style="display:none;">
+                <img id="img-dse" src="pic/dse.jpg" alt="DSE金属豆子背键" style="display:none;">
+                <img id="img-dseb" src="pic/dseb.jpg" alt="DSE金属拨片背键" style="display:none;">
+                <img id="img-dsea" src="pic/dsea.jpg" alt="DSE金属豆子背键+DSE金属拨片背键" style="display:none;">
+                <img id="img-fn" src="pic/fn.jpg" alt="FN摇杆微动背键" style="display:none;">
+                <img id="img-bset" src="pic/Bset.jpg" alt="背键位置" style="display:none;">
+                <img id="img-keycap-slice" src="pic/slice.jpg" alt="刀片键帽" style="display:none;">
+                <img id="img-keycap-round" src="pic/round.jpg" alt="大圆点键帽" style="display:none;">
+                <img id="img-keycap-dse" src="pic/dse1.jpg" alt="DSE豆子键帽" style="display:none;">
+                <img id="img-keycap-round1" src="pic/round1.jpg" alt="嵌入圆点键帽" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Step 11: 订单汇总与用户信息 -->
+        <div class="section" id="section-9">
+            <div class="section-title">【订单确认】</div>
+            
+            <div class="user-info" style="margin-bottom:20px;">
+                <div class="form-group">
+                    <label for="username">昵称 <span style="color:red;">*</span></label>
+                    <input type="text" id="username" placeholder="请填写昵称用于下单排号（必填）" required>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <div class="summary-title">改装项目清单</div>
+                <div class="summary-list" id="summaryList">
+                    <p style="color:#999;">尚未选择任何项目</p>
+                </div>
+                <div class="total-price">总计: <span id="totalPrice">0</span> 元</div>
+            </div>
+
+            <button class="btn-submit" style="margin-top:20px;" onclick="showConfirm()">📋 复制订单配置</button>
+        </div>
+
+        <div class="nav-bar">
+            <button class="nav-btn prev" id="prevBtn" disabled>◀ 上一选择</button>
+            <button class="nav-btn next" id="nextBtn">下一选择 ▶</button>
+        </div>
+
+        <div class="footer-note">DS4手柄改装订单系统</div>
+    </div>
+
+    <!-- 确认弹窗 -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <h2>订单配置</h2>
+            <div id="modalContent">
+                <div class="modal-summary" id="modalSummary"></div>
+                <div class="modal-buttons">
+                    <button class="btn-cancel" onclick="closeModal()">关闭</button>
+                    <button class="btn-copy" id="btnCopyOrder" onclick="copyOrder()">📋 复制订单</button>
+                    <button class="btn-copy" id="btnContact" onclick="toggleWechat()" style="background: linear-gradient(135deg, #48bb78, #38a169);">📱 联系改装</button>
+                </div>
+            </div>
+            <div id="wechatContent" style="display:none; text-align:center; max-height: 80vh; overflow: hidden;">
+                <img src="pic/wechat.jpg" alt="微信二维码" id="wechatImg" onclick="toggleWechat()" style="max-width: 100%; max-height: 55vh; width: auto; height: auto; border-radius: 10px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); object-fit: contain;">
+                <p style="font-size: 14px; color: #4a5568; margin-bottom: 12px; line-height: 1.6;">请添加UP工作VX发送订单信息及付款</p>
+                <div class="modal-buttons" style="margin-top: 0;">
+                    <button class="btn-cancel" onclick="toggleWechat()">返回</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片预览弹窗 -->
+    <div class="image-preview-overlay" id="imagePreviewOverlay" onclick="closeImagePreview()">
+        <img id="imagePreviewImg" src="" alt="图片预览">
+    </div>
+
+    <script>
+        let currentSection = 0;
+        const totalSections = 10;
+        const sectionTitles = ['手柄主板', '外壳选择', '其他配件', '摇杆选配', '十字键改装', '交互键改装', '肩键改装', '扳机键改装', '背键改装方案', '订单确认'];
+        
+        function toggleMotherboardDesc(el) {
+            document.querySelectorAll('#section-0 .item-desc').forEach(d => d.classList.remove('show'));
+            const name = el.getAttribute('data-name');
+            let descId = '';
+            let imgSrc = '';
+            if (name === '氦闪主板') {
+                descId = 'desc-helishan';
+                imgSrc = 'pic/hs.jpg';
+            } else if (name === 'GNS明日香主板') {
+                descId = 'desc-gns';
+                imgSrc = 'pic/gns.jpg';
+            } else if (name === '速跃主板') {
+                descId = 'desc-suyue';
+                imgSrc = 'pic/suiovo.jpg';
+            }
+            if (descId) document.getElementById(descId).classList.add('show');
+            
+            const imgContainer = document.getElementById('motherboard-image');
+            const imgEl = document.getElementById('mb-img');
+            if (imgSrc) {
+                imgEl.src = imgSrc;
+                imgContainer.style.display = 'flex';
+            } else {
+                imgContainer.style.display = 'none';
+                imgEl.src = '';
+            }
+            
+            updateGnsOnlyVisibility();
+            updateMicroswitchState();
+        }
+
+        function toggleHenChipDesc(el) {
+            const desc = document.getElementById('desc-hen-chip');
+            if (!desc) return;
+            if (el.checked) {
+                desc.classList.add('show');
+            } else {
+                desc.classList.remove('show');
+            }
+        }
+
+        function toggleExclusiveCheckbox(el) {
+            const group = el.getAttribute('data-group');
+            if (!group) return;
+            if (el.checked) {
+                document.querySelectorAll(`input[type="checkbox"][data-group="${group}"]`).forEach(cb => {
+                    if (cb !== el) {
+                        cb.checked = false;
+                    }
+                });
+            }
+        }
+
+        function updateMicroswitchState() {
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const isGns = mbRadio && mbRadio.getAttribute('data-name') === 'GNS明日香主板';
+
+            // 摇杆下压微动：GNS主板60元，非GNS主板100元
+            const joystickCheckbox = document.getElementById('joystick-microswitch');
+            const joystickPriceSpan = document.getElementById('joystick-microswitch-price');
+            if (joystickCheckbox && joystickPriceSpan) {
+                const price = isGns ? 60 : 100;
+                joystickCheckbox.setAttribute('data-price', price);
+                joystickPriceSpan.textContent = price + '元';
+            }
+
+            // 菜单背包微动：GNS主板时不可选
+            const menuCheckbox = document.getElementById('menu-microswitch');
+            const menuNotice = document.getElementById('menu-microswitch-notice');
+            if (menuCheckbox && menuNotice) {
+                if (isGns) {
+                    menuCheckbox.disabled = true;
+                    menuNotice.classList.add('show');
+                    if (menuCheckbox.checked) {
+                        menuCheckbox.checked = false;
+                        updateSelection();
+                    }
+                } else {
+                    menuCheckbox.disabled = false;
+                    menuNotice.classList.remove('show');
+                }
+            }
+        }
+
+        function toggleSocketDesc(el) {
+            const desc = document.getElementById('socket-desc');
+            if (el.checked) {
+                desc.classList.add('show');
+            } else {
+                desc.classList.remove('show');
+            }
+        }
+
+        function toggleAccessoryImage(el, imgId) {
+            const img = document.getElementById(imgId);
+            if (!img) return;
+            img.style.display = el.checked ? 'block' : 'none';
+        }
+
+        function toggleDpadModules(el) {
+            const type = el.getAttribute('data-name');
+            const forceModule = document.getElementById('dpad-force-module');
+            const configModule = document.getElementById('dpad-config-module');
+            const colorModule = document.getElementById('dpad-color-module');
+            const typeImg = document.getElementById('img-dpad-type');
+            const colorImg = document.getElementById('img-dpad-color');
+
+            // Reset all modules
+            forceModule.style.display = 'none';
+            configModule.style.display = 'none';
+            colorModule.style.display = 'none';
+
+            // Reset selections
+            forceModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            configModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            colorModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+
+            // Reset color image
+            colorImg.style.display = 'none';
+            colorImg.src = '';
+
+            // Set type image and default selections
+            let typeImgSrc = '';
+            if (type === '凯隆小微动') {
+                typeImgSrc = 'pic/direct.jpg';
+                forceModule.style.display = 'block';
+                colorModule.style.display = 'block';
+                // 默认选择90g
+                const defaultForce = forceModule.querySelector('input[type="radio"][data-name="90g"]');
+                if (defaultForce) defaultForce.checked = true;
+            } else if (type === '热插拔大微动') {
+                typeImgSrc = 'pic/direction-hotkey.jpg';
+                configModule.style.display = 'block';
+                colorModule.style.display = 'block';
+                // 默认选择标配TTC金+青龙
+                const defaultConfig = configModule.querySelector('input[type="radio"][data-name="标配TTC金+青龙"]');
+                if (defaultConfig) defaultConfig.checked = true;
+            } else if (type === '模块微动') {
+                typeImgSrc = 'pic/direct-plug.jpg';
+                colorModule.style.display = 'block';
+            } else if (type === '原装软胶垫') {
+                colorModule.style.display = 'block';
+            }
+
+            // 更新颜色价格和原装按键选项显示
+            const originalOption = document.getElementById('dpad-original-option');
+            if (type === '原装软胶垫') {
+                originalOption.style.display = 'flex';
+                // 黑色/白色20元，原装按键0元
+                colorModule.querySelectorAll('input[type="radio"]').forEach(r => {
+                    const name = r.getAttribute('data-name');
+                    r.setAttribute('data-price', name === '原装按键' ? 0 : 20);
+                });
+                colorModule.querySelectorAll('.item-price').forEach((span, idx) => {
+                    const radio = colorModule.querySelectorAll('input[type="radio"]')[idx];
+                    span.textContent = (radio.getAttribute('data-name') === '原装按键' ? 0 : 20) + '元';
+                });
+                // 默认选中原装按键
+                const defaultOriginal = colorModule.querySelector('input[type="radio"][data-name="原装按键"]');
+                if (defaultOriginal) defaultOriginal.checked = true;
+            } else {
+                originalOption.style.display = 'none';
+                colorModule.querySelectorAll('input[type="radio"]').forEach(r => {
+                    r.setAttribute('data-price', 0);
+                });
+                colorModule.querySelectorAll('.item-price').forEach(span => {
+                    span.textContent = '0元';
+                });
+            }
+
+            if (typeImgSrc) {
+                typeImg.src = typeImgSrc;
+                typeImg.style.display = 'block';
+            } else {
+                typeImg.style.display = 'none';
+                typeImg.src = '';
+            }
+        }
+
+        function updateDpadColorImage() {
+            const colorRadio = document.querySelector('input[type="radio"][name="dpad-color"]:checked');
+            const colorImg = document.getElementById('img-dpad-color');
+            let color = '';
+            if (colorRadio && colorImg) {
+                color = colorRadio.getAttribute('data-name');
+                if (color === '原装按键') {
+                    colorImg.style.display = 'none';
+                    colorImg.src = '';
+                } else {
+                    colorImg.src = color === '黑色' ? 'pic/Bkey.jpg' : 'pic/Wkey.jpg';
+                    colorImg.style.display = 'block';
+                }
+            }
+            
+            // 同步到交互键颜色（如果交互键选择非原装软胶垫）
+            if (color && color !== '原装按键') {
+                const interactTypeRadio = document.querySelector('input[type="radio"][name="interact-type"]:checked');
+                if (interactTypeRadio && interactTypeRadio.getAttribute('data-name') !== '原装软胶垫') {
+                    const interactColorModule = document.getElementById('interact-color-module');
+                    const targetColorRadio = interactColorModule.querySelector(`input[type="radio"][data-name="${color}"]`);
+                    if (targetColorRadio) {
+                        targetColorRadio.checked = true;
+                        interactColorModule.querySelectorAll('input[type="radio"]').forEach(r => {
+                            if (r.getAttribute('data-name') !== color) {
+                                r.disabled = true;
+                            } else {
+                                r.disabled = false;
+                            }
+                        });
+                        updateInteractColorImage();
+                        updateSelection();
+                    }
+                }
+            }
+        }
+
+        function toggleInteractModules(el) {
+            const type = el.getAttribute('data-name');
+            const forceModule = document.getElementById('interact-force-module');
+            const configModule = document.getElementById('interact-config-module');
+            const colorModule = document.getElementById('interact-color-module');
+            const typeImg = document.getElementById('img-interact-type');
+            const colorImg = document.getElementById('img-interact-color');
+
+            // Reset all modules
+            forceModule.style.display = 'none';
+            configModule.style.display = 'none';
+            colorModule.style.display = 'none';
+
+            // Reset selections
+            forceModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            configModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            colorModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+
+            // Reset color image
+            colorImg.style.display = 'none';
+            colorImg.src = '';
+
+            // Set type image and default selections
+            let typeImgSrc = '';
+            if (type === '凯隆小微动') {
+                typeImgSrc = 'pic/abxy.jpg';
+                forceModule.style.display = 'block';
+                colorModule.style.display = 'block';
+                // 默认选择90g
+                const defaultForce = forceModule.querySelector('input[type="radio"][data-name="90g"]');
+                if (defaultForce) defaultForce.checked = true;
+            } else if (type === '热插拔大微动') {
+                typeImgSrc = 'pic/abxy-hotkey.jpg';
+                configModule.style.display = 'block';
+                colorModule.style.display = 'block';
+                // 默认选择标配TTC金+青龙
+                const defaultConfig = configModule.querySelector('input[type="radio"][data-name="标配TTC金+青龙"]');
+                if (defaultConfig) defaultConfig.checked = true;
+            } else if (type === '模块微动') {
+                typeImgSrc = 'pic/abxy-plug.jpg';
+                colorModule.style.display = 'block';
+            } else if (type === '原装软胶垫') {
+                colorModule.style.display = 'block';
+            }
+
+            // 更新颜色价格和原装按键选项显示
+            const originalOption = document.getElementById('interact-original-option');
+            if (type === '原装软胶垫') {
+                originalOption.style.display = 'flex';
+                // 黑色/白色20元，原装按键0元
+                colorModule.querySelectorAll('input[type="radio"]').forEach(r => {
+                    const name = r.getAttribute('data-name');
+                    r.setAttribute('data-price', name === '原装按键' ? 0 : 20);
+                    r.disabled = false;
+                });
+                colorModule.querySelectorAll('.item-price').forEach((span, idx) => {
+                    const radio = colorModule.querySelectorAll('input[type="radio"]')[idx];
+                    span.textContent = (radio.getAttribute('data-name') === '原装按键' ? 0 : 20) + '元';
+                });
+                // 默认选中原装按键
+                const defaultOriginal = colorModule.querySelector('input[type="radio"][data-name="原装按键"]');
+                if (defaultOriginal) defaultOriginal.checked = true;
+            } else {
+                originalOption.style.display = 'none';
+                colorModule.querySelectorAll('input[type="radio"]').forEach(r => {
+                    r.setAttribute('data-price', 0);
+                    r.disabled = false;
+                });
+                colorModule.querySelectorAll('.item-price').forEach(span => {
+                    span.textContent = '0元';
+                });
+                
+                // 获取十字键颜色选择，同步到交互键
+                const dpadColorRadio = document.querySelector('input[type="radio"][name="dpad-color"]:checked');
+                if (dpadColorRadio && dpadColorRadio.getAttribute('data-name') !== '原装按键') {
+                    const dpadColorName = dpadColorRadio.getAttribute('data-name');
+                    const targetColorRadio = colorModule.querySelector(`input[type="radio"][data-name="${dpadColorName}"]`);
+                    if (targetColorRadio) {
+                        targetColorRadio.checked = true;
+                        // 禁用其他颜色选项
+                        colorModule.querySelectorAll('input[type="radio"]').forEach(r => {
+                            if (r.getAttribute('data-name') !== dpadColorName) {
+                                r.disabled = true;
+                            }
+                        });
+                        // 显示对应颜色图片
+                        updateInteractColorImage();
+                    }
+                }
+            }
+
+            if (typeImgSrc) {
+                typeImg.src = typeImgSrc;
+                typeImg.style.display = 'block';
+            } else {
+                typeImg.style.display = 'none';
+                typeImg.src = '';
+            }
+        }
+
+        function updateInteractColorImage() {
+            const colorRadio = document.querySelector('input[type="radio"][name="interact-color"]:checked');
+            const colorImg = document.getElementById('img-interact-color');
+            if (colorRadio && colorImg) {
+                const color = colorRadio.getAttribute('data-name');
+                if (color === '原装按键') {
+                    colorImg.style.display = 'none';
+                    colorImg.src = '';
+                } else {
+                    colorImg.src = color === '黑色' ? 'pic/Bkey.jpg' : 'pic/Wkey.jpg';
+                    colorImg.style.display = 'block';
+                }
+            }
+        }
+
+        function updateShoulderImage() {
+            const shoulderRadio = document.querySelector('input[type="radio"][name="shoulder"]:checked');
+            const shoulderImg = document.getElementById('img-shoulder');
+            if (shoulderRadio && shoulderImg) {
+                const name = shoulderRadio.getAttribute('data-name');
+                let imgSrc = '';
+                if (name === '肩键改装 凯隆弹片微动') {
+                    imgSrc = 'pic/LR1-new.jpg';
+                } else if (name === '肩键改装 凯隆普通微动') {
+                    imgSrc = 'pic/LR1.jpg';
+                } else if (name === '肩键改装 热插拔大微动') {
+                    imgSrc = 'pic/LR1-hot.jpg';
+                }
+                if (imgSrc) {
+                    shoulderImg.src = imgSrc;
+                    shoulderImg.style.display = 'block';
+                } else {
+                    shoulderImg.style.display = 'none';
+                    shoulderImg.src = '';
+                }
+            }
+        }
+
+        function toggleShoulderModules(el) {
+            const name = el.getAttribute('data-name');
+            const forceModule = document.getElementById('shoulder-force-module');
+            const configModule = document.getElementById('shoulder-config-module');
+
+            // 隐藏所有子模块并清除选中状态
+            forceModule.style.display = 'none';
+            forceModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+            configModule.style.display = 'none';
+            configModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+
+            if (name === '肩键改装 凯隆普通微动') {
+                forceModule.style.display = 'block';
+                const forceRadio = document.querySelector('input[name="shoulder-force"][data-name="120g"]');
+                if (forceRadio) forceRadio.checked = true;
+            } else if (name === '肩键改装 热插拔大微动') {
+                configModule.style.display = 'block';
+                const configRadio = document.querySelector('input[name="shoulder-config"][data-name="青龙微动"]');
+                if (configRadio) configRadio.checked = true;
+            }
+
+            // 肩键选择变化后，更新扳机键的凯隆普通微动可用性
+            updateTriggerState();
+        }
+
+        function toggleTriggerModules(el) {
+            const name = el.getAttribute('data-name');
+            const configModule = document.getElementById('trigger-config-module');
+
+            configModule.style.display = 'none';
+            configModule.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+
+            if (name === '扳机键改装 热插拔大微动' || name === '扳机键改装 双切热插拔微动') {
+                configModule.style.display = 'block';
+                const defaultConfig = configModule.querySelector('input[type="radio"][data-name="TTC金微动"]');
+                if (defaultConfig) defaultConfig.checked = true;
+            }
+        }
+
+        function updateTriggerImage() {
+            const triggerRadio = document.querySelector('input[type="radio"][name="trigger"]:checked');
+            const triggerImg = document.getElementById('img-trigger');
+            if (triggerRadio && triggerImg) {
+                const name = triggerRadio.getAttribute('data-name');
+                let imgSrc = '';
+                if (name === '扳机键改装 凯隆弹片微动') {
+                    imgSrc = 'pic/LR2-new.jpg';
+                } else if (name === '扳机键改装 热插拔大微动') {
+                    imgSrc = 'pic/LR2-hot.jpg';
+                } else if (name === '扳机键改装 凯隆普通微动') {
+                    imgSrc = 'pic/LR2.jpg';
+                } else if (name === '扳机键改装 双切热插拔微动') {
+                    imgSrc = 'pic/LR2-dual.jpg';
+                }
+                if (imgSrc) {
+                    triggerImg.src = imgSrc;
+                    triggerImg.style.display = 'block';
+                } else {
+                    triggerImg.style.display = 'none';
+                    triggerImg.src = '';
+                }
+            }
+        }
+
+        function updateTriggerState() {
+            const shoulderRadio = document.querySelector('input[type="radio"][name="shoulder"]:checked');
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const shoulderName = shoulderRadio ? shoulderRadio.getAttribute('data-name') : '';
+            const mbName = mbRadio ? mbRadio.getAttribute('data-name') : '';
+
+            // 凯隆普通微动：肩键选择凯隆弹片微动时禁用
+            const normalRadio = document.querySelector('input[name="trigger"][data-name="扳机键改装 凯隆普通微动"]');
+            const normalNotice = document.getElementById('trigger-normal-notice');
+            if (shoulderName === '肩键改装 凯隆弹片微动') {
+                normalRadio.disabled = true;
+                normalNotice.classList.add('show');
+                if (normalRadio.checked) {
+                    normalRadio.checked = false;
+                    toggleTriggerModules(normalRadio);
+                    updateTriggerImage();
+                }
+            } else {
+                normalRadio.disabled = false;
+                normalNotice.classList.remove('show');
+            }
+
+            // 双切热插拔微动：仅GNS主板可选
+            const dualRadio = document.querySelector('input[name="trigger"][data-name="扳机键改装 双切热插拔微动"]');
+            const dualNotice = document.getElementById('trigger-dual-notice');
+            if (mbName !== 'GNS明日香主板') {
+                dualRadio.disabled = true;
+                dualNotice.classList.add('show');
+                if (dualRadio.checked) {
+                    dualRadio.checked = false;
+                    toggleTriggerModules(dualRadio);
+                    updateTriggerImage();
+                }
+            } else {
+                dualRadio.disabled = false;
+                dualNotice.classList.remove('show');
+            }
+
+            updateSelection();
+        }
+
+        function toggleStickDamping(el) {
+            const stickName = el.getAttribute('data-name');
+            const tmrSticks = ['DS13MAX摇杆', 'JS13PRO+摇杆', '锦富霍尔摇杆'];
+            const isTmr = tmrSticks.includes(stickName);
+
+            const dampingRadios = document.querySelectorAll('input[name="damping"]');
+            const tmrNotice = document.getElementById('tmr-notice');
+            const ds13Desc = document.getElementById('ds13-desc');
+            const js13Desc = document.getElementById('js13-desc');
+
+            // 隐藏所有摇杆说明
+            if (ds13Desc) ds13Desc.style.display = 'none';
+            if (js13Desc) js13Desc.style.display = 'none';
+
+            if (isTmr) {
+                // 非alps蓝边摇杆：默认选原装阻尼且不可更改
+                dampingRadios.forEach(r => {
+                    r.disabled = true;
+                    if (r.getAttribute('data-name') === '原装阻尼') {
+                        r.checked = true;
+                    } else {
+                        r.checked = false;
+                    }
+                });
+                tmrNotice.style.display = 'block';
+                // 显示对应的摇杆说明
+                if (stickName === 'DS13MAX摇杆' && ds13Desc) {
+                    ds13Desc.style.display = 'block';
+                } else if (stickName === 'JS13PRO+摇杆' && js13Desc) {
+                    js13Desc.style.display = 'block';
+                }
+            } else {
+                // alps蓝边摇杆：减阻尼可选，清空之前的选择强制用户主动选择
+                dampingRadios.forEach(r => {
+                    r.disabled = false;
+                    r.checked = false;
+                });
+                tmrNotice.style.display = 'none';
+            }
+            updateSelection();
+        }
+
+        function toggleGnsExclusive(el) {
+            const displayCb = document.querySelector('input[type="checkbox"][data-name="GNS主板显示屏"]');
+            const touchCb = document.querySelector('input[type="checkbox"][data-name="GNS主板2键触摸板"]');
+            
+            if (el.checked) {
+                if (el === displayCb) {
+                    touchCb.checked = false;
+                    touchCb.disabled = true;
+                } else if (el === touchCb) {
+                    displayCb.checked = false;
+                    displayCb.disabled = true;
+                    const screenImg = document.getElementById('img-screen');
+                    if (screenImg) screenImg.style.display = 'none';
+                }
+            } else {
+                displayCb.disabled = false;
+                touchCb.disabled = false;
+            }
+        }
+
+        function updateBackkeyImages() {
+            const img2key = document.getElementById('img-2key');
+            const img4key = document.getElementById('img-4key');
+            const imgDse = document.getElementById('img-dse');
+            const imgFn = document.getElementById('img-fn');
+            const imgBset = document.getElementById('img-bset');
+
+            const extraShoulder = document.querySelector('input[type="checkbox"][data-group="extra-shoulder"]:checked');
+            if (extraShoulder) {
+                const name = extraShoulder.getAttribute('data-name');
+                if (name === '2键蝶式微动肩键') {
+                    img2key.style.display = 'block';
+                    img4key.style.display = 'none';
+                } else if (name === '4键蝶式微动肩键') {
+                    img2key.style.display = 'none';
+                    img4key.style.display = 'block';
+                }
+            } else {
+                img2key.style.display = 'none';
+                img4key.style.display = 'none';
+            }
+
+            const dseCb = document.querySelector('input[type="checkbox"][data-name="DSE金属豆子背键"]');
+            const dsebCb = document.querySelector('input[type="checkbox"][data-name="DSE金属拨片背键"]');
+            const imgDseb = document.getElementById('img-dseb');
+            const imgDsea = document.getElementById('img-dsea');
+            const dseChecked = dseCb && dseCb.checked;
+            const dsebChecked = dsebCb && dsebCb.checked;
+            if (dseChecked && dsebChecked) {
+                imgDse.style.display = 'none';
+                imgDseb.style.display = 'none';
+                imgDsea.style.display = 'block';
+            } else if (dseChecked) {
+                imgDse.style.display = 'block';
+                imgDseb.style.display = 'none';
+                imgDsea.style.display = 'none';
+            } else if (dsebChecked) {
+                imgDse.style.display = 'none';
+                imgDseb.style.display = 'block';
+                imgDsea.style.display = 'none';
+            } else {
+                imgDse.style.display = 'none';
+                imgDseb.style.display = 'none';
+                imgDsea.style.display = 'none';
+            }
+
+            const fnCb = document.querySelector('input[type="checkbox"][data-name="FN摇杆微动背键"]');
+            imgFn.style.display = fnCb && fnCb.checked ? 'block' : 'none';
+
+            const bsetChecked = document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked').length > 0;
+            imgBset.style.display = bsetChecked ? 'block' : 'none';
+
+            // 键帽图片显示
+            const imgKeycapSlice = document.getElementById('img-keycap-slice');
+            const imgKeycapRound = document.getElementById('img-keycap-round');
+            const imgKeycapDse = document.getElementById('img-keycap-dse');
+            const imgKeycapRound1 = document.getElementById('img-keycap-round1');
+            imgKeycapSlice.style.display = 'none';
+            imgKeycapRound.style.display = 'none';
+            imgKeycapDse.style.display = 'none';
+            imgKeycapRound1.style.display = 'none';
+            document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').forEach(cb => {
+                const name = cb.getAttribute('data-name');
+                if (name === '刀片键帽') imgKeycapSlice.style.display = 'block';
+                else if (name === '大圆点键帽') imgKeycapRound.style.display = 'block';
+                else if (name === 'DSE豆子键帽') imgKeycapDse.style.display = 'block';
+                else if (name === '嵌入圆点键帽') imgKeycapRound1.style.display = 'block';
+            });
+        }
+
+        function onBackkeyCountChange(el) {
+            const keycapSection = document.getElementById('backkey-keycap-section');
+            const positionSection = document.getElementById('backkey-position-section');
+            const priceEl = document.getElementById('backkey-count-price');
+
+            if (el.checked) {
+                const price = parseInt(el.getAttribute('data-price'));
+                priceEl.textContent = price + '元';
+                keycapSection.style.display = 'block';
+                positionSection.style.display = 'block';
+                const count = parseInt(el.value);
+                const maxKeycaps = count === 2 ? 1 : 2;
+                const maxPositions = count === 2 ? 1 : 2;
+                
+                const keycapCheckboxes = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]');
+                keycapCheckboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.disabled = false;
+                });
+                updateKeycapLimit(maxKeycaps);
+
+                const positionCheckboxes = document.querySelectorAll('#backkey-position-section input[type="checkbox"]');
+                positionCheckboxes.forEach(cb => {
+                    cb.checked = false;
+                    cb.disabled = false;
+                });
+                updatePositionLimit(maxPositions);
+            } else {
+                priceEl.textContent = '0元';
+                // Clear child states
+                document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]').forEach(cb => {
+                    cb.checked = false; cb.disabled = false;
+                });
+                document.querySelectorAll('#backkey-position-section input[type="checkbox"]').forEach(cb => {
+                    cb.checked = false; cb.disabled = false;
+                });
+                keycapSection.style.display = 'none';
+                positionSection.style.display = 'none';
+                updateBackkeyImages();
+            }
+            updateSelection();
+            updateSummary();
+        }
+
+        function updateKeycapLimit(maxCount) {
+            const keycapCheckboxes = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]');
+            let checkedCount = 0;
+            keycapCheckboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+            keycapCheckboxes.forEach(cb => {
+                if (!cb.checked && checkedCount >= maxCount) {
+                    cb.disabled = true;
+                } else {
+                    cb.disabled = false;
+                }
+            });
+        }
+
+        function updatePositionLimit(maxCount) {
+            const positionCheckboxes = document.querySelectorAll('#backkey-position-section input[type="checkbox"]');
+            let checkedCount = 0;
+            positionCheckboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+            positionCheckboxes.forEach(cb => {
+                if (!cb.checked && checkedCount >= maxCount) {
+                    cb.disabled = true;
+                } else {
+                    cb.disabled = false;
+                }
+            });
+        }
+
+        function onBackkeyPositionChange(el) {
+            const countRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            if (!countRadio) return;
+            const count = parseInt(countRadio.value);
+            const maxPositions = count === 2 ? 1 : 2;
+            const positionCheckboxes = document.querySelectorAll('#backkey-position-section input[type="checkbox"]');
+            let checkedCount = 0;
+            positionCheckboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+            if (el.checked && checkedCount > maxPositions) {
+                el.checked = false;
+                return;
+            }
+            updatePositionLimit(maxPositions);
+        }
+
+        function onKeycapChange(el) {
+            const countRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            if (!countRadio) return;
+            const count = parseInt(countRadio.value);
+            const maxKeycaps = count === 2 ? 1 : 2;
+            const keycapCheckboxes = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]');
+            let checkedCount = 0;
+            keycapCheckboxes.forEach(cb => {
+                if (cb.checked) checkedCount++;
+            });
+            if (el.checked && checkedCount > maxKeycaps) {
+                el.checked = false;
+                return;
+            }
+            updateKeycapLimit(maxKeycaps);
+            updateBackkeyImages();
+            updateSelection();
+            updateSummary();
+        }
+
+        function toggleShellModule(el) {
+            document.querySelectorAll('[data-module]').forEach(mod => {
+                mod.classList.remove('selected');
+                const radios = mod.querySelectorAll('input[type="radio"]');
+                radios.forEach(r => {
+                    if (r.name.startsWith('shell-color')) {
+                        r.disabled = true;
+                        r.checked = false;
+                    }
+                });
+                const desc = mod.querySelector('.item-desc');
+                if (desc) desc.style.display = 'none';
+            });
+
+            if (el.checked) {
+                const module = el.closest('[data-module]');
+                module.classList.add('selected');
+                
+                const colorRadios = module.querySelectorAll('input[type="radio"][name^="shell-color"]');
+                colorRadios.forEach(r => r.disabled = false);
+
+                const desc = module.querySelector('.item-desc');
+                if (desc) desc.style.display = 'block';
+
+                const imgSrc = el.getAttribute('data-image');
+                const imgContainer = document.getElementById('shell-image');
+                const imgEl = document.getElementById('shell-img');
+                if (imgSrc) {
+                    imgEl.src = imgSrc;
+                    imgContainer.style.display = 'flex';
+                } else {
+                    imgContainer.style.display = 'none';
+                    imgEl.src = '';
+                }
+            } else {
+                document.getElementById('shell-image').style.display = 'none';
+                document.getElementById('shell-img').src = '';
+            }
+
+            // 振飞扬外壳自带TYPEC接口，无需额外制作
+            const isZfyShell = el.checked && el.getAttribute('data-name') === '振飞扬国产外壳';
+            const typecCheckbox = document.getElementById('typec-checkbox');
+            const typecNotice = document.getElementById('typec-notice');
+            const typecRequiredNotice = document.getElementById('typec-required-notice');
+            const typecImg = document.getElementById('img-typec');
+            if (isZfyShell) {
+                typecCheckbox.checked = false;
+                typecCheckbox.disabled = true;
+                typecNotice.style.display = 'block';
+                typecRequiredNotice.style.display = 'none';
+                if (typecImg) typecImg.style.display = 'none';
+            } else {
+                // 非振飞扬外壳：默认勾选TYPEC接口制作且不可取消
+                typecCheckbox.checked = true;
+                typecCheckbox.disabled = true;
+                typecNotice.style.display = 'none';
+                typecRequiredNotice.style.display = 'block';
+                if (typecImg) typecImg.style.display = 'block';
+            }
+
+            updateSelection();
+        }
+
+        function updateGnsOnlyVisibility() {
+            const gnsSelected = document.querySelector('input[type="radio"][data-name="GNS明日香主板"]:checked');
+            document.querySelectorAll('.gns-only').forEach(el => {
+                if (gnsSelected) {
+                    el.style.display = '';
+                    el.style.flexDirection = 'row';
+                    const cb = el.querySelector('input[type="checkbox"]');
+                    if (cb) cb.disabled = false;
+                } else {
+                    // Uncheck and hide
+                    const cb = el.querySelector('input[type="checkbox"]');
+                    if (cb) {
+                        cb.checked = false;
+                        cb.disabled = false;
+                        const name = cb.getAttribute('data-name');
+                        if (name === 'GNS主板显示屏') {
+                            const screenImg = document.getElementById('img-screen');
+                            if (screenImg) screenImg.style.display = 'none';
+                        }
+                    }
+                    el.style.display = 'none';
+                }
+            });
+            updateSummary();
+            updateMicroswitchState();
+        }
+
+        function hasAnySelection() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            let hasSelection = false;
+            checkboxes.forEach(cb => {
+                if (cb.closest('#backkey-keycap-section') || cb.closest('#backkey-position-section')) return;
+                hasSelection = true;
+            });
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
+            const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
+            const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
+            const dpadRadio = document.querySelector('input[type="radio"][name="dpad-type"]:checked');
+            const interactRadio = document.querySelector('input[type="radio"][name="interact-type"]:checked');
+            const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            const extraShoulderRadio = document.querySelector('input[type="checkbox"][data-group="extra-shoulder"]:checked');
+            return hasSelection || !!mbRadio || !!shellRadio || !!midframeRadio || !!stickRadio || 
+                   !!dpadRadio || !!interactRadio || !!backkeyCountRadio || !!extraShoulderRadio;
+        }
+
+        function updateSelection() {
+            const nextBtn = document.getElementById('nextBtn');
+            const sectionInputs = document.querySelectorAll(`#section-${currentSection} input:checked`);
+            let canNext = sectionInputs.length > 0 || currentSection >= totalSections - 1 || currentSection === 2 || currentSection === 8;
+
+            // 外壳选择页面：手柄外壳和手柄中框均为必选，振扬和欧升腾外壳需选择颜色
+            if (currentSection === 1 && currentSection < totalSections - 1) {
+                const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
+                const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
+                canNext = !!shellRadio && !!midframeRadio;
+                if (shellRadio) {
+                    const shellName = shellRadio.getAttribute('data-name');
+                    if (shellName === '振飞扬国产外壳') {
+                        const colorRadio = document.querySelector('input[type="radio"][name="shell-color-zfy"]:checked');
+                        canNext = canNext && !!colorRadio;
+                    } else if (shellName === '欧升腾国产类肤壳') {
+                        const colorRadio = document.querySelector('input[type="radio"][name="shell-color-ost"]:checked');
+                        canNext = canNext && !!colorRadio;
+                    }
+                }
+            }
+
+            // 摇杆选配页面：摇杆本体和减阻尼均为必选
+            if (currentSection === 3 && currentSection < totalSections - 1) {
+                const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
+                const dampingRadio = document.querySelector('input[type="radio"][name="damping"]:checked');
+                canNext = !!stickRadio && !!dampingRadio;
+            }
+
+            // 十字键/交互键改装页面：显示的子模块必须选择
+            if ((currentSection === 4 || currentSection === 5) && currentSection < totalSections - 1) {
+                const prefix = currentSection === 4 ? 'dpad' : 'interact';
+                ['force', 'config', 'color'].forEach(suffix => {
+                    const module = document.getElementById(`${prefix}-${suffix}-module`);
+                    if (module && module.style.display !== 'none') {
+                        const radioName = `${prefix}-${suffix}`;
+                        const radioChecked = module.querySelector(`input[type="radio"][name="${radioName}"]:checked`);
+                        if (!radioChecked) canNext = false;
+                    }
+                });
+            }
+
+            // 肩键改装页面：显示的子模块必须选择
+            if (currentSection === 6 && currentSection < totalSections - 1) {
+                ['force', 'config'].forEach(suffix => {
+                    const module = document.getElementById(`shoulder-${suffix}-module`);
+                    if (module && module.style.display !== 'none') {
+                        const radioName = `shoulder-${suffix}`;
+                        const radioChecked = module.querySelector(`input[type="radio"][name="${radioName}"]:checked`);
+                        if (!radioChecked) canNext = false;
+                    }
+                });
+            }
+
+            // 扳机键改装页面：显示的子模块必须选择
+            if (currentSection === 7 && currentSection < totalSections - 1) {
+                const configModule = document.getElementById('trigger-config-module');
+                if (configModule && configModule.style.display !== 'none') {
+                    const configChecked = configModule.querySelector('input[type="radio"][name="trigger-config"]:checked');
+                    if (!configChecked) canNext = false;
+                }
+            }
+
+            nextBtn.disabled = !canNext;
+        }
+
+        function updateProgressSteps() {
+            const container = document.getElementById('progressSteps');
+            if (!container.children.length) {
+                container.innerHTML = '<div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>';
+            }
+            const progressBar = document.getElementById('progressBar');
+            const percentage = ((currentSection) / (totalSections - 1)) * 100;
+            progressBar.style.width = Math.max(0, Math.min(100, percentage)) + '%';
+        }
+
+        function showSection(index) {
+            document.querySelectorAll('.section').forEach((sec, i) => {
+                sec.classList.toggle('active', i === index);
+            });
+            
+            currentSection = index;
+            
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progress = document.getElementById('progress');
+            
+            prevBtn.disabled = index === 0;
+            progress.textContent = `第 ${index + 1}/${totalSections} 步：${sectionTitles[index]}`;
+            
+            if (index === totalSections - 1) {
+                nextBtn.textContent = '复制订单配置';
+                nextBtn.removeEventListener('click', nextSection);
+                nextBtn.addEventListener('click', showConfirm);
+            } else {
+                nextBtn.textContent = '下一选择 ▶';
+                nextBtn.removeEventListener('click', showConfirm);
+                nextBtn.addEventListener('click', nextSection);
+                updateSelection();
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateSummary();
+            if (index === 2) updateGnsOnlyVisibility();
+            // 进入摇杆选配页面时，确保默认勾选和描述文字正确显示
+            if (index === 3) {
+                const checkedStick = document.querySelector('input[type="radio"][name="stick"]:checked');
+                if (checkedStick) {
+                    toggleStickDamping(checkedStick);
+                }
+            }
+            // 进入扳机键改装页面时，更新选项可用性
+            if (index === 7) {
+                updateTriggerState();
+            }
+            updateProgressSteps();
+            // 切换页面后重新计算图片标签字体大小
+            setTimeout(updateImageLabelSizes, 100);
+        }
+
+        function prevSection() {
+            if (currentSection > 0) {
+                showSection(currentSection - 1);
+            }
+        }
+
+        function nextSection() {
+            if (currentSection < totalSections - 1) {
+                const sectionCheckboxes = document.querySelectorAll(`#section-${currentSection} input:checked`);
+                if (sectionCheckboxes.length === 0 && currentSection !== 2 && currentSection !== 8) {
+                    showMessage('请至少选择一个项目', 'error');
+                    return;
+                }
+                // 外壳选择页面：手柄外壳和手柄中框均为必选，振飞扬和欧升腾外壳需选择颜色
+                if (currentSection === 1) {
+                    const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
+                    const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
+                    if (!shellRadio) {
+                        showMessage('请选择手柄外壳', 'error');
+                        return;
+                    }
+                    if (!midframeRadio) {
+                        showMessage('请选择手柄中框', 'error');
+                        return;
+                    }
+                    const shellName = shellRadio.getAttribute('data-name');
+                    let needColor = false;
+                    let colorRadio = null;
+                    if (shellName === '振飞扬国产外壳') {
+                        needColor = true;
+                        colorRadio = document.querySelector('input[type="radio"][name="shell-color-zfy"]:checked');
+                    } else if (shellName === '欧升腾国产类肤壳') {
+                        needColor = true;
+                        colorRadio = document.querySelector('input[type="radio"][name="shell-color-ost"]:checked');
+                    }
+                    if (needColor && !colorRadio) {
+                        showMessage('请选择外壳颜色', 'error');
+                        return;
+                    }
+                }
+                // 摇杆选配页面：摇杆本体和减阻尼均为必选
+                if (currentSection === 3) {
+                    const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
+                    const dampingRadio = document.querySelector('input[type="radio"][name="damping"]:checked');
+                    if (!stickRadio) {
+                        showMessage('请选择摇杆本体', 'error');
+                        return;
+                    }
+                    if (!dampingRadio) {
+                        showMessage('请选择摇杆减阻尼', 'error');
+                        return;
+                    }
+                }
+                // 十字键/交互键改装页面：显示的子模块必须选择
+                if (currentSection === 4 || currentSection === 5) {
+                    const prefix = currentSection === 4 ? 'dpad' : 'interact';
+                    const labels = { force: '微动力度', config: '大微动配置', color: '按键颜色' };
+                    for (const suffix of ['force', 'config', 'color']) {
+                        const module = document.getElementById(`${prefix}-${suffix}-module`);
+                        if (module && module.style.display !== 'none') {
+                            const radioName = `${prefix}-${suffix}`;
+                            const radioChecked = module.querySelector(`input[type="radio"][name="${radioName}"]:checked`);
+                            if (!radioChecked) {
+                                showMessage(`请选择${labels[suffix]}`, 'error');
+                                return;
+                            }
+                        }
+                    }
+                }
+                // 肩键改装页面：显示的子模块必须选择
+                if (currentSection === 6) {
+                    const labels = { force: '微动力度', config: '大微动配置' };
+                    for (const suffix of ['force', 'config']) {
+                        const module = document.getElementById(`shoulder-${suffix}-module`);
+                        if (module && module.style.display !== 'none') {
+                            const radioName = `shoulder-${suffix}`;
+                            const radioChecked = module.querySelector(`input[type="radio"][name="${radioName}"]:checked`);
+                            if (!radioChecked) {
+                                showMessage(`请选择${labels[suffix]}`, 'error');
+                                return;
+                            }
+                        }
+                    }
+                }
+                // 扳机键改装页面：大微动配置必须选择
+                if (currentSection === 7) {
+                    const configModule = document.getElementById('trigger-config-module');
+                    if (configModule && configModule.style.display !== 'none') {
+                        const configChecked = configModule.querySelector('input[type="radio"][name="trigger-config"]:checked');
+                        if (!configChecked) {
+                            showMessage('请选择大微动配置', 'error');
+                            return;
+                        }
+                    }
+                }
+                showSection(currentSection + 1);
+            }
+        }
+
+        function updateSummary() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            let total = 0;
+            const items = [];
+
+            checkboxes.forEach(cb => {
+                const name = cb.getAttribute('data-name');
+                if (!name) return;
+                if (cb.closest('#backkey-keycap-section') || cb.closest('#backkey-position-section')) return;
+                if (cb.getAttribute('data-group')) return; // handled separately
+                const price = parseInt(cb.getAttribute('data-price'));
+                items.push({ name, price });
+                total += price;
+            });
+
+            // 处理主板选择
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            if (mbRadio) {
+                const name = mbRadio.getAttribute('data-name');
+                const price = parseInt(mbRadio.getAttribute('data-price'));
+                items.push({ name, price });
+                total += price;
+            }
+
+            // 处理外壳选择
+            const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
+            if (shellRadio) {
+                const name = shellRadio.getAttribute('data-name');
+                const price = parseInt(shellRadio.getAttribute('data-price'));
+                const module = shellRadio.closest('.shell-module');
+                const colorRadio = module ? module.querySelector('input[type="radio"][name^="shell-color"]:checked') : null;
+                const color = colorRadio ? colorRadio.value : '';
+                items.push({ name: color ? `${name} ${color}` : name, price });
+                total += price;
+            }
+
+            // 处理中框选择
+            const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
+            if (midframeRadio) {
+                const name = midframeRadio.getAttribute('data-name');
+                const price = parseInt(midframeRadio.getAttribute('data-price'));
+                items.push({ name, price });
+                total += price;
+            }
+
+            // 处理摇杆本体和阻尼组合
+            const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
+            const dampingRadio = document.querySelector('input[type="radio"][name="damping"]:checked');
+            if (stickRadio) {
+                const stickName = stickRadio.getAttribute('data-name');
+                const stickPrice = parseInt(stickRadio.getAttribute('data-price'));
+                let dampingName = '';
+                let dampingPrice = 0;
+                if (dampingRadio) {
+                    dampingName = dampingRadio.getAttribute('data-name');
+                    dampingPrice = parseInt(dampingRadio.getAttribute('data-price'));
+                }
+                const combinedName = dampingName && dampingName !== '原装阻尼' ? `${stickName} ${dampingName}` : stickName;
+                items.push({ name: combinedName, price: stickPrice + dampingPrice });
+                total += stickPrice + dampingPrice;
+            }
+
+            // 处理十字键改装组合
+            const dpadTypeRadio = document.querySelector('input[type="radio"][name="dpad-type"]:checked');
+            if (dpadTypeRadio) {
+                const typeName = dpadTypeRadio.getAttribute('data-name');
+                const typePrice = parseInt(dpadTypeRadio.getAttribute('data-price'));
+                let extraInfo = [];
+
+                const dpadForceRadio = document.querySelector('input[type="radio"][name="dpad-force"]:checked');
+                if (dpadForceRadio) extraInfo.push(dpadForceRadio.getAttribute('data-name'));
+
+                const dpadConfigRadio = document.querySelector('input[type="radio"][name="dpad-config"]:checked');
+                if (dpadConfigRadio) extraInfo.push(dpadConfigRadio.getAttribute('data-name'));
+
+                const dpadColorRadio = document.querySelector('input[type="radio"][name="dpad-color"]:checked');
+                if (dpadColorRadio) extraInfo.push(dpadColorRadio.getAttribute('data-name'));
+
+                const combinedName = `十字键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''}`;
+                items.push({ name: combinedName, price: typePrice });
+                total += typePrice;
+            }
+
+            // 处理交互键改装组合
+            const interactTypeRadio = document.querySelector('input[type="radio"][name="interact-type"]:checked');
+            if (interactTypeRadio) {
+                const typeName = interactTypeRadio.getAttribute('data-name');
+                const typePrice = parseInt(interactTypeRadio.getAttribute('data-price'));
+                let extraInfo = [];
+
+                const interactForceRadio = document.querySelector('input[type="radio"][name="interact-force"]:checked');
+                if (interactForceRadio) extraInfo.push(interactForceRadio.getAttribute('data-name'));
+
+                const interactConfigRadio = document.querySelector('input[type="radio"][name="interact-config"]:checked');
+                if (interactConfigRadio) extraInfo.push(interactConfigRadio.getAttribute('data-name'));
+
+                const interactColorRadio = document.querySelector('input[type="radio"][name="interact-color"]:checked');
+                if (interactColorRadio) extraInfo.push(interactColorRadio.getAttribute('data-name'));
+
+                const combinedName = `交互键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''}`;
+                items.push({ name: combinedName, price: typePrice });
+                total += typePrice;
+            }
+
+            // 处理肩键改装组合
+            const shoulderRadio = document.querySelector('input[type="radio"][name="shoulder"]:checked');
+            if (shoulderRadio) {
+                const typeName = shoulderRadio.getAttribute('data-name');
+                const typePrice = parseInt(shoulderRadio.getAttribute('data-price'));
+                let extraInfo = [];
+
+                const shoulderForceRadio = document.querySelector('input[type="radio"][name="shoulder-force"]:checked');
+                if (shoulderForceRadio) extraInfo.push(shoulderForceRadio.getAttribute('data-name'));
+
+                const shoulderConfigRadio = document.querySelector('input[type="radio"][name="shoulder-config"]:checked');
+                if (shoulderConfigRadio) extraInfo.push(shoulderConfigRadio.getAttribute('data-name'));
+
+                const combinedName = extraInfo.length ? `${typeName} ${extraInfo.join(' ')}` : typeName;
+                items.push({ name: combinedName, price: typePrice });
+                total += typePrice;
+            }
+
+            // 处理扳机键改装组合
+            const triggerRadio = document.querySelector('input[type="radio"][name="trigger"]:checked');
+            if (triggerRadio) {
+                const typeName = triggerRadio.getAttribute('data-name');
+                const typePrice = parseInt(triggerRadio.getAttribute('data-price'));
+                let extraInfo = [];
+
+                const triggerConfigRadio = document.querySelector('input[type="radio"][name="trigger-config"]:checked');
+                if (triggerConfigRadio) extraInfo.push(triggerConfigRadio.getAttribute('data-name'));
+
+                const combinedName = extraInfo.length ? `${typeName} ${extraInfo.join(' ')}` : typeName;
+                items.push({ name: combinedName, price: typePrice });
+                total += typePrice;
+            }
+
+            // 处理微动背键组合
+            const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            if (backkeyCountRadio) {
+                const countName = backkeyCountRadio.getAttribute('data-name');
+                const countPrice = parseInt(backkeyCountRadio.getAttribute('data-price'));
+                let extraInfo = [];
+                let extraPrice = 0;
+
+                document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').forEach(cb => {
+                    extraInfo.push(cb.getAttribute('data-name'));
+                    extraPrice += parseInt(cb.getAttribute('data-price')) || 0;
+                });
+
+                document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked').forEach(cb => {
+                    extraInfo.push(cb.getAttribute('data-name'));
+                    extraPrice += parseInt(cb.getAttribute('data-price')) || 0;
+                });
+
+                const combinedName = extraInfo.length ? `微动背键 ${countName} ${extraInfo.join(' ')}` : `微动背键 ${countName}`;
+                items.push({ name: combinedName, price: countPrice + extraPrice });
+                total += countPrice + extraPrice;
+            }
+
+            // 处理额外肩键
+            const extraShoulderCb = document.querySelector('input[type="checkbox"][data-group="extra-shoulder"]:checked');
+            if (extraShoulderCb) {
+                const name = extraShoulderCb.getAttribute('data-name');
+                const price = parseInt(extraShoulderCb.getAttribute('data-price'));
+                items.push({ name, price });
+                total += price;
+            }
+
+            // 处理其他radio
+            const otherRadios = document.querySelectorAll('input[type="radio"]:checked');
+            otherRadios.forEach(r => {
+                const name = r.getAttribute('data-name');
+                if (!name) return;
+                // 跳过已处理的
+                if (r.name === 'motherboard' || r.name === 'shell' || r.name === 'midframe' || r.name === 'stick' || r.name === 'damping' ||
+                        r.name === 'dpad-type' || r.name === 'dpad-force' || r.name === 'dpad-config' || r.name === 'dpad-color' ||
+                        r.name === 'interact-type' || r.name === 'interact-force' || r.name === 'interact-config' || r.name === 'interact-color' ||
+                        r.name === 'shoulder' || r.name === 'shoulder-force' || r.name === 'shoulder-config' ||
+                        r.name === 'trigger' || r.name === 'trigger-config') return;
+                const price = parseInt(r.getAttribute('data-price'));
+                items.push({ name, price });
+                total += price;
+            });
+
+            const listEl = document.getElementById('summaryList');
+            if (items.length === 0) {
+                listEl.innerHTML = '<p style="color:#999;">尚未选择任何项目</p>';
+            } else {
+                listEl.innerHTML = items.map(item =>
+                    `<div class="summary-item"><span>${item.name}</span><span>${item.price}元</span></div>`
+                ).join('');
+            }
+
+            document.getElementById('totalPrice').textContent = total;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function validateUserInput(username) {
+            if (!username || !username.trim()) {
+                showMessage('请填写昵称', 'error');
+                return false;
+            }
+            const dangerousChars = /[<>"'`;()=&%$#@!^*[\]{}|\\]/;
+            if (username.length > 50) {
+                showMessage('姓名不能超过50个字符', 'error');
+                return false;
+            }
+            if (dangerousChars.test(username)) {
+                showMessage('姓名包含非法字符，请修改后重试', 'error');
+                return false;
+            }
+            return true;
+        }
+
+        function showConfirm() {
+            const username = document.getElementById('username').value.trim();
+
+            if (!validateUserInput(username)) {
+                return;
+            }
+
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
+            const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
+            const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
+            const dpadRadio = document.querySelector('input[type="radio"][name="dpad-type"]:checked');
+            const interactRadio = document.querySelector('input[type="radio"][name="interact-type"]:checked');
+            const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            const extraShoulderRadio = document.querySelector('input[type="checkbox"][data-group="extra-shoulder"]:checked');
+
+            let hasSelection = false;
+            checkboxes.forEach(cb => {
+                if (cb.closest('#backkey-keycap-section') || cb.closest('#backkey-position-section')) return;
+                hasSelection = true;
+            });
+            if (!hasSelection && !mbRadio && !shellRadio && !midframeRadio && !stickRadio && !dpadRadio && !interactRadio && !backkeyCountRadio && !extraShoulderRadio) {
+                showMessage('请至少选择一个改装项目', 'error');
+                return;
+            }
+
+            const total = document.getElementById('totalPrice').textContent;
+            const displayName = username || '未填写';
+            let html = `<strong>用户:</strong> ${escapeHtml(displayName)}<br>`;
+            html += `<hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">`;
+            html += `<strong>改装项目:</strong><br>`;
+            
+            let orderText = `用户: ${displayName}\n`;
+            orderText += `==========\n`;
+            orderText += `改装项目:\n`;
+
+            // 主板
+            if (mbRadio) {
+                html += `• ${mbRadio.getAttribute('data-name')} = ${mbRadio.getAttribute('data-price')}元<br>`;
+                orderText += `• ${mbRadio.getAttribute('data-name')} = ${mbRadio.getAttribute('data-price')}元\n`;
+            }
+
+            // 外壳
+            if (shellRadio) {
+                const module = shellRadio.closest('.shell-module');
+                const colorRadio = module ? module.querySelector('input[type="radio"][name^="shell-color"]:checked') : null;
+                const color = colorRadio ? colorRadio.value : '';
+                html += `• ${color ? `${shellRadio.getAttribute('data-name')} ${color}` : shellRadio.getAttribute('data-name')} = ${shellRadio.getAttribute('data-price')}元<br>`;
+                orderText += `• ${color ? `${shellRadio.getAttribute('data-name')} ${color}` : shellRadio.getAttribute('data-name')} = ${shellRadio.getAttribute('data-price')}元\n`;
+            }
+
+            // 中框
+            if (midframeRadio) {
+                html += `• ${midframeRadio.getAttribute('data-name')} = ${midframeRadio.getAttribute('data-price')}元<br>`;
+                orderText += `• ${midframeRadio.getAttribute('data-name')} = ${midframeRadio.getAttribute('data-price')}元\n`;
+            }
+
+            // 摇杆和阻尼
+            if (stickRadio) {
+                const stickName = stickRadio.getAttribute('data-name');
+                const stickPrice = stickRadio.getAttribute('data-price');
+                const dampingRadio = document.querySelector('input[type="radio"][name="damping"]:checked');
+                let dampingName = '';
+                let dampingPrice = 0;
+                if (dampingRadio) {
+                    dampingName = dampingRadio.getAttribute('data-name');
+                    dampingPrice = parseInt(dampingRadio.getAttribute('data-price'));
+                }
+                const combinedName = dampingName && dampingName !== '原装阻尼' ? `${stickName} ${dampingName}` : stickName;
+                html += `• ${combinedName} = ${parseInt(stickPrice) + dampingPrice}元<br>`;
+                orderText += `• ${combinedName} = ${parseInt(stickPrice) + dampingPrice}元\n`;
+            }
+
+            // 十字键改装
+            if (dpadRadio) {
+                const typeName = dpadRadio.getAttribute('data-name');
+                const typePrice = dpadRadio.getAttribute('data-price');
+                let extraInfo = [];
+                const dpadForceRadio = document.querySelector('input[type="radio"][name="dpad-force"]:checked');
+                if (dpadForceRadio) extraInfo.push(dpadForceRadio.getAttribute('data-name'));
+                const dpadConfigRadio = document.querySelector('input[type="radio"][name="dpad-config"]:checked');
+                if (dpadConfigRadio) extraInfo.push(dpadConfigRadio.getAttribute('data-name'));
+                const dpadColorRadio = document.querySelector('input[type="radio"][name="dpad-color"]:checked');
+                if (dpadColorRadio) extraInfo.push(dpadColorRadio.getAttribute('data-name'));
+                html += `• 十字键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元<br>`;
+                orderText += `• 十字键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元\n`;
+            }
+
+            // 交互键改装
+            if (interactRadio) {
+                const typeName = interactRadio.getAttribute('data-name');
+                const typePrice = interactRadio.getAttribute('data-price');
+                let extraInfo = [];
+                const interactForceRadio = document.querySelector('input[type="radio"][name="interact-force"]:checked');
+                if (interactForceRadio) extraInfo.push(interactForceRadio.getAttribute('data-name'));
+                const interactConfigRadio = document.querySelector('input[type="radio"][name="interact-config"]:checked');
+                if (interactConfigRadio) extraInfo.push(interactConfigRadio.getAttribute('data-name'));
+                const interactColorRadio = document.querySelector('input[type="radio"][name="interact-color"]:checked');
+                if (interactColorRadio) extraInfo.push(interactColorRadio.getAttribute('data-name'));
+                html += `• 交互键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元<br>`;
+                orderText += `• 交互键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元\n`;
+            }
+
+            // 微动背键
+            if (backkeyCountRadio) {
+                const countName = backkeyCountRadio.getAttribute('data-name');
+                const countPrice = parseInt(backkeyCountRadio.getAttribute('data-price'));
+                let extraInfo = [];
+                let extraPrice = 0;
+                document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').forEach(cb => {
+                    extraInfo.push(cb.getAttribute('data-name'));
+                    extraPrice += parseInt(cb.getAttribute('data-price')) || 0;
+                });
+                document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked').forEach(cb => {
+                    extraInfo.push(cb.getAttribute('data-name'));
+                    extraPrice += parseInt(cb.getAttribute('data-price')) || 0;
+                });
+                html += `• 微动背键 ${countName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${countPrice + extraPrice}元<br>`;
+                orderText += `• 微动背键 ${countName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${countPrice + extraPrice}元\n`;
+            }
+
+            // 额外肩键
+            if (extraShoulderRadio) {
+                const name = extraShoulderRadio.getAttribute('data-name');
+                const price = extraShoulderRadio.getAttribute('data-price');
+                html += `• ${name} = ${price}元<br>`;
+                orderText += `• ${name} = ${price}元\n`;
+            }
+
+            // 肩键改装
+            const shoulderRadio = document.querySelector('input[type="radio"][name="shoulder"]:checked');
+            if (shoulderRadio) {
+                const typeName = shoulderRadio.getAttribute('data-name');
+                const typePrice = shoulderRadio.getAttribute('data-price');
+                let extraInfo = [];
+                const shoulderForceRadio = document.querySelector('input[type="radio"][name="shoulder-force"]:checked');
+                if (shoulderForceRadio) extraInfo.push(shoulderForceRadio.getAttribute('data-name'));
+                const shoulderConfigRadio = document.querySelector('input[type="radio"][name="shoulder-config"]:checked');
+                if (shoulderConfigRadio) extraInfo.push(shoulderConfigRadio.getAttribute('data-name'));
+                html += `• ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元<br>`;
+                orderText += `• ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元\n`;
+            }
+
+            // 扳机键改装
+            const triggerRadio = document.querySelector('input[type="radio"][name="trigger"]:checked');
+            if (triggerRadio) {
+                const typeName = triggerRadio.getAttribute('data-name');
+                const typePrice = triggerRadio.getAttribute('data-price');
+                let extraInfo = [];
+                const triggerConfigRadio = document.querySelector('input[type="radio"][name="trigger-config"]:checked');
+                if (triggerConfigRadio) extraInfo.push(triggerConfigRadio.getAttribute('data-name'));
+                html += `• ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元<br>`;
+                orderText += `• ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元\n`;
+            }
+
+            // 其他radio（肩键、扳机键改装）
+            const otherRadios = document.querySelectorAll('input[type="radio"]:checked');
+            otherRadios.forEach(r => {
+                const name = r.getAttribute('data-name');
+                if (!name) return;
+                if (r.name === 'motherboard' || r.name === 'shell' || r.name === 'midframe' || r.name === 'stick' || r.name === 'damping' ||
+                        r.name === 'dpad-type' || r.name === 'dpad-force' || r.name === 'dpad-config' || r.name === 'dpad-color' ||
+                        r.name === 'interact-type' || r.name === 'interact-force' || r.name === 'interact-config' || r.name === 'interact-color' ||
+                        r.name === 'shoulder' || r.name === 'shoulder-force' || r.name === 'shoulder-config' ||
+                        r.name === 'trigger' || r.name === 'trigger-config') return;
+                html += `• ${name} = ${r.getAttribute('data-price')}元<br>`;
+                orderText += `• ${name} = ${r.getAttribute('data-price')}元\n`;
+            });
+
+            checkboxes.forEach(cb => {
+                const name = cb.getAttribute('data-name');
+                if (!name) return;
+                if (cb.closest('#backkey-keycap-section') || cb.closest('#backkey-position-section')) return;
+                if (cb.getAttribute('data-group')) return; // handled separately
+                const price = cb.getAttribute('data-price');
+                html += `• ${name} = ${price}元<br>`;
+                orderText += `• ${name} = ${price}元\n`;
+            });
+
+            html += `<hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">`;
+            html += `<strong style="color:#e74c3c;font-size:18px;">总计: ${total} 元</strong>`;
+            
+            orderText += `==========\n`;
+            orderText += `总计: ${total} 元`;
+
+            document.getElementById('modalSummary').innerHTML = html;
+            document.getElementById('confirmModal').classList.add('active');
+            
+            window.orderText = orderText;
+        }
+
+        function copyOrder() {
+            if (!window.orderText) return;
+            navigator.clipboard.writeText(window.orderText).then(() => {
+                const btn = document.getElementById('btnCopyOrder');
+                if (!btn) return;
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✓ 已复制';
+                btn.style.background = '#48bb78';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                alert('复制失败，请手动复制订单信息');
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            document.getElementById('modalContent').style.display = 'block';
+            document.getElementById('wechatContent').style.display = 'none';
+        }
+
+        function toggleWechat() {
+            const modalContent = document.getElementById('modalContent');
+            const wechatContent = document.getElementById('wechatContent');
+            if (wechatContent.style.display === 'none') {
+                modalContent.style.display = 'none';
+                wechatContent.style.display = 'block';
+            } else {
+                modalContent.style.display = 'block';
+                wechatContent.style.display = 'none';
+            }
+        }
+
+        function openImagePreview(src) {
+            const overlay = document.getElementById('imagePreviewOverlay');
+            const img = document.getElementById('imagePreviewImg');
+            img.src = src;
+            overlay.classList.add('active');
+        }
+
+        function closeImagePreview() {
+            const overlay = document.getElementById('imagePreviewOverlay');
+            overlay.classList.remove('active');
+            document.getElementById('imagePreviewImg').src = '';
+        }
+
+        function toggleGallery() {
+            const container = document.getElementById('gallery-container');
+            const btn = document.getElementById('gallery-btn');
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                btn.textContent = '📷 收起成品欣赏';
+            } else {
+                container.style.display = 'none';
+                btn.textContent = '📷 成品欣赏';
+            }
+        }
+
+        function updateImageLabelSizes() {
+            document.querySelectorAll('.img-wrapper').forEach(wrapper => {
+                const img = wrapper.querySelector('img');
+                const label = wrapper.querySelector('.img-label');
+                if (!img || !label) return;
+                if (img.style.display === 'none' || wrapper.style.display === 'none') return;
+                const imgHeight = img.offsetHeight;
+                if (imgHeight > 0) {
+                    label.style.fontSize = Math.max(12, imgHeight * 0.1) + 'px';
+                }
+            });
+        }
+
+        function initImagePreview() {
+            document.querySelectorAll('.accessory-images').forEach(container => {
+                const tip = document.createElement('div');
+                tip.className = 'image-tip';
+                tip.textContent = '点击图片可放大查看';
+                container.parentNode.insertBefore(tip, container);
+            });
+
+            document.querySelectorAll('.accessory-images img').forEach(img => {
+                const container = img.closest('.accessory-images');
+                const noLabel = container && container.hasAttribute('data-no-label');
+
+                if (noLabel) {
+                    img.style.cursor = 'pointer';
+                    img.addEventListener('click', function() {
+                        if (this.src) {
+                            openImagePreview(this.src);
+                        }
+                    });
+                    return;
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'img-wrapper';
+                const origDisplay = img.style.display;
+                if (origDisplay) {
+                    wrapper.style.display = origDisplay;
+                }
+
+                const label = document.createElement('div');
+                label.className = 'img-label';
+                label.textContent = img.alt || '';
+
+                img.parentNode.insertBefore(wrapper, img);
+                wrapper.appendChild(img);
+                wrapper.appendChild(label);
+
+                const updateLabelSize = () => {
+                    if (img.complete && img.naturalHeight > 0) {
+                        const imgHeight = img.offsetHeight;
+                        if (imgHeight > 0) {
+                            label.style.fontSize = Math.max(12, imgHeight * 0.1) + 'px';
+                        }
+                    }
+                };
+                img.addEventListener('load', updateLabelSize);
+                if (img.complete) updateLabelSize();
+
+                const observer = new MutationObserver(() => {
+                    wrapper.style.display = img.style.display;
+                    if (img.style.display !== 'none') {
+                        setTimeout(updateLabelSize, 50);
+                    }
+                });
+                observer.observe(img, { attributes: true, attributeFilter: ['style'] });
+
+                img.addEventListener('click', function() {
+                    if (this.src && wrapper.style.display !== 'none') {
+                        openImagePreview(this.src);
+                    }
+                });
+            });
+        }
+
+        function showMessage(msg, type) {
+            const el = document.getElementById('message');
+            el.textContent = msg;
+            el.className = 'message ' + type;
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => { el.className = 'message'; }, 4000);
+        }
+
+        // 默认勾选DS13MAX摇杆
+        const defaultStick = document.querySelector('input[type="radio"][data-name="DS13MAX摇杆"]');
+        if (defaultStick) {
+            defaultStick.checked = true;
+            toggleStickDamping(defaultStick);
+        }
+        
+        // 添加导航按钮事件监听
+        document.getElementById('prevBtn').addEventListener('click', prevSection);
+        document.getElementById('nextBtn').addEventListener('click', nextSection);
+        
+        updateSelection();
+        updateProgressSteps();
+        initImagePreview();
+        window.addEventListener('resize', updateImageLabelSizes);
+    </script>
+</body>
+</html>
