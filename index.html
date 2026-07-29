@@ -1154,7 +1154,7 @@
             <div class="shell-module" style="margin-top:20px;">
                 <div class="section-title" style="font-size:16px;margin-bottom:10px;">特殊背键</div>
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属豆子背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); toggleDseKeycap(this); updateSelection()"><span class="item-name">DSE金属豆子背键</span></div><span class="item-price">120元</span></label>
-                <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属拨片背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">DSE金属拨片背键</span></div><span class="item-price">120元</span></label>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属拨片背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); toggleDseKeycap(this); updateSelection()"><span class="item-name">DSE金属拨片背键</span></div><span class="item-price">120元</span></label>
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="FN摇杆微动背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">FN摇杆微动背键</span></div><span class="item-price">120元</span></label>
                 <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="麦克风微动背键" data-price="100" data-section="8" onchange="updateSelection()"><span class="item-name">麦克风微动背键</span></div><span class="item-price">100元</span></label>
             </div>
@@ -1836,7 +1836,13 @@
         function toggleDseKeycap(el) {
             const dseKeycapCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE豆子键帽"]');
             const pos34Cb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="背键34号位置"]');
-            if (el.checked) {
+            const dseCb = document.querySelector('input[type="checkbox"][data-name="DSE金属豆子背键"]');
+            const dsebCb = document.querySelector('input[type="checkbox"][data-name="DSE金属拨片背键"]');
+            
+            // 只要有任一DSE特殊背键被勾选，就禁用DSE豆子键帽和背键34号位置
+            const shouldDisable = (dseCb && dseCb.checked) || (dsebCb && dsebCb.checked);
+            
+            if (shouldDisable) {
                 if (dseKeycapCb) {
                     dseKeycapCb.checked = false;
                     dseKeycapCb.disabled = true;
