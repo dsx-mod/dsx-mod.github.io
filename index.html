@@ -1153,7 +1153,7 @@
 
             <div class="shell-module" style="margin-top:20px;">
                 <div class="section-title" style="font-size:16px;margin-bottom:10px;">特殊背键</div>
-                <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属豆子背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">DSE金属豆子背键</span></div><span class="item-price">120元</span></label>
+                <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属豆子背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); toggleDseKeycap(this); updateSelection()"><span class="item-name">DSE金属豆子背键</span></div><span class="item-price">120元</span></label>
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属拨片背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">DSE金属拨片背键</span></div><span class="item-price">120元</span></label>
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="FN摇杆微动背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">FN摇杆微动背键</span></div><span class="item-price">120元</span></label>
                 <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="麦克风微动背键" data-price="100" data-section="8" onchange="updateSelection()"><span class="item-name">麦克风微动背键</span></div><span class="item-price">100元</span></label>
@@ -1833,6 +1833,18 @@
             });
         }
 
+        function toggleDseKeycap(el) {
+            const dseKeycapCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE豆子键帽"]');
+            if (!dseKeycapCb) return;
+            if (el.checked) {
+                dseKeycapCb.checked = false;
+                dseKeycapCb.disabled = true;
+            } else {
+                dseKeycapCb.disabled = false;
+            }
+            updateBackkeyImages();
+        }
+
         function onBackkeyCountChange(el) {
             const keycapSection = document.getElementById('backkey-keycap-section');
             const positionSection = document.getElementById('backkey-position-section');
@@ -2324,6 +2336,22 @@
                         const configChecked = configModule.querySelector('input[type="radio"][name="trigger-config"]:checked');
                         if (!configChecked) {
                             showMessage('请选择大微动配置', 'error');
+                            return;
+                        }
+                    }
+                }
+                // 背键改装方案页面：勾选微动背键时必须选择键帽和背键位置
+                if (currentSection === 8) {
+                    const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+                    if (backkeyCountRadio) {
+                        const keycapChecked = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked');
+                        const positionChecked = document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked');
+                        if (keycapChecked.length === 0) {
+                            showMessage('请选择键帽', 'error');
+                            return;
+                        }
+                        if (positionChecked.length === 0) {
+                            showMessage('请选择背键位置', 'error');
                             return;
                         }
                     }
