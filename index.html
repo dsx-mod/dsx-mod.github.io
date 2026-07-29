@@ -871,10 +871,10 @@
                         </div>
                         <div class="divider-line"></div>
                         <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="黑类肤背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 黑类肤背壳</label>
-                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="白类肤背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 白类肤背壳</label>
-                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="黑点防滑背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 黑点防滑背壳</label>
-                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="红点防滑背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 红点防滑背壳</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="黑类肤背壳" data-price="60" disabled onchange="updateBo5Price(); updateSelection()"> 黑类肤背壳</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="白类肤背壳" data-price="60" disabled onchange="updateBo5Price(); updateSelection()"> 白类肤背壳</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="黑点防滑背壳" data-price="70" disabled onchange="updateBo5Price(); updateSelection()"> 黑点防滑背壳</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="红点防滑背壳" data-price="70" disabled onchange="updateBo5Price(); updateSelection()"> 红点防滑背壳</label>
                         </div>
                     </div>
                 </div>
@@ -2061,6 +2061,7 @@
                     shellImgContainer.style.display = 'flex';
                 } else {
                     if (oupianDesc) oupianDesc.style.display = 'none';
+                    shellImg.src = '';
                     shellImgContainer.style.display = 'none';
                 }
             }
@@ -2092,25 +2093,6 @@
             });
             updateSummary();
             updateMicroswitchState();
-        }
-
-        function hasAnySelection() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-            let hasSelection = false;
-            checkboxes.forEach(cb => {
-                if (cb.closest('#backkey-keycap-section') || cb.closest('#backkey-position-section')) return;
-                hasSelection = true;
-            });
-            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
-            const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
-            const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
-            const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
-            const dpadRadio = document.querySelector('input[type="radio"][name="dpad-type"]:checked');
-            const interactRadio = document.querySelector('input[type="radio"][name="interact-type"]:checked');
-            const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
-            const extraShoulderRadio = document.querySelector('input[type="checkbox"][data-group="extra-shoulder"]:checked');
-            return hasSelection || !!mbRadio || !!shellRadio || !!midframeRadio || !!stickRadio || 
-                   !!dpadRadio || !!interactRadio || !!backkeyCountRadio || !!extraShoulderRadio;
         }
 
         function updateSelection() {
@@ -2651,6 +2633,9 @@
                         const bo5Price = bo5StyleRadio.getAttribute('data-price');
                         html += `• ${shellName} ${bo5Style} = ${bo5Price}元<br>`;
                         orderText += `• ${shellName} ${bo5Style} = ${bo5Price}元\n`;
+                    } else {
+                        html += `• ${shellName} = 0元<br>`;
+                        orderText += `• ${shellName} = 0元\n`;
                     }
                 // 其他外壳需要从选项获取价格
                 } else if (shellName === '其他外壳') {
@@ -2660,6 +2645,9 @@
                         const otherPrice = otherShellRadio.getAttribute('data-price');
                         html += `• ${shellName} ${otherShell} = ${otherPrice}元<br>`;
                         orderText += `• ${shellName} ${otherShell} = ${otherPrice}元\n`;
+                    } else {
+                        html += `• ${shellName} = 0元<br>`;
+                        orderText += `• ${shellName} = 0元\n`;
                     }
                 } else {
                     const shellPrice = shellRadio.getAttribute('data-price');
