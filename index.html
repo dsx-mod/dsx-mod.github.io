@@ -1835,12 +1835,19 @@
 
         function toggleDseKeycap(el) {
             const dseKeycapCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE豆子键帽"]');
-            if (!dseKeycapCb) return;
+            const pos34Cb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="背键34号位置"]');
             if (el.checked) {
-                dseKeycapCb.checked = false;
-                dseKeycapCb.disabled = true;
+                if (dseKeycapCb) {
+                    dseKeycapCb.checked = false;
+                    dseKeycapCb.disabled = true;
+                }
+                if (pos34Cb) {
+                    pos34Cb.checked = false;
+                    pos34Cb.disabled = true;
+                }
             } else {
-                dseKeycapCb.disabled = false;
+                if (dseKeycapCb) dseKeycapCb.disabled = false;
+                if (pos34Cb) pos34Cb.disabled = false;
             }
             updateBackkeyImages();
         }
