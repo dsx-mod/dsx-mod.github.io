@@ -472,6 +472,24 @@
         .option-label input:not(:disabled):checked {
             accent-color: #667eea;
         }
+        .bo5-option {
+            padding: 6px 12px;
+            background: #f7fafc;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            min-width: 80px;
+            justify-content: center;
+        }
+        .bo5-option:hover:not(:has(input:disabled)) {
+            background: #edf2f7;
+        }
+        .bo5-option input:not(:disabled):checked ~ * {
+            color: #667eea;
+        }
+        .bo5-option:has(input:not(:disabled):checked) {
+            background: #e6e9ff;
+            border-color: #667eea;
+        }
         .backkey-count-row {
             display: flex;
             align-items: flex-start;
@@ -835,28 +853,28 @@
                     <div class="item-desc" style="display:none;">默认带TYPEC接口，当自行邮寄提供面壳（如EXR面壳），仅需选择背壳即可</div>
                     <div class="bo5-options" style="display:none; margin-top:10px;">
                         <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="艾许" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 艾许</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="瓦尔基里" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 瓦尔基里</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="电妹" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 电妹</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="D.VA" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> D.VA</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="恶灵" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 恶灵</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="初号机" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 初号机</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="二号机" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 二号机</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="血缘" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 血缘</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="樱花白" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 樱花白</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="恋柱粉" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 恋柱粉</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="动力小子" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 动力小子</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="探路者" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 探路者</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="地平线" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 地平线</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="樱花粉" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 樱花粉</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="纪念灰" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 纪念灰</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="艾许" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 艾许</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="瓦尔基里" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 瓦尔基里</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="电妹" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 电妹</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="D.VA" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> D.VA</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="恶灵" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 恶灵</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="初号机" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 初号机</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="二号机" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 二号机</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="血缘" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 血缘</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="樱花白" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 樱花白</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="恋柱粉" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 恋柱粉</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="动力小子" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 动力小子</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="探路者" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 探路者</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="地平线" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 地平线</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="樱花粉" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 樱花粉</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="纪念灰" data-price="140" disabled onchange="updateBo5Price(); updateSelection()"> 纪念灰</label>
                         </div>
                         <div class="divider-line"></div>
                         <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="黑类肤背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 黑类肤背壳</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="白类肤背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 白类肤背壳</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="黑点防滑背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 黑点防滑背壳</label>
-                            <label class="option-label" style="padding:6px 12px; background:#f7fafc; border-radius:6px; border:1px solid #e2e8f0;"><input type="radio" name="bo5-style" value="红点防滑" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 红点防滑</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="黑类肤背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 黑类肤背壳</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="白类肤背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 白类肤背壳</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="黑点防滑背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 黑点防滑背壳</label>
+                            <label class="option-label bo5-option"><input type="radio" name="bo5-style" value="红点防滑背壳" data-price="65" disabled onchange="updateBo5Price(); updateSelection()"> 红点防滑背壳</label>
                         </div>
                     </div>
                 </div>
@@ -864,11 +882,18 @@
                 <div data-module="self">
                     <label class="item">
                         <div class="item-left">
-                            <input type="radio" name="shell" data-name="自备外壳" data-price="0" data-section="1" onchange="toggleShellModule(this)">
-                            <span class="item-name">自备外壳</span>
+                            <input type="radio" name="shell" data-name="其他外壳" data-price="0" data-section="1" onchange="toggleShellModule(this)">
+                            <span class="item-name">其他外壳</span>
                         </div>
-                        <span class="item-price">0元</span>
+                        <span class="item-price" id="other-price">按选项</span>
                     </label>
+                    <div class="other-options" style="display:none; margin-top:10px;">
+                        <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                            <label class="option-label bo5-option"><input type="radio" name="other-shell" value="自备外壳" data-price="0" disabled onchange="updateOtherPrice(); updateSelection()"> 自备外壳 (0元)</label>
+                            <label class="option-label bo5-option"><input type="radio" name="other-shell" value="喷漆外壳" data-price="50" disabled onchange="updateOtherPrice(); updateSelection()"> 喷漆外壳 (50元)</label>
+                        </div>
+                        <div class="item-desc" id="oupian-desc" style="display:none; margin-top:10px;">推荐藕片定制涂装喷漆。价格包含邮寄喷漆快递费，一个原装外壳，外壳处理费，外壳喷漆费另计约300~400元/个。</div>
+                    </div>
                 </div>
             </div>
 
@@ -1925,7 +1950,7 @@
                 mod.classList.remove('selected');
                 const radios = mod.querySelectorAll('input[type="radio"]');
                 radios.forEach(r => {
-                    if (r.name.startsWith('shell-color') || r.name === 'bo5-style') {
+                    if (r.name.startsWith('shell-color') || r.name === 'bo5-style' || r.name === 'other-shell') {
                         r.disabled = true;
                         r.checked = false;
                     }
@@ -1934,6 +1959,11 @@
                 if (desc) desc.style.display = 'none';
                 const bo5Options = mod.querySelector('.bo5-options');
                 if (bo5Options) bo5Options.style.display = 'none';
+                const otherOptions = mod.querySelector('.other-options');
+                if (otherOptions) otherOptions.style.display = 'none';
+                // 隐藏藕片说明
+                const oupianDesc = mod.querySelector('#oupian-desc');
+                if (oupianDesc) oupianDesc.style.display = 'none';
             });
 
             if (el.checked) {
@@ -1951,8 +1981,15 @@
                     bo5Options.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = false);
                 }
 
+                // 其他外壳选项
+                const otherOptions = module.querySelector('.other-options');
+                if (otherOptions) {
+                    otherOptions.style.display = 'block';
+                    otherOptions.querySelectorAll('input[type="radio"]').forEach(r => r.disabled = false);
+                }
+
                 const desc = module.querySelector('.item-desc');
-                if (desc) desc.style.display = 'block';
+                if (desc && desc.id !== 'oupian-desc') desc.style.display = 'block';
 
                 const imgSrc = el.getAttribute('data-image');
                 const imgContainer = document.getElementById('shell-image');
@@ -1972,7 +2009,6 @@
             // TYPEC接口制作：振飞扬和BO5外壳自带，无需额外制作
             const shellName = el.getAttribute('data-name');
             const isZfyOrBo5 = el.checked && (shellName === '振飞扬国产外壳' || shellName === 'BO5国产外壳');
-            const isBo5 = el.checked && shellName === 'BO5国产外壳';
             const typecCheckbox = document.getElementById('typec-checkbox');
             const typecNotice = document.getElementById('typec-notice');
             const typecRequiredNotice = document.getElementById('typec-required-notice');
@@ -1986,7 +2022,7 @@
                 typecRequiredNotice.style.display = 'none';
                 if (typecImg) typecImg.style.display = 'none';
             } else if (el.checked) {
-                // 其他外壳（欧升腾、自备）：需要制作TYPEC接口
+                // 其他外壳（欧升腾、其他外壳）：需要制作TYPEC接口
                 typecCheckbox.checked = true;
                 typecCheckbox.disabled = true;
                 typecNotice.style.display = 'none';
@@ -2003,6 +2039,30 @@
             if (bo5StyleRadio && priceEl) {
                 const price = bo5StyleRadio.getAttribute('data-price');
                 priceEl.textContent = price + '元';
+            }
+            updateSummary();
+        }
+
+        function updateOtherPrice() {
+            const otherShellRadio = document.querySelector('input[type="radio"][name="other-shell"]:checked');
+            const priceEl = document.getElementById('other-price');
+            const oupianDesc = document.getElementById('oupian-desc');
+            const shellImg = document.getElementById('shell-img');
+            const shellImgContainer = document.getElementById('shell-image');
+            
+            if (otherShellRadio && priceEl) {
+                const price = otherShellRadio.getAttribute('data-price');
+                priceEl.textContent = price + '元';
+                
+                // 喷漆外壳显示说明和图片
+                if (otherShellRadio.value === '喷漆外壳') {
+                    if (oupianDesc) oupianDesc.style.display = 'block';
+                    shellImg.src = 'pic/oupian.jpg';
+                    shellImgContainer.style.display = 'flex';
+                } else {
+                    if (oupianDesc) oupianDesc.style.display = 'none';
+                    shellImgContainer.style.display = 'none';
+                }
             }
             updateSummary();
         }
@@ -2074,6 +2134,9 @@
                     } else if (shellName === 'BO5国产外壳') {
                         const bo5StyleRadio = document.querySelector('input[type="radio"][name="bo5-style"]:checked');
                         canNext = canNext && !!bo5StyleRadio;
+                    } else if (shellName === '其他外壳') {
+                        const otherShellRadio = document.querySelector('input[type="radio"][name="other-shell"]:checked');
+                        canNext = canNext && !!otherShellRadio;
                     }
                 }
             }
@@ -2189,7 +2252,7 @@
                     showMessage('请至少选择一个项目', 'error');
                     return;
                 }
-                // 外壳选择页面：手柄外壳和手柄中框均为必选，振飞扬、欧升腾、BO5需选择款式
+                // 外壳选择页面：手柄外壳和手柄中框均为必选，振飞扬、欧升腾、BO5、其他外壳需选择选项
                 if (currentSection === 1) {
                     const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
                     const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
@@ -2218,6 +2281,12 @@
                         const bo5StyleRadio = document.querySelector('input[type="radio"][name="bo5-style"]:checked');
                         if (!bo5StyleRadio) {
                             showMessage('请选择BO5外壳款式', 'error');
+                            return;
+                        }
+                    } else if (shellName === '其他外壳') {
+                        const otherShellRadio = document.querySelector('input[type="radio"][name="other-shell"]:checked');
+                        if (!otherShellRadio) {
+                            showMessage('请选择其他外壳类型', 'error');
                             return;
                         }
                     }
@@ -2321,6 +2390,16 @@
                         const bo5Style = bo5StyleRadio.value;
                         price = parseInt(bo5StyleRadio.getAttribute('data-price')) || 0;
                         items.push({ name: `${name} ${bo5Style}`, price });
+                    } else {
+                        items.push({ name, price });
+                    }
+                // 其他外壳需要从选项获取价格
+                } else if (name === '其他外壳') {
+                    const otherShellRadio = document.querySelector('input[type="radio"][name="other-shell"]:checked');
+                    if (otherShellRadio) {
+                        const otherShell = otherShellRadio.value;
+                        price = parseInt(otherShellRadio.getAttribute('data-price')) || 0;
+                        items.push({ name: `${name} ${otherShell}`, price });
                     } else {
                         items.push({ name, price });
                     }
@@ -2572,6 +2651,15 @@
                         const bo5Price = bo5StyleRadio.getAttribute('data-price');
                         html += `• ${shellName} ${bo5Style} = ${bo5Price}元<br>`;
                         orderText += `• ${shellName} ${bo5Style} = ${bo5Price}元\n`;
+                    }
+                // 其他外壳需要从选项获取价格
+                } else if (shellName === '其他外壳') {
+                    const otherShellRadio = document.querySelector('input[type="radio"][name="other-shell"]:checked');
+                    if (otherShellRadio) {
+                        const otherShell = otherShellRadio.value;
+                        const otherPrice = otherShellRadio.getAttribute('data-price');
+                        html += `• ${shellName} ${otherShell} = ${otherPrice}元<br>`;
+                        orderText += `• ${shellName} ${otherShell} = ${otherPrice}元\n`;
                     }
                 } else {
                     const shellPrice = shellRadio.getAttribute('data-price');
