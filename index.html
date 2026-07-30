@@ -2182,6 +2182,20 @@
                 }
             }
 
+            // 背键改装方案页面：勾选微动背键时必须选择键帽和背键位置(4个背键时需选2个位置)
+            if (currentSection === 8 && currentSection < totalSections - 1) {
+                const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+                if (backkeyCountRadio) {
+                    const count = parseInt(backkeyCountRadio.value);
+                    const keycapChecked = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').length;
+                    const positionChecked = document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked').length;
+                    const requiredPositions = count === 4 ? 2 : 1;
+                    if (keycapChecked === 0 || positionChecked < requiredPositions) {
+                        canNext = false;
+                    }
+                }
+            }
+
             nextBtn.disabled = !canNext;
         }
 
@@ -2350,14 +2364,16 @@
                 if (currentSection === 8) {
                     const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
                     if (backkeyCountRadio) {
+                        const count = parseInt(backkeyCountRadio.value);
                         const keycapChecked = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked');
                         const positionChecked = document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked');
+                        const requiredPositions = count === 4 ? 2 : 1;
                         if (keycapChecked.length === 0) {
                             showMessage('请选择键帽', 'error');
                             return;
                         }
-                        if (positionChecked.length === 0) {
-                            showMessage('请选择背键位置', 'error');
+                        if (positionChecked.length < requiredPositions) {
+                            showMessage(`请选择${requiredPositions}个背键位置`, 'error');
                             return;
                         }
                     }
