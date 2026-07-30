@@ -1750,16 +1750,11 @@
             if (el.checked) {
                 if (el === displayCb) {
                     touchCb.checked = false;
-                    touchCb.disabled = true;
                 } else if (el === touchCb) {
                     displayCb.checked = false;
-                    displayCb.disabled = true;
                     const screenImg = document.getElementById('img-screen');
                     if (screenImg) screenImg.style.display = 'none';
                 }
-            } else {
-                displayCb.disabled = false;
-                touchCb.disabled = false;
             }
         }
 
@@ -1833,6 +1828,10 @@
             });
         }
 
+        // 键帽和背键位置的选择顺序追踪（FIFO）
+        let keycapOrder = [];
+        let positionOrder = [];
+
         function toggleDseKeycap(el) {
             const dseKeycapCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE豆子键帽"]');
             const pos34Cb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="背键34号位置"]');
@@ -1844,11 +1843,17 @@
             
             if (shouldDisable) {
                 if (dseKeycapCb) {
-                    dseKeycapCb.checked = false;
+                    if (dseKeycapCb.checked) {
+                        dseKeycapCb.checked = false;
+                        keycapOrder = keycapOrder.filter(n => n !== 'DSE豆子键帽');
+                    }
                     dseKeycapCb.disabled = true;
                 }
                 if (pos34Cb) {
-                    pos34Cb.checked = false;
+                    if (pos34Cb.checked) {
+                        pos34Cb.checked = false;
+                        positionOrder = positionOrder.filter(n => n !== '背键34号位置');
+                    }
                     pos34Cb.disabled = true;
                 }
             } else {
@@ -1863,31 +1868,29 @@
             const positionSection = document.getElementById('backkey-position-section');
             const priceEl = document.getElementById('backkey-count-price');
 
+            // 重置选择顺序
+            keycapOrder = [];
+            positionOrder = [];
+
             if (el.checked) {
                 const price = parseInt(el.getAttribute('data-price'));
                 priceEl.textContent = price + '元';
                 keycapSection.style.display = 'block';
                 positionSection.style.display = 'block';
-                const count = parseInt(el.value);
-                const maxKeycaps = count === 2 ? 1 : 2;
-                const maxPositions = count === 2 ? 1 : 2;
                 
-                const keycapCheckboxes = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]');
-                keycapCheckboxes.forEach(cb => {
+                // 清空子选项
+                document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]').forEach(cb => {
                     cb.checked = false;
                     cb.disabled = false;
                 });
-                updateKeycapLimit(maxKeycaps);
-
-                const positionCheckboxes = document.querySelectorAll('#backkey-position-section input[type="checkbox"]');
-                positionCheckboxes.forEach(cb => {
+                document.querySelectorAll('#backkey-position-section input[type="checkbox"]').forEach(cb => {
                     cb.checked = false;
                     cb.disabled = false;
                 });
-                updatePositionLimit(maxPositions);
+                // 重新应用DSE禁用限制
+                toggleDseKeycap();
             } else {
                 priceEl.textContent = '0元';
-                // Clear child states
                 document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]').forEach(cb => {
                     cb.checked = false; cb.disabled = false;
                 });
@@ -1902,51 +1905,31 @@
             updateSummary();
         }
 
-        function updateKeycapLimit(maxCount) {
-            const keycapCheckboxes = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]');
-            let checkedCount = 0;
-            keycapCheckboxes.forEach(cb => {
-                if (cb.checked) checkedCount++;
-            });
-            keycapCheckboxes.forEach(cb => {
-                if (!cb.checked && checkedCount >= maxCount) {
-                    cb.disabled = true;
-                } else {
-                    cb.disabled = false;
-                }
-            });
-        }
-
-        function updatePositionLimit(maxCount) {
-            const positionCheckboxes = document.querySelectorAll('#backkey-position-section input[type="checkbox"]');
-            let checkedCount = 0;
-            positionCheckboxes.forEach(cb => {
-                if (cb.checked) checkedCount++;
-            });
-            positionCheckboxes.forEach(cb => {
-                if (!cb.checked && checkedCount >= maxCount) {
-                    cb.disabled = true;
-                } else {
-                    cb.disabled = false;
-                }
-            });
-        }
-
         function onBackkeyPositionChange(el) {
             const countRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
             if (!countRadio) return;
             const count = parseInt(countRadio.value);
             const maxPositions = count === 2 ? 1 : 2;
-            const positionCheckboxes = document.querySelectorAll('#backkey-position-section input[type="checkbox"]');
-            let checkedCount = 0;
-            positionCheckboxes.forEach(cb => {
-                if (cb.checked) checkedCount++;
-            });
-            if (el.checked && checkedCount > maxPositions) {
-                el.checked = false;
-                return;
+            
+            const name = el.getAttribute('data-name');
+            
+            if (el.checked) {
+                // 添加到选择顺序
+                if (!positionOrder.includes(name)) {
+                    positionOrder.push(name);
+                }
+                // 超过限制时，移除最早选择的（FIFO）
+                while (positionOrder.length > maxPositions) {
+                    const firstName = positionOrder.shift();
+                    const firstCb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="' + firstName + '"]');
+                    if (firstCb) firstCb.checked = false;
+                }
+            } else {
+                positionOrder = positionOrder.filter(n => n !== name);
             }
-            updatePositionLimit(maxPositions);
+            
+            // 重新应用DSE禁用限制
+            toggleDseKeycap();
         }
 
         function onKeycapChange(el) {
@@ -1954,16 +1937,26 @@
             if (!countRadio) return;
             const count = parseInt(countRadio.value);
             const maxKeycaps = count === 2 ? 1 : 2;
-            const keycapCheckboxes = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]');
-            let checkedCount = 0;
-            keycapCheckboxes.forEach(cb => {
-                if (cb.checked) checkedCount++;
-            });
-            if (el.checked && checkedCount > maxKeycaps) {
-                el.checked = false;
-                return;
+            
+            const name = el.getAttribute('data-name');
+            
+            if (el.checked) {
+                // 添加到选择顺序
+                if (!keycapOrder.includes(name)) {
+                    keycapOrder.push(name);
+                }
+                // 超过限制时，移除最早选择的（FIFO）
+                while (keycapOrder.length > maxKeycaps) {
+                    const firstName = keycapOrder.shift();
+                    const firstCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="' + firstName + '"]');
+                    if (firstCb) firstCb.checked = false;
+                }
+            } else {
+                keycapOrder = keycapOrder.filter(n => n !== name);
             }
-            updateKeycapLimit(maxKeycaps);
+            
+            // 重新应用DSE禁用限制
+            toggleDseKeycap();
             updateBackkeyImages();
             updateSelection();
             updateSummary();
