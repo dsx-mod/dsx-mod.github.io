@@ -1213,20 +1213,11 @@
     <!-- 确认弹窗 -->
     <div class="modal-overlay" id="confirmModal">
         <div class="modal">
-            <h2>订单配置</h2>
-            <div id="modalContent">
-                <div class="modal-summary" id="modalSummary"></div>
+            <div id="modalContent" style="text-align:center;">
+                <img src="pic/wechat.jpg" alt="微信二维码" id="wechatImg" onclick="openImagePreview(this.src)" style="max-width: 100%; max-height: 55vh; width: auto; height: auto; border-radius: 10px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); object-fit: contain;">
+                <p style="font-size: 14px; color: #4a5568; margin-bottom: 12px; line-height: 1.6;">已复制订单内容，请扫码添加微信并发送给UP。</p>
                 <div class="modal-buttons">
                     <button class="btn-cancel" onclick="closeModal()">关闭</button>
-                    <button class="btn-copy" id="btnCopyOrder" onclick="copyOrder()">📋 复制订单</button>
-                    <button class="btn-copy" id="btnContact" onclick="toggleWechat()" style="background: linear-gradient(135deg, #48bb78, #38a169);">📱 联系改装</button>
-                </div>
-            </div>
-            <div id="wechatContent" style="display:none; text-align:center; max-height: 80vh; overflow: hidden;">
-                <img src="pic/wechat.jpg" alt="微信二维码" id="wechatImg" onclick="toggleWechat()" style="max-width: 100%; max-height: 55vh; width: auto; height: auto; border-radius: 10px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); object-fit: contain;">
-                <p style="font-size: 14px; color: #4a5568; margin-bottom: 12px; line-height: 1.6;">请添加UP工作VX发送订单信息及付款</p>
-                <div class="modal-buttons" style="margin-top: 0;">
-                    <button class="btn-cancel" onclick="toggleWechat()">返回</button>
                 </div>
             </div>
         </div>
@@ -2840,45 +2831,18 @@
             orderText += `==========\n`;
             orderText += `总计: ${total} 元`;
 
-            document.getElementById('modalSummary').innerHTML = html;
-            document.getElementById('confirmModal').classList.add('active');
-            
-            window.orderText = orderText;
-        }
-
-        function copyOrder() {
-            if (!window.orderText) return;
-            navigator.clipboard.writeText(window.orderText).then(() => {
-                const btn = document.getElementById('btnCopyOrder');
-                if (!btn) return;
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '✓ 已复制';
-                btn.style.background = '#48bb78';
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = '';
-                }, 2000);
+            // 直接复制订单内容到剪贴板，然后显示微信二维码弹窗
+            navigator.clipboard.writeText(orderText).then(() => {
+                document.getElementById('confirmModal').classList.add('active');
             }).catch(err => {
-                alert('复制失败，请手动复制订单信息');
+                // 复制失败仍显示弹窗，提示用户
+                document.getElementById('confirmModal').classList.add('active');
+                showMessage('复制失败，请手动复制订单信息', 'error');
             });
         }
 
         function closeModal() {
             document.getElementById('confirmModal').classList.remove('active');
-            document.getElementById('modalContent').style.display = 'block';
-            document.getElementById('wechatContent').style.display = 'none';
-        }
-
-        function toggleWechat() {
-            const modalContent = document.getElementById('modalContent');
-            const wechatContent = document.getElementById('wechatContent');
-            if (wechatContent.style.display === 'none') {
-                modalContent.style.display = 'none';
-                wechatContent.style.display = 'block';
-            } else {
-                modalContent.style.display = 'block';
-                wechatContent.style.display = 'none';
-            }
         }
 
         function openImagePreview(src) {
