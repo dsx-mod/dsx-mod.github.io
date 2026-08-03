@@ -1069,10 +1069,9 @@
         <!-- Step 8: 扳机键改装 -->
         <div class="section" id="section-7">
             <div class="section-title">【扳机键改装】</div>
-            <div class="section-hint">请选择扳机键改装方案（五选一）</div>
+            <div class="section-hint">请选择扳机键改装方案（四选一）</div>
             <label class="item"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 凯隆普通微动" data-price="40" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">凯隆普通微动</span></div><span class="item-price">40元</span></label>
             <div class="item-desc" id="trigger-normal-notice">肩键使用弹片微动时不可选择普通微动扳机</div>
-            <label class="item"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 凯隆弹片微动" data-price="60" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">凯隆弹片微动</span></div><span class="item-price">60元</span></label>
             <label class="item"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 热插拔大微动" data-price="80" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">热插拔大微动</span></div><span class="item-price">80元</span></label>
             <label class="item" id="trigger-dual-label"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 双切热插拔微动" data-price="150" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">双切热插拔微动</span></div><span class="item-price">150元</span></label>
             <div class="item-desc" id="trigger-dual-notice">所选主板无线性扳机，不支持双切微动</div>
@@ -1632,9 +1631,7 @@
             if (triggerRadio && triggerImg) {
                 const name = triggerRadio.getAttribute('data-name');
                 let imgSrc = '';
-                if (name === '扳机键改装 凯隆弹片微动') {
-                    imgSrc = 'pic/LR2-new.jpg';
-                } else if (name === '扳机键改装 热插拔大微动') {
+                if (name === '扳机键改装 热插拔大微动') {
                     imgSrc = 'pic/LR2-hot.jpg';
                 } else if (name === '扳机键改装 凯隆普通微动') {
                     imgSrc = 'pic/LR2.jpg';
