@@ -935,7 +935,7 @@
         <!-- Step 4: 摇杆选配 -->
         <div class="section" id="section-3">
             <div class="section-title">【摇杆选配】</div>
-            <div class="section-hint">摇杆出货标准：外圈回中≤1.176%，轻推回中≤3%</div>
+            <div class="section-hint">请选择摇杆类型</div>
 
             <div class="shell-module">
                 <div class="section-title" style="font-size:16px;margin-bottom:10px;">摇杆本体（四选一）</div>
@@ -1130,8 +1130,8 @@
                             <span>大圆点键帽</span>
                         </label>
                         <label class="keycap-item">
-                            <input type="checkbox" data-name="DSE豆子键帽" data-price="0" onchange="onKeycapChange(this)">
-                            <span>DSE豆子键帽</span>
+                            <input type="checkbox" data-name="DSE塑料豆子键帽" data-price="0" onchange="onKeycapChange(this)">
+                            <span>DSE塑料豆子键帽</span>
                         </label>
                         <label class="keycap-item">
                             <input type="checkbox" data-name="嵌入圆点键帽" data-price="0" onchange="onKeycapChange(this)">
@@ -1174,7 +1174,7 @@
                 <img id="img-bset" src="pic/Bset.jpg" alt="背键位置" style="display:none;">
                 <img id="img-keycap-slice" src="pic/slice.jpg" alt="刀片键帽" style="display:none;">
                 <img id="img-keycap-round" src="pic/round.jpg" alt="大圆点键帽" style="display:none;">
-                <img id="img-keycap-dse" src="pic/dse1.jpg" alt="DSE豆子键帽" style="display:none;">
+                <img id="img-keycap-dse" src="pic/dse1.jpg" alt="DSE塑料豆子键帽" style="display:none;">
                 <img id="img-keycap-round1" src="pic/round1.jpg" alt="嵌入圆点键帽" style="display:none;">
             </div>
         </div>
@@ -1811,7 +1811,7 @@
                 const name = cb.getAttribute('data-name');
                 if (name === '刀片键帽') imgKeycapSlice.style.display = 'block';
                 else if (name === '大圆点键帽') imgKeycapRound.style.display = 'block';
-                else if (name === 'DSE豆子键帽') imgKeycapDse.style.display = 'block';
+                else if (name === 'DSE塑料豆子键帽') imgKeycapDse.style.display = 'block';
                 else if (name === '嵌入圆点键帽') imgKeycapRound1.style.display = 'block';
             });
         }
@@ -1821,19 +1821,19 @@
         let positionOrder = [];
 
         function toggleDseKeycap(el) {
-            const dseKeycapCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE豆子键帽"]');
+            const dseKeycapCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE塑料豆子键帽"]');
             const pos34Cb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="背键34号位置"]');
             const dseCb = document.querySelector('input[type="checkbox"][data-name="DSE金属豆子背键"]');
             const dsebCb = document.querySelector('input[type="checkbox"][data-name="DSE金属拨片背键"]');
             
-            // 只要有任一DSE特殊背键被勾选，就禁用DSE豆子键帽和背键34号位置
+            // 只要有任一DSE特殊背键被勾选，就禁用DSE塑料豆子键帽和背键34号位置
             const shouldDisable = (dseCb && dseCb.checked) || (dsebCb && dsebCb.checked);
             
             if (shouldDisable) {
                 if (dseKeycapCb) {
                     if (dseKeycapCb.checked) {
                         dseKeycapCb.checked = false;
-                        keycapOrder = keycapOrder.filter(n => n !== 'DSE豆子键帽');
+                        keycapOrder = keycapOrder.filter(n => n !== 'DSE塑料豆子键帽');
                     }
                     dseKeycapCb.disabled = true;
                 }
