@@ -561,6 +561,9 @@
             cursor: not-allowed;
             opacity: 0.4;
         }
+        .keycap-price {
+            display: none;
+        }
         @media (max-width: 640px) {
             .user-info { grid-template-columns: 1fr; }
             .nav-bar { gap: 10px; }
@@ -1122,20 +1125,29 @@
                     <div class="section-title" style="font-size:14px;margin-bottom:10px;color:#555;">键帽选择</div>
                     <div class="keycap-grid">
                         <label class="keycap-item">
-                            <input type="checkbox" data-name="刀片键帽" data-price="0" onchange="onKeycapChange(this)">
+                            <input type="checkbox" data-name="刀片键帽" data-base-price="0" onchange="onKeycapChange(this)">
                             <span>刀片键帽</span>
+                            <span class="keycap-price" data-keycap-price="刀片键帽">0元</span>
                         </label>
                         <label class="keycap-item">
-                            <input type="checkbox" data-name="大圆点键帽" data-price="0" onchange="onKeycapChange(this)">
+                            <input type="checkbox" data-name="大圆点键帽" data-base-price="0" onchange="onKeycapChange(this)">
                             <span>大圆点键帽</span>
+                            <span class="keycap-price" data-keycap-price="大圆点键帽">0元</span>
                         </label>
                         <label class="keycap-item">
-                            <input type="checkbox" data-name="DSE塑料豆子键帽" data-price="0" onchange="onKeycapChange(this)">
-                            <span>DSE塑料豆子键帽</span>
+                            <input type="checkbox" data-name="DSE金属豆子键帽" data-base-price="0" onchange="onKeycapChange(this)">
+                            <span>DSE金属豆子键帽</span>
+                            <span class="keycap-price" data-keycap-price="DSE金属豆子键帽">0元</span>
                         </label>
                         <label class="keycap-item">
-                            <input type="checkbox" data-name="嵌入圆点键帽" data-price="0" onchange="onKeycapChange(this)">
+                            <input type="checkbox" data-name="DSE金属拨片键帽" data-base-price="0" onchange="onKeycapChange(this)">
+                            <span>DSE金属拨片键帽</span>
+                            <span class="keycap-price" data-keycap-price="DSE金属拨片键帽">0元</span>
+                        </label>
+                        <label class="keycap-item">
+                            <input type="checkbox" data-name="嵌入圆点键帽" data-base-price="0" onchange="onKeycapChange(this)">
                             <span>嵌入圆点键帽</span>
+                            <span class="keycap-price" data-keycap-price="嵌入圆点键帽">0元</span>
                         </label>
                     </div>
                 </div>
@@ -1152,8 +1164,6 @@
 
             <div class="shell-module" style="margin-top:20px;">
                 <div class="section-title" style="font-size:16px;margin-bottom:10px;">特殊背键</div>
-                <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属豆子背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); toggleDseKeycap(this); updateSelection()"><span class="item-name">DSE金属豆子背键</span></div><span class="item-price">120元</span></label>
-                <label class="item"><div class="item-left"><input type="checkbox" data-name="DSE金属拨片背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); toggleDseKeycap(this); updateSelection()"><span class="item-name">DSE金属拨片背键</span></div><span class="item-price">120元</span></label>
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="FN摇杆微动背键" data-price="120" data-section="8" onchange="updateBackkeyImages(); updateSelection()"><span class="item-name">FN摇杆微动背键</span></div><span class="item-price">120元</span></label>
                 <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="麦克风微动背键" data-price="100" data-section="8" onchange="updateSelection()"><span class="item-name">麦克风微动背键</span></div><span class="item-price">100元</span></label>
             </div>
@@ -1167,14 +1177,13 @@
             <div class="accessory-images" id="backkey-images">
                 <img id="img-2key" src="pic/2key.jpg" alt="2键蝶式微动肩键" style="display:none;">
                 <img id="img-4key" src="pic/4key.jpg" alt="4键蝶式微动肩键" style="display:none;">
-                <img id="img-dse" src="pic/dse.jpg" alt="DSE金属豆子背键" style="display:none;">
+                <img id="img-dse" src="pic/dse.jpg" alt="DSE金属豆子+拨片背键" style="display:none;">
                 <img id="img-dseb" src="pic/dseb.jpg" alt="DSE金属拨片背键" style="display:none;">
-                <img id="img-dsea" src="pic/dsea.jpg" alt="DSE金属豆子背键+DSE金属拨片背键" style="display:none;">
+                <img id="img-dsea" src="pic/dsea.jpg" alt="DSE金属豆子背键" style="display:none;">
                 <img id="img-fn" src="pic/fn.jpg" alt="FN摇杆微动背键" style="display:none;">
                 <img id="img-bset" src="pic/Bset.jpg" alt="背键位置" style="display:none;">
                 <img id="img-keycap-slice" src="pic/slice.jpg" alt="刀片键帽" style="display:none;">
                 <img id="img-keycap-round" src="pic/round.jpg" alt="大圆点键帽" style="display:none;">
-                <img id="img-keycap-dse" src="pic/dse1.jpg" alt="DSE塑料豆子键帽" style="display:none;">
                 <img id="img-keycap-round1" src="pic/round1.jpg" alt="嵌入圆点键帽" style="display:none;">
             </div>
         </div>
@@ -1768,21 +1777,23 @@
                 img4key.style.display = 'none';
             }
 
-            const dseCb = document.querySelector('input[type="checkbox"][data-name="DSE金属豆子背键"]');
-            const dsebCb = document.querySelector('input[type="checkbox"][data-name="DSE金属拨片背键"]');
+            // DSE 金属键帽组合显示（来自键帽选择，非特殊背键）
+            // 豆子→dsea，拨片→dseb，同时选→dse
+            const dseMetalCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE金属豆子键帽"]');
+            const dsebMetalCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE金属拨片键帽"]');
             const imgDseb = document.getElementById('img-dseb');
             const imgDsea = document.getElementById('img-dsea');
-            const dseChecked = dseCb && dseCb.checked;
-            const dsebChecked = dsebCb && dsebCb.checked;
-            if (dseChecked && dsebChecked) {
-                imgDse.style.display = 'none';
-                imgDseb.style.display = 'none';
-                imgDsea.style.display = 'block';
-            } else if (dseChecked) {
+            const dseMetalChecked = dseMetalCb && dseMetalCb.checked;
+            const dsebMetalChecked = dsebMetalCb && dsebMetalCb.checked;
+            if (dseMetalChecked && dsebMetalChecked) {
                 imgDse.style.display = 'block';
                 imgDseb.style.display = 'none';
                 imgDsea.style.display = 'none';
-            } else if (dsebChecked) {
+            } else if (dseMetalChecked) {
+                imgDse.style.display = 'none';
+                imgDseb.style.display = 'none';
+                imgDsea.style.display = 'block';
+            } else if (dsebMetalChecked) {
                 imgDse.style.display = 'none';
                 imgDseb.style.display = 'block';
                 imgDsea.style.display = 'none';
@@ -1801,17 +1812,14 @@
             // 键帽图片显示
             const imgKeycapSlice = document.getElementById('img-keycap-slice');
             const imgKeycapRound = document.getElementById('img-keycap-round');
-            const imgKeycapDse = document.getElementById('img-keycap-dse');
             const imgKeycapRound1 = document.getElementById('img-keycap-round1');
             imgKeycapSlice.style.display = 'none';
             imgKeycapRound.style.display = 'none';
-            imgKeycapDse.style.display = 'none';
             imgKeycapRound1.style.display = 'none';
             document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').forEach(cb => {
                 const name = cb.getAttribute('data-name');
                 if (name === '刀片键帽') imgKeycapSlice.style.display = 'block';
                 else if (name === '大圆点键帽') imgKeycapRound.style.display = 'block';
-                else if (name === 'DSE塑料豆子键帽') imgKeycapDse.style.display = 'block';
                 else if (name === '嵌入圆点键帽') imgKeycapRound1.style.display = 'block';
             });
         }
@@ -1820,35 +1828,121 @@
         let keycapOrder = [];
         let positionOrder = [];
 
-        function toggleDseKeycap(el) {
-            const dseKeycapCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE塑料豆子键帽"]');
-            const pos34Cb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="背键34号位置"]');
-            const dseCb = document.querySelector('input[type="checkbox"][data-name="DSE金属豆子背键"]');
-            const dsebCb = document.querySelector('input[type="checkbox"][data-name="DSE金属拨片背键"]');
-            
-            // 只要有任一DSE特殊背键被勾选，就禁用DSE塑料豆子键帽和背键34号位置
-            const shouldDisable = (dseCb && dseCb.checked) || (dsebCb && dsebCb.checked);
-            
-            if (shouldDisable) {
-                if (dseKeycapCb) {
-                    if (dseKeycapCb.checked) {
-                        dseKeycapCb.checked = false;
-                        keycapOrder = keycapOrder.filter(n => n !== 'DSE塑料豆子键帽');
-                    }
-                    dseKeycapCb.disabled = true;
-                }
-                if (pos34Cb) {
-                    if (pos34Cb.checked) {
-                        pos34Cb.checked = false;
-                        positionOrder = positionOrder.filter(n => n !== '背键34号位置');
-                    }
-                    pos34Cb.disabled = true;
-                }
-            } else {
-                if (dseKeycapCb) dseKeycapCb.disabled = false;
-                if (pos34Cb) pos34Cb.disabled = false;
+        // 计算键帽的动态价格，返回 {名称: 价格} 的对象
+        function calculateKeycapPrices() {
+            const prices = {};
+            prices['刀片键帽'] = 0;
+            prices['大圆点键帽'] = 0;
+            prices['嵌入圆点键帽'] = 0;
+
+            const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            if (!backkeyCountRadio) {
+                prices['DSE金属豆子键帽'] = 0;
+                prices['DSE金属拨片键帽'] = 0;
+                return prices;
             }
-            updateBackkeyImages();
+            const count = parseInt(backkeyCountRadio.value);
+
+            const dseMetalCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE金属豆子键帽"]');
+            const dsebMetalCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE金属拨片键帽"]');
+            const hasDseMetal = dseMetalCb && dseMetalCb.checked;
+            const hasDsebMetal = dsebMetalCb && dsebMetalCb.checked;
+
+            if (count === 2) {
+                prices['DSE金属豆子键帽'] = 20;
+                prices['DSE金属拨片键帽'] = 20;
+            } else { // count === 4
+                if (hasDseMetal && hasDsebMetal) {
+                    prices['DSE金属豆子键帽'] = 40;
+                    prices['DSE金属拨片键帽'] = 40;
+                } else if (hasDseMetal) {
+                    prices['DSE金属豆子键帽'] = 60;
+                    prices['DSE金属拨片键帽'] = 60; // 未勾选时本身不收费，但显示潜在价格
+                } else if (hasDsebMetal) {
+                    prices['DSE金属豆子键帽'] = 60; // 未勾选时本身不收费，但显示潜在价格
+                    prices['DSE金属拨片键帽'] = 60;
+                } else {
+                    prices['DSE金属豆子键帽'] = 60;
+                    prices['DSE金属拨片键帽'] = 60;
+                }
+            }
+            return prices;
+        }
+
+        // 更新键帽价格标签显示
+        function updateKeycapPriceLabels() {
+            const prices = calculateKeycapPrices();
+            document.querySelectorAll('[data-keycap-price]').forEach(span => {
+                const name = span.getAttribute('data-keycap-price');
+                if (prices[name] !== undefined) {
+                    span.textContent = prices[name] + '元';
+                }
+            });
+        }
+
+        // 当 DSE金属豆子键帽 或 DSE金属拨片键帽 任一有勾选时，强制勾选背键34号位置
+        // 否则，取消背键34号位置勾选并设为禁用，避免用户无DSE理由选择该位置
+        function toggleDseKeycap() {
+            const dseMetalCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE金属豆子键帽"]');
+            const dsebMetalCb = document.querySelector('#backkey-keycap-section input[type="checkbox"][data-name="DSE金属拨片键帽"]');
+            const pos34Cb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="背键34号位置"]');
+            const hasDseMetal = (dseMetalCb && dseMetalCb.checked) || (dsebMetalCb && dsebMetalCb.checked);
+
+            if (pos34Cb) {
+                if (hasDseMetal) {
+                    pos34Cb.checked = true;
+                    pos34Cb.disabled = true;
+                    if (!positionOrder.includes('背键34号位置')) {
+                        positionOrder.push('背键34号位置');
+                    }
+                } else {
+                    // 无DSE金属键帽勾选时，取消背键34号位置勾选并禁用
+                    pos34Cb.checked = false;
+                    pos34Cb.disabled = true;
+                    positionOrder = positionOrder.filter(n => n !== '背键34号位置');
+                }
+            }
+
+            // 加入/移除34号后，裁剪超额位置，并动态禁用未勾选的位置（数量满时禁止继续选）
+            enforcePositionLimit();
+            updatePositionAvailability();
+        }
+
+        // 根据当前已选位置数量与最大额度，清理positionOrder脏数据，并保持位置checkbox的可用性
+        // 注意：本函数不再提前禁用"未勾选但数量满"的位置，而是保持它们可点击，
+        // 让用户勾选时通过 onBackkeyPositionChange 的 FIFO 自动移除最早的非34号位置。
+        function updatePositionAvailability() {
+            const countRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            if (!countRadio) return;
+
+            // 先清理positionOrder中未实际勾选的脏数据
+            positionOrder = positionOrder.filter(n => {
+                const cb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="' + n + '"]');
+                return cb && cb.checked;
+            });
+
+            // 非34号位置保持全部可用（无论是否数量超限）
+            // 用户点击勾选多余位置时，由 onBackkeyPositionChange 中的 FIFO 逻辑处理
+            document.querySelectorAll('#backkey-position-section input[type="checkbox"]').forEach(cb => {
+                const name = cb.getAttribute('data-name');
+                if (name === '背键34号位置') return; // 34号状态归 toggleDseKeycap 管，不覆盖
+                cb.disabled = false;
+            });
+        }
+
+        // 更新2/4个背键选项右侧显示的累计价格（基础背键价 + 键帽累计价格）
+        function updateBackkeyCountPrice() {
+            const countRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            const priceEl = document.getElementById('backkey-count-price');
+            if (!countRadio || !priceEl) return;
+            const basePrice = parseInt(countRadio.getAttribute('data-price'));
+            let keycapTotal = 0;
+            const prices = calculateKeycapPrices();
+            document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').forEach(cb => {
+                const name = cb.getAttribute('data-name');
+                keycapTotal += prices[name] || 0;
+            });
+            priceEl.textContent = (basePrice + keycapTotal) + '元';
         }
 
         function onBackkeyCountChange(el) {
@@ -1875,8 +1969,11 @@
                     cb.checked = false;
                     cb.disabled = false;
                 });
-                // 重新应用DSE禁用限制
+                // 重新应用DSE禁用限制和键帽价格，并累计显示价格
                 toggleDseKeycap();
+                updateKeycapPriceLabels();
+                updateBackkeyCountPrice();
+                updatePositionAvailability();
             } else {
                 priceEl.textContent = '0元';
                 document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]').forEach(cb => {
@@ -1888,6 +1985,13 @@
                 keycapSection.style.display = 'none';
                 positionSection.style.display = 'none';
                 updateBackkeyImages();
+                updateKeycapPriceLabels();
+                updateBackkeyCountPrice();
+                // 无背键数量选择时，重置34号的禁用状态
+                const pos34 = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="背键34号位置"]');
+                if (pos34) { pos34.checked = false; pos34.disabled = true; }
+                positionOrder = [];
+                updatePositionAvailability();
             }
             updateSelection();
             updateSummary();
@@ -1906,18 +2010,71 @@
                 if (!positionOrder.includes(name)) {
                     positionOrder.push(name);
                 }
-                // 超过限制时，移除最早选择的（FIFO）
+                // 超过限制时，移除最早选择的（FIFO）—— 遇到disabled=true（如34号被DSE锁定）跳过，优先移除用户可取消的
                 while (positionOrder.length > maxPositions) {
-                    const firstName = positionOrder.shift();
-                    const firstCb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="' + firstName + '"]');
-                    if (firstCb) firstCb.checked = false;
+                    let removedIdx = -1;
+                    let removedName = null;
+                    for (let i = 0; i < positionOrder.length; i++) {
+                        const candidateName = positionOrder[i];
+                        const candidateCb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="' + candidateName + '"]');
+                        if (candidateCb && !candidateCb.disabled) {
+                            removedIdx = i;
+                            removedName = candidateName;
+                            break;
+                        }
+                    }
+                    if (removedName) {
+                        positionOrder.splice(removedIdx, 1);
+                        const removedCb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="' + removedName + '"]');
+                        if (removedCb) removedCb.checked = false;
+                    } else {
+                        // 全部都是disabled项（极异常），强制终止循环
+                        break;
+                    }
                 }
             } else {
                 positionOrder = positionOrder.filter(n => n !== name);
             }
             
-            // 重新应用DSE禁用限制
+            // 重新应用DSE禁用限制 + 更新位置可用性（额度满时禁用剩余选项）
             toggleDseKeycap();
+            updatePositionAvailability();
+        }
+
+        // 当 positionOrder 超过当前限制时，裁剪非disabled项
+        // 供 toggleDseKeycap 在自动加入34号之后调用，避免34号占用额度后还额外保留了用户之前选的位置
+        function enforcePositionLimit() {
+            const countRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            if (!countRadio) return;
+            const count = parseInt(countRadio.value);
+            const maxPositions = count === 2 ? 1 : 2;
+
+            // 先清理positionOrder中未勾选的项
+            positionOrder = positionOrder.filter(n => {
+                const cb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="' + n + '"]');
+                return cb && cb.checked;
+            });
+
+            while (positionOrder.length > maxPositions) {
+                let removedIdx = -1;
+                let removedName = null;
+                for (let i = 0; i < positionOrder.length; i++) {
+                    const candidateName = positionOrder[i];
+                    const candidateCb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="' + candidateName + '"]');
+                    if (candidateCb && !candidateCb.disabled) {
+                        removedIdx = i;
+                        removedName = candidateName;
+                        break;
+                    }
+                }
+                if (removedName) {
+                    positionOrder.splice(removedIdx, 1);
+                    const removedCb = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="' + removedName + '"]');
+                    if (removedCb) removedCb.checked = false;
+                } else {
+                    break;
+                }
+            }
         }
 
         function onKeycapChange(el) {
@@ -1943,8 +2100,10 @@
                 keycapOrder = keycapOrder.filter(n => n !== name);
             }
             
-            // 重新应用DSE禁用限制
+            // 重新应用DSE禁用限制，更新键帽价格(DSE金属价格根据互选变化)，更新右侧累计价格显示
             toggleDseKeycap();
+            updateKeycapPriceLabels();
+            updateBackkeyCountPrice();
             updateBackkeyImages();
             updateSelection();
             updateSummary();
@@ -2235,6 +2394,11 @@
             // 进入扳机键改装页面时，更新选项可用性
             if (index === 7) {
                 updateTriggerState();
+            }
+            // 进入背键改装方案页面时，确保DSE相关禁用、价格累计显示正确
+            if (index === 8) {
+                toggleDseKeycap();
+                updateBackkeyCountPrice();
             }
             updateProgressSteps();
             // 切换页面后重新计算图片标签字体大小
@@ -2537,10 +2701,12 @@
                 const countPrice = parseInt(backkeyCountRadio.getAttribute('data-price'));
                 let extraInfo = [];
                 let extraPrice = 0;
+                const keycapPrices = calculateKeycapPrices();
 
                 document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').forEach(cb => {
-                    extraInfo.push(cb.getAttribute('data-name'));
-                    extraPrice += parseInt(cb.getAttribute('data-price')) || 0;
+                    const name = cb.getAttribute('data-name');
+                    extraInfo.push(name);
+                    extraPrice += keycapPrices[name] || 0;
                 });
 
                 document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked').forEach(cb => {
@@ -2752,9 +2918,11 @@
                 const countPrice = parseInt(backkeyCountRadio.getAttribute('data-price'));
                 let extraInfo = [];
                 let extraPrice = 0;
+                const keycapPrices = calculateKeycapPrices();
                 document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').forEach(cb => {
-                    extraInfo.push(cb.getAttribute('data-name'));
-                    extraPrice += parseInt(cb.getAttribute('data-price')) || 0;
+                    const name = cb.getAttribute('data-name');
+                    extraInfo.push(name);
+                    extraPrice += keycapPrices[name] || 0;
                 });
                 document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked').forEach(cb => {
                     extraInfo.push(cb.getAttribute('data-name'));
