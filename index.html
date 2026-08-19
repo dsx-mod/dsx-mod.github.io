@@ -80,6 +80,14 @@
             transform: none;
             box-shadow: none;
         }
+        .nav-btn.skip {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            color: #fff;
+        }
+        .nav-btn.skip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(72,187,120,0.4);
+        }
         .progress {
             text-align: center;
             font-size: 15px;
@@ -219,6 +227,7 @@
         .form-group textarea {
             resize: vertical;
             min-height: 80px;
+            font-family: inherit;
         }
         .summary-box {
             background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
@@ -775,6 +784,14 @@
                 <span class="item-price">0元</span>
             </label>
 
+            <label class="item">
+                <div class="item-left">
+                    <input type="radio" name="motherboard" data-name="二改手柄" data-price="50" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <span class="item-name">二改手柄</span>
+                </div>
+                <span class="item-price">50元</span>
+            </label>
+
             <div class="accessory-images" id="motherboard-image" style="display:none;">
                 <img id="mb-img" src="" alt="主板图片">
             </div>
@@ -915,11 +932,12 @@
                 <label class="item"><div class="item-left"><input type="checkbox" id="typec-checkbox" data-name="TYPEC接口制作" data-price="50" data-section="2" onchange="toggleAccessoryImage(this, 'img-typec'); updateSelection()"><span class="item-name">TYPEC接口制作</span></div><span class="item-price">50元</span></label>
                 <div class="item-desc" id="typec-notice" style="display:none;">振飞扬外壳自带TYPEC接口，无需额外制作</div>
                 <div class="item-desc" id="typec-required-notice" style="display:none;">该外壳需制作TYPEC接口，默认勾选且不可取消</div>
+                <div class="item-desc" id="typec-ergai-notice" style="display:none;">如果寄改手柄没有制作TYPEC接口，那么请根据需要选择本项目</div>
                 <label class="item"><div class="item-left"><input type="checkbox" id="joystick-microswitch" data-name="摇杆下压微动" data-price="60" data-section="2" onchange="toggleAccessoryImage(this, 'img-joystick-down'); updateSelection()"><span class="item-name">摇杆下压微动</span></div><span class="item-price" id="joystick-microswitch-price">60元</span></label>
-                <label class="item" id="menu-microswitch-label"><div class="item-left"><input type="checkbox" id="menu-microswitch" data-name="菜单背包微动" data-price="40" data-section="2" onchange="toggleAccessoryImage(this, 'img-share'); updateSelection()"><span class="item-name">菜单背包微动</span></div><span class="item-price">40元</span></label>
+                <label class="item" id="menu-microswitch-label"><div class="item-left"><input type="checkbox" id="menu-microswitch" data-name="菜单背包微动" data-price="40" data-section="2" onchange="toggleAccessoryImage(this, 'img-share'); updateSelection()"><span class="item-name">菜单背包微动</span></div><span class="item-price" id="menu-microswitch-price">40元</span></label>
                 <div class="item-desc" id="menu-microswitch-notice">GNS主板自带菜单背包微动</div>
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="触摸板改微动" data-price="40" data-section="2" onchange="updateSelection()"><span class="item-name">触摸板改微动</span></div><span class="item-price">40元</span></label>
-                <label class="item"><div class="item-left"><input type="checkbox" data-name="PS键微动" data-price="30" data-section="2" onchange="toggleAccessoryImage(this, 'img-ps'); updateSelection()"><span class="item-name">PS键微动</span></div><span class="item-price">30元</span></label>
+                <label class="item"><div class="item-left"><input type="checkbox" id="ps-microswitch" data-name="PS键微动" data-price="30" data-section="2" onchange="toggleAccessoryImage(this, 'img-ps'); updateSelection()"><span class="item-name">PS键微动</span></div><span class="item-price" id="ps-microswitch-price">30元</span></label>
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="智慧核心摇杆帽" data-price="85" data-section="2" onchange="toggleAccessoryImage(this, 'img-stick'); updateSelection()"><span class="item-name">智慧核心摇杆帽</span></div><span class="item-price">85元</span></label>
                 <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="GNS主板显示屏" data-price="50" data-section="2" onchange="toggleGnsExclusive(this); toggleAccessoryImage(this, 'img-screen'); updateSelection()"><span class="item-name">GNS主板显示屏</span></div><span class="item-price">50元</span></label>
                 <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="GNS主板2键触摸板" data-price="60" data-section="2" onchange="toggleGnsExclusive(this); updateSelection()"><span class="item-name">GNS主板2键触摸板</span></div><span class="item-price">60元</span></label>
@@ -942,10 +960,10 @@
 
             <div class="shell-module">
                 <div class="section-title" style="font-size:16px;margin-bottom:10px;">摇杆本体（四选一）</div>
-                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="alps蓝边摇杆" data-price="60" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">alps蓝边摇杆</span></div><span class="item-price">60元</span></label>
-                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="DS13MAX摇杆" data-price="80" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">DS13MAX摇杆</span></div><span class="item-price">80元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="alps蓝边摇杆" data-price="60" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">alps蓝边摇杆</span></div><span class="item-price" id="stick-alps-price">60元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="DS13MAX摇杆" data-price="80" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">DS13MAX摇杆</span></div><span class="item-price" id="stick-ds13-price">80元</span></label>
                 <div class="item-desc" id="ds13-desc" style="display:none;">阻尼略小，约alps原装阻尼-20%，中心阻力均匀</div>
-                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="JS13PRO+摇杆" data-price="80" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">JS13PRO+摇杆</span></div><span class="item-price">80元</span></label>
+                <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="JS13PRO+摇杆" data-price="80" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">JS13PRO+摇杆</span></div><span class="item-price" id="stick-js13-price">80元</span></label>
                 <div class="item-desc" id="js13-desc" style="display:none;">阻尼略大，接近alps原装阻尼，中心阻力略有变化</div>
                 <label class="item"><div class="item-left"><input type="radio" name="stick" data-name="锦富霍尔摇杆" data-price="60" data-section="3" onchange="toggleStickDamping(this); updateSelection()"><span class="item-name">锦富霍尔摇杆</span></div><span class="item-price">60元</span></label>
             </div>
@@ -1157,6 +1175,7 @@
                 <div class="backkey-position-section" id="backkey-position-section" style="display:none;">
                     <div class="section-title" style="font-size:14px;margin-bottom:10px;color:#555;">背键位置</div>
                     <label class="item"><div class="item-left"><input type="checkbox" data-name="背键34号位置" data-price="0" data-section="8" onchange="onBackkeyPositionChange(this); updateBackkeyImages(); updateSelection()"><span class="item-name">背键34号位置</span></div></label>
+                    <div class="item-desc" style="display:block;">背键34号位置为DSE金属豆子与拨片键帽使用，其他键帽如需在34号位请与UP说明</div>
                     <label class="item"><div class="item-left"><input type="checkbox" data-name="背键56号位置" data-price="0" data-section="8" onchange="onBackkeyPositionChange(this); updateBackkeyImages(); updateSelection()"><span class="item-name">背键56号位置</span></div></label>
                     <label class="item"><div class="item-left"><input type="checkbox" data-name="背键78号位置" data-price="0" data-section="8" onchange="onBackkeyPositionChange(this); updateBackkeyImages(); updateSelection()"><span class="item-name">背键78号位置</span></div></label>
                 </div>
@@ -1199,6 +1218,13 @@
                 </div>
             </div>
 
+            <div id="ergai-requirement-group" style="margin-bottom:20px;display:none;">
+                <div class="form-group">
+                    <label for="ergai-requirement">二改要求</label>
+                    <textarea id="ergai-requirement" placeholder="如有特殊要求请在此说明（非必填）"></textarea>
+                </div>
+            </div>
+
             <div class="summary-box">
                 <div class="summary-title">改装项目清单</div>
                 <div class="summary-list" id="summaryList">
@@ -1213,6 +1239,7 @@
         <div class="nav-bar">
             <button class="nav-btn prev" id="prevBtn" disabled>◀ 上一选择</button>
             <button class="nav-btn next" id="nextBtn">下一选择 ▶</button>
+            <button class="nav-btn skip" id="skipBtn" style="display:none;" onclick="skipSection()">二改跳过</button>
         </div>
 
         <div class="footer-note">DS4手柄改装订单系统</div>
@@ -1297,6 +1324,24 @@
         function updateMicroswitchState() {
             const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
             const isGns = mbRadio && mbRadio.getAttribute('data-name') === 'GNS明日香主板';
+            const isErGai = mbRadio && mbRadio.getAttribute('data-name') === '二改手柄';
+
+            // TYPEC接口制作：二改手柄时可选且不默认勾选，显示二改说明
+            const typecCheckbox = document.getElementById('typec-checkbox');
+            const typecNotice = document.getElementById('typec-notice');
+            const typecRequiredNotice = document.getElementById('typec-required-notice');
+            const typecErgaiNotice = document.getElementById('typec-ergai-notice');
+            if (typecCheckbox && typecNotice && typecRequiredNotice && typecErgaiNotice) {
+                if (isErGai) {
+                    typecCheckbox.checked = false;
+                    typecCheckbox.disabled = false;
+                    typecNotice.style.display = 'none';
+                    typecRequiredNotice.style.display = 'none';
+                    typecErgaiNotice.style.display = 'block';
+                } else {
+                    typecErgaiNotice.style.display = 'none';
+                }
+            }
 
             // 摇杆下压微动：GNS主板60元，非GNS主板100元
             const joystickCheckbox = document.getElementById('joystick-microswitch');
@@ -1307,8 +1352,9 @@
                 joystickPriceSpan.textContent = price + '元';
             }
 
-            // 菜单背包微动：GNS主板时不可选
+            // 菜单背包微动：GNS主板时不可选，二改手柄60元，其他40元
             const menuCheckbox = document.getElementById('menu-microswitch');
+            const menuPriceSpan = document.getElementById('menu-microswitch-price');
             const menuNotice = document.getElementById('menu-microswitch-notice');
             if (menuCheckbox && menuNotice) {
                 if (isGns) {
@@ -1322,7 +1368,36 @@
                     menuCheckbox.disabled = false;
                     menuNotice.classList.remove('show');
                 }
+                const menuPrice = isErGai ? 60 : 40;
+                menuCheckbox.setAttribute('data-price', menuPrice);
+                if (menuPriceSpan) menuPriceSpan.textContent = menuPrice + '元';
             }
+
+            // PS键微动：二改手柄50元，其他30元
+            const psCheckbox = document.getElementById('ps-microswitch');
+            const psPriceSpan = document.getElementById('ps-microswitch-price');
+            if (psCheckbox) {
+                const psPrice = isErGai ? 50 : 30;
+                psCheckbox.setAttribute('data-price', psPrice);
+                if (psPriceSpan) psPriceSpan.textContent = psPrice + '元';
+            }
+
+            // 摇杆本体价格：二改手柄时alps80/DS13MAX100/JS13PRO+100，其他保持默认
+            const stickPrices = {
+                'alps蓝边摇杆': { default: 60, ergai: 80, spanId: 'stick-alps-price' },
+                'DS13MAX摇杆': { default: 80, ergai: 100, spanId: 'stick-ds13-price' },
+                'JS13PRO+摇杆': { default: 80, ergai: 100, spanId: 'stick-js13-price' }
+            };
+            Object.keys(stickPrices).forEach(stickName => {
+                const cfg = stickPrices[stickName];
+                const radio = document.querySelector(`input[type="radio"][name="stick"][data-name="${stickName}"]`);
+                const span = document.getElementById(cfg.spanId);
+                if (radio) {
+                    const price = isErGai ? cfg.ergai : cfg.default;
+                    radio.setAttribute('data-price', price);
+                    if (span) span.textContent = price + '元';
+                }
+            });
         }
 
         function toggleSocketDesc(el) {
@@ -2174,12 +2249,21 @@
             // TYPEC接口制作：振飞扬和BO5外壳自带，无需额外制作
             const shellName = el.getAttribute('data-name');
             const isZfyOrBo5 = el.checked && (shellName === '振飞扬国产外壳' || shellName === 'BO5国产外壳');
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const isErGaiShell = mbRadio && mbRadio.getAttribute('data-name') === '二改手柄';
             const typecCheckbox = document.getElementById('typec-checkbox');
             const typecNotice = document.getElementById('typec-notice');
             const typecRequiredNotice = document.getElementById('typec-required-notice');
+            const typecErgaiNotice = document.getElementById('typec-ergai-notice');
             const typecImg = document.getElementById('img-typec');
-            
-            if (isZfyOrBo5) {
+
+            if (isErGaiShell) {
+                // 二改手柄：TYPEC始终可选，不受外壳选择影响
+                typecCheckbox.disabled = false;
+                typecNotice.style.display = 'none';
+                typecRequiredNotice.style.display = 'none';
+                if (typecErgaiNotice) typecErgaiNotice.style.display = 'block';
+            } else if (isZfyOrBo5) {
                 typecCheckbox.checked = false;
                 typecCheckbox.disabled = true;
                 typecNotice.textContent = '振飞扬及BO5外壳自带TYPEC接口，无需额外制作';
@@ -2382,6 +2466,23 @@
             }
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // 二改跳过按钮：仅在选择了"二改手柄"且非主板/订单确认页面时显示
+            const skipBtn = document.getElementById('skipBtn');
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const isErGai = mbRadio && mbRadio.getAttribute('data-name') === '二改手柄';
+            if (isErGai && index !== 0 && index !== totalSections - 1) {
+                skipBtn.style.display = '';
+            } else {
+                skipBtn.style.display = 'none';
+            }
+
+            // 二改要求输入框：仅在选择了"二改手柄"且在订单确认页面时显示
+            const ergaiReqGroup = document.getElementById('ergai-requirement-group');
+            if (ergaiReqGroup) {
+                ergaiReqGroup.style.display = (isErGai && index === totalSections - 1) ? '' : 'none';
+            }
+
             updateSummary();
             if (index === 2) updateGnsOnlyVisibility();
             // 进入摇杆选配页面时，确保默认勾选和描述文字正确显示
@@ -2403,6 +2504,51 @@
             updateProgressSteps();
             // 切换页面后重新计算图片标签字体大小
             setTimeout(updateImageLabelSizes, 100);
+        }
+
+        // 二改跳过：清空当前页所有选择，不计入清单，直接跳转下一页
+        function skipSection() {
+            const section = document.getElementById(`section-${currentSection}`);
+            if (section) {
+                // 取消当前页所有已勾选的input
+                section.querySelectorAll('input[type="checkbox"]:checked, input[type="radio"]:checked').forEach(input => {
+                    input.checked = false;
+                });
+                // 触发页面特定的重置逻辑
+                if (currentSection === 8) {
+                    // 背键页面需要重置键帽和位置状态
+                    positionOrder = [];
+                    document.querySelectorAll('#backkey-position-section input[type="checkbox"]').forEach(cb => {
+                        cb.checked = false;
+                        cb.disabled = false;
+                    });
+                    const pos34 = document.querySelector('#backkey-position-section input[type="checkbox"][data-name="背键34号位置"]');
+                    if (pos34) { pos34.disabled = true; }
+                    toggleDseKeycap();
+                    updateBackkeyCountPrice();
+                    updateKeycapPriceLabels();
+                    updateBackkeyImages();
+                }
+                if (currentSection === 1) {
+                    // 外壳页面重置颜色选项显示
+                    document.querySelectorAll('.shell-color-options').forEach(opt => opt.style.display = 'none');
+                    document.querySelectorAll('.other-options').forEach(opt => opt.style.display = 'none');
+                    document.querySelectorAll('.bo5-options').forEach(opt => opt.style.display = 'none');
+                    const oupianDesc = document.getElementById('oupian-desc');
+                    if (oupianDesc) oupianDesc.style.display = 'none';
+                }
+                if (currentSection === 3) {
+                    // 摇杆页面重置减阻尼提示
+                    const tmrNotice = document.getElementById('tmr-notice');
+                    if (tmrNotice) tmrNotice.style.display = 'none';
+                    const ds13Desc = document.getElementById('ds13-desc');
+                    if (ds13Desc) ds13Desc.style.display = 'none';
+                    const js13Desc = document.getElementById('js13-desc');
+                    if (js13Desc) js13Desc.style.display = 'none';
+                }
+            }
+            updateSummary();
+            showSection(currentSection + 1);
         }
 
         function prevSection() {
@@ -2788,6 +2934,7 @@
 
             const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
             const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const isErGaiConfirmed = mbRadio && mbRadio.getAttribute('data-name') === '二改手柄';
             const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
             const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
             const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
@@ -2990,9 +3137,19 @@
                 orderText += `• ${name} = ${price}元\n`;
             });
 
+            // 二改要求
+            const ergaiReqText = document.getElementById('ergai-requirement') ? document.getElementById('ergai-requirement').value.trim() : '';
+            if (isErGaiConfirmed && ergaiReqText) {
+                html += `<hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">`;
+                html += `<strong>二改要求:</strong><br>`;
+                html += `${escapeHtml(ergaiReqText)}<br>`;
+                orderText += `----------\n`;
+                orderText += `二改要求:\n${ergaiReqText}\n`;
+            }
+
             html += `<hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">`;
             html += `<strong style="color:#e74c3c;font-size:18px;">总计: ${total} 元</strong>`;
-            
+
             orderText += `==========\n`;
             orderText += `总计: ${total} 元`;
 
