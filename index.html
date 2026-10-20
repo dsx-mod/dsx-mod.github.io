@@ -1766,10 +1766,10 @@
                 normalNotice.classList.remove('show');
             }
 
-            // 双切热插拔微动：仅GNS主板可选
+            // 双切热插拔微动：GNS主板或氦闪2主板可选
             const dualRadio = document.querySelector('input[name="trigger"][data-name="扳机键改装 双切热插拔微动"]');
             const dualNotice = document.getElementById('trigger-dual-notice');
-            if (mbName !== 'GNS明日香主板') {
+            if (mbName !== 'GNS明日香主板' && mbName !== '氦闪2主板') {
                 dualRadio.disabled = true;
                 dualNotice.classList.add('show');
                 if (dualRadio.checked) {
