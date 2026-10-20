@@ -760,6 +760,15 @@
             
             <label class="item">
                 <div class="item-left">
+                    <input type="radio" name="motherboard" data-name="氦闪2主板" data-price="290" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <span class="item-name">氦闪2主板</span>
+                </div>
+                <span class="item-price">290元</span>
+            </label>
+            <div class="item-desc" id="desc-helishan2">8K回报，12bit摇杆，8键背键自定义(无线性扳机、震动、触摸板、陀螺仪)，不带摇杆</div>
+            
+            <label class="item">
+                <div class="item-left">
                     <input type="radio" name="motherboard" data-name="GNS明日香主板" data-price="220" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
                     <span class="item-name">GNS明日香主板</span>
                 </div>
@@ -1276,6 +1285,9 @@
             if (name === '氦闪主板') {
                 descId = 'desc-helishan';
                 imgSrc = 'pic/hs.jpg';
+            } else if (name === '氦闪2主板') {
+                descId = 'desc-helishan2';
+                imgSrc = 'pic/hs2.jpg';
             } else if (name === 'GNS明日香主板') {
                 descId = 'desc-gns';
                 imgSrc = 'pic/gns.jpg';
@@ -3301,7 +3313,7 @@
                 'PS.jpg','abxy.jpg','abxy-key.jpg','abxy-plug.jpg','abxy-hotkey.jpg',
                 'bo5.jpg','direct.jpg','direct-key.jpg','direct-plug.jpg','direction-hotkey.jpg',
                 'dse.jpg','dse1.jpg','dsea.jpg','dseb.jpg','fn.jpg',
-                'gns.jpg','hs.jpg','suiovo.jpg','ost.jpg','zfy.jpg','oupian.jpg',
+                'gns.jpg','hs.jpg','hs2.jpg','suiovo.jpg','ost.jpg','zfy.jpg','oupian.jpg',
                 'plug.jpg','round.jpg','round1.jpg','screen.jpg','share.jpg','slice.jpg','stick.jpg','typec.jpg','wechat.jpg'
             ];
             images.forEach(name => {
