@@ -787,6 +787,15 @@
             
             <label class="item">
                 <div class="item-left">
+                    <input type="radio" name="motherboard" data-name="ProShock主板" data-price="200" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <span class="item-name">ProShock主板</span>
+                </div>
+                <span class="item-price">200元</span>
+            </label>
+            <div class="item-desc" id="desc-proshock">8K回报，14bit摇杆，8键背键自定义(无线性扳机、震动、触摸板、陀螺仪)，不带摇杆</div>
+            
+            <label class="item">
+                <div class="item-left">
                     <input type="radio" name="motherboard" data-name="自备主板" data-price="0" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
                     <span class="item-name">自备主板</span>
                 </div>
@@ -1294,6 +1303,9 @@
             } else if (name === '速跃主板') {
                 descId = 'desc-suyue';
                 imgSrc = 'pic/suiovo.jpg';
+            } else if (name === 'ProShock主板') {
+                descId = 'desc-proshock';
+                imgSrc = 'pic/proshock.jpg';
             }
             if (descId) document.getElementById(descId).classList.add('show');
             
@@ -3313,7 +3325,7 @@
                 'PS.jpg','abxy.jpg','abxy-key.jpg','abxy-plug.jpg','abxy-hotkey.jpg',
                 'bo5.jpg','direct.jpg','direct-key.jpg','direct-plug.jpg','direction-hotkey.jpg',
                 'dse.jpg','dse1.jpg','dsea.jpg','dseb.jpg','fn.jpg',
-                'gns.jpg','hs.jpg','hs2.jpg','suiovo.jpg','ost.jpg','zfy.jpg','oupian.jpg',
+                'gns.jpg','hs.jpg','hs2.jpg','suiovo.jpg','proshock.jpg','ost.jpg','zfy.jpg','oupian.jpg',
                 'plug.jpg','round.jpg','round1.jpg','screen.jpg','share.jpg','slice.jpg','stick.jpg','typec.jpg','wechat.jpg'
             ];
             images.forEach(name => {
