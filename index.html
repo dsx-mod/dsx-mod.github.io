@@ -957,13 +957,10 @@
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="触摸板改微动" data-price="40" data-section="2" onchange="updateSelection()"><span class="item-name">触摸板改微动</span></div><span class="item-price">40元</span></label>
                 <label class="item"><div class="item-left"><input type="checkbox" id="ps-microswitch" data-name="PS键微动" data-price="30" data-section="2" onchange="toggleAccessoryImage(this, 'img-ps'); updateSelection()"><span class="item-name">PS键微动</span></div><span class="item-price" id="ps-microswitch-price">30元</span></label>
                 <label class="item"><div class="item-left"><input type="checkbox" data-name="动感指尖2摇杆帽" data-price="40" data-section="2" onchange="toggleAccessoryImage(this, 'img-stick'); updateSelection()"><span class="item-name">动感指尖2摇杆帽</span></div><span class="item-price">40元</span></label>
-                <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="GNS主板显示屏" data-price="50" data-section="2" onchange="toggleGnsExclusive(this); toggleAccessoryImage(this, 'img-screen'); updateSelection()"><span class="item-name">GNS主板显示屏</span></div><span class="item-price">50元</span></label>
-                <label class="item gns-only" style="display:none;"><div class="item-left"><input type="checkbox" data-name="GNS主板2键触摸板" data-price="60" data-section="2" onchange="toggleGnsExclusive(this); updateSelection()"><span class="item-name">GNS主板2键触摸板</span></div><span class="item-price">60元</span></label>
                 <div class="accessory-images">
                     <img id="img-plug" src="pic/plug.jpg" alt="微动排线插座升级" style="display:none;">
                     <img id="img-typec" src="pic/typec.jpg" alt="TYPEC接口制作" style="display:none;">
                     <img id="img-stick" src="pic/stick.jpg" alt="动感指尖2摇杆帽" style="display:none;">
-                    <img id="img-screen" src="pic/screen.jpg" alt="GNS主板显示屏" style="display:none;">
                     <img id="img-joystick-down" src="pic/LR3-down.jpg" alt="摇杆下压微动" style="display:none;">
                     <img id="img-share" src="pic/share.jpg" alt="菜单背包微动" style="display:none;">
                     <img id="img-ps" src="pic/PS.jpg" alt="PS键微动" style="display:none;">
@@ -971,8 +968,27 @@
             </div>
         </div>
 
-        <!-- Step 4: 摇杆选配 -->
+        <!-- Step 4: 选配升级 -->
         <div class="section" id="section-3">
+            <div class="section-title">【选配升级】</div>
+            <div class="section-hint">以下升级配件按所选主板显示，可按需选配（可不选）</div>
+
+            <div class="shell-module">
+                <label class="item upgrade-item" data-boards="GNS明日香主板,氦闪2主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="触摸板" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">触摸板</span></div><span class="item-price">60元</span></label>
+                <label class="item upgrade-item" data-boards="GNS明日香主板,ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="显示屏" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">显示屏</span></div><span class="item-price">60元</span></label>
+                <label class="item upgrade-item" data-boards="GNS明日香主板,ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="蓝牙模块" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">蓝牙模块</span></div><span class="item-price">60元</span></label>
+                <label class="item upgrade-item" data-boards="GNS明日香主板,ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="2.4G无线模式" data-price="80" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">2.4G无线模式</span></div><span class="item-price">80元</span></label>
+                <label class="item upgrade-item" data-boards="ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="体感陀螺仪" data-price="80" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">体感陀螺仪</span></div><span class="item-price">80元</span></label>
+                <div class="accessory-images">
+                    <img id="img-touchpad" src="pic/touchpad.jpg" alt="触摸板" style="display:none;">
+                    <img id="img-upgrade-screen" src="pic/screen.jpg" alt="显示屏" style="display:none;">
+                    <img id="img-reciver" src="pic/reciver.jpg" alt="2.4G无线模式" style="display:none;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: 摇杆选配 -->
+        <div class="section" id="section-4">
             <div class="section-title">【摇杆选配】</div>
             <div class="section-hint">请选择摇杆类型</div>
 
@@ -997,8 +1013,8 @@
             </div>
         </div>
 
-        <!-- Step 5: 十字键改装 -->
-        <div class="section" id="section-4">
+        <!-- Step 6: 十字键改装 -->
+        <div class="section" id="section-5">
             <div class="section-title">【十字键改装】</div>
             <div class="section-hint">请选择十字键改装方案</div>
 
@@ -1037,8 +1053,8 @@
             </div>
         </div>
 
-        <!-- Step 6: 交互键改装 -->
-        <div class="section" id="section-5">
+        <!-- Step 7: 交互键改装 -->
+        <div class="section" id="section-6">
             <div class="section-title">【交互键改装】</div>
             <div class="section-hint">请选择交互键改装方案</div>
 
@@ -1077,8 +1093,8 @@
             </div>
         </div>
 
-        <!-- Step 7: 肩键改装 -->
-        <div class="section" id="section-6">
+        <!-- Step 8: 肩键改装 -->
+        <div class="section" id="section-7">
             <div class="section-title">【肩键改装】</div>
             <div class="section-hint">请选择肩键改装方案（四选一）</div>
             <label class="item"><div class="item-left"><input type="radio" name="shoulder" data-name="肩键改装 凯隆普通微动" data-price="30" data-section="6" onchange="toggleShoulderModules(this); updateShoulderImage(); updateSelection()"><span class="item-name">凯隆普通微动</span></div><span class="item-price">30元</span></label>
@@ -1105,8 +1121,8 @@
             </div>
         </div>
 
-        <!-- Step 8: 扳机键改装 -->
-        <div class="section" id="section-7">
+        <!-- Step 9: 扳机键改装 -->
+        <div class="section" id="section-8">
             <div class="section-title">【扳机键改装】</div>
             <div class="section-hint">请选择扳机键改装方案（四选一）</div>
             <label class="item"><div class="item-left"><input type="radio" name="trigger" data-name="扳机键改装 凯隆普通微动" data-price="40" data-section="7" onchange="toggleTriggerModules(this); updateTriggerImage(); updateSelection()"><span class="item-name">凯隆普通微动</span></div><span class="item-price">40元</span></label>
@@ -1127,8 +1143,8 @@
             </div>
         </div>
 
-        <!-- Step 9: 背键改装方案 -->
-        <div class="section" id="section-8">
+        <!-- Step 10: 背键改装方案 -->
+        <div class="section" id="section-9">
             <div class="section-title">【背键改装方案】</div>
             <div class="section-hint">请选择背键配置（如不需要背键可跳过）</div>
 
@@ -1226,7 +1242,7 @@
         </div>
 
         <!-- Step 11: 订单汇总与用户信息 -->
-        <div class="section" id="section-9">
+        <div class="section" id="section-10">
             <div class="section-title">【订单确认】</div>
             
             <div class="user-info" style="margin-bottom:20px;">
@@ -1283,8 +1299,8 @@
 
     <script>
         let currentSection = 0;
-        const totalSections = 10;
-        const sectionTitles = ['手柄主板', '外壳选择', '其他配件', '摇杆选配', '十字键改装', '交互键改装', '肩键改装', '扳机键改装', '背键改装方案', '订单确认'];
+        const totalSections = 11;
+        const sectionTitles = ['手柄主板', '外壳选择', '其他配件', '选配升级', '摇杆选配', '十字键改装', '交互键改装', '肩键改装', '扳机键改装', '背键改装方案', '订单确认'];
         
         function toggleMotherboardDesc(el) {
             document.querySelectorAll('#section-0 .item-desc').forEach(d => d.classList.remove('show'));
@@ -1320,6 +1336,7 @@
             }
             
             updateGnsOnlyVisibility();
+            updateUpgradeVisibility();
             updateMicroswitchState();
         }
 
@@ -1839,21 +1856,6 @@
             updateSelection();
         }
 
-        function toggleGnsExclusive(el) {
-            const displayCb = document.querySelector('input[type="checkbox"][data-name="GNS主板显示屏"]');
-            const touchCb = document.querySelector('input[type="checkbox"][data-name="GNS主板2键触摸板"]');
-            
-            if (el.checked) {
-                if (el === displayCb) {
-                    touchCb.checked = false;
-                } else if (el === touchCb) {
-                    displayCb.checked = false;
-                    const screenImg = document.getElementById('img-screen');
-                    if (screenImg) screenImg.style.display = 'none';
-                }
-            }
-        }
-
         function updateBackkeyImages() {
             const img2key = document.getElementById('img-2key');
             const img4key = document.getElementById('img-4key');
@@ -2355,11 +2357,6 @@
                     if (cb) {
                         cb.checked = false;
                         cb.disabled = false;
-                        const name = cb.getAttribute('data-name');
-                        if (name === 'GNS主板显示屏') {
-                            const screenImg = document.getElementById('img-screen');
-                            if (screenImg) screenImg.style.display = 'none';
-                        }
                     }
                     el.style.display = 'none';
                 }
@@ -2368,10 +2365,89 @@
             updateMicroswitchState();
         }
 
+        // 选配升级页面所属的主板
+        const UPGRADE_BOARDS = ['GNS明日香主板', 'ProShock主板', '氦闪2主板'];
+
+        function isUpgradeEligible() {
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            return !!mbRadio && UPGRADE_BOARDS.indexOf(mbRadio.getAttribute('data-name')) !== -1;
+        }
+
+        function updateUpgradeVisibility() {
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const board = mbRadio ? mbRadio.getAttribute('data-name') : '';
+            document.querySelectorAll('#section-3 .upgrade-item').forEach(label => {
+                const cb = label.querySelector('input[type="checkbox"]');
+                const boards = (label.getAttribute('data-boards') || '').split(',');
+                if (boards.indexOf(board) !== -1) {
+                    label.style.display = '';
+                } else {
+                    if (cb) cb.checked = false;
+                    label.style.display = 'none';
+                }
+            });
+            updateUpgradeImages();
+            updateSummary();
+        }
+
+        function updateUpgradeImages() {
+            const map = { '触摸板': 'img-touchpad', '显示屏': 'img-upgrade-screen', '2.4G无线模式': 'img-reciver' };
+            Object.keys(map).forEach(name => {
+                const cb = document.querySelector(`#section-3 input[type="checkbox"][data-name="${name}"]`);
+                const img = document.getElementById(map[name]);
+                if (cb && img) img.style.display = cb.checked ? 'block' : 'none';
+            });
+        }
+
+        function toggleUpgradeOption(el) {
+            const name = el.getAttribute('data-name');
+            if (el.checked) {
+                // 触摸板与显示屏互斥（二选一）
+                if (name === '触摸板') {
+                    const other = document.querySelector('#section-3 input[type="checkbox"][data-name="显示屏"]');
+                    if (other) other.checked = false;
+                } else if (name === '显示屏') {
+                    const other = document.querySelector('#section-3 input[type="checkbox"][data-name="触摸板"]');
+                    if (other) other.checked = false;
+                } else if (name === '蓝牙模块' || name === '2.4G无线模式' || name === '体感陀螺仪') {
+                    // ProShock主板：蓝牙模块、2.4G无线模式、体感陀螺仪互斥（三选一）
+                    const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+                    if (mbRadio && mbRadio.getAttribute('data-name') === 'ProShock主板') {
+                        ['蓝牙模块', '2.4G无线模式', '体感陀螺仪'].forEach(other => {
+                            if (other === name) return;
+                            // 只取消当前页面上可见的选项
+                            const otherCb = document.querySelector(`#section-3 input[type="checkbox"][data-name="${other}"]`);
+                            if (!otherCb || otherCb.closest('.upgrade-item').style.display === 'none') return;
+                            otherCb.checked = false;
+                        });
+                    }
+                }
+            }
+            updateUpgradeImages();
+            updateSelection();
+            updateSummary();
+        }
+
+        // 选配升级页面在主板不适配时不展示，导航需跳过该页面
+        function getVisibleSectionIndices() {
+            const list = [];
+            for (let i = 0; i < totalSections; i++) {
+                if (i === 3 && !isUpgradeEligible()) continue;
+                list.push(i);
+            }
+            return list;
+        }
+
+        function adjacentSection(delta) {
+            const list = getVisibleSectionIndices();
+            const target = list[list.indexOf(currentSection) + delta];
+            return target === undefined ? null : target;
+        }
+
         function updateSelection() {
             const nextBtn = document.getElementById('nextBtn');
             const sectionInputs = document.querySelectorAll(`#section-${currentSection} input:checked`);
-            let canNext = sectionInputs.length > 0 || currentSection >= totalSections - 1 || currentSection === 2 || currentSection === 8;
+            let canNext = sectionInputs.length > 0 || currentSection >= totalSections - 1 || currentSection === 2 || currentSection === 3 || currentSection === 9;
 
             // 外壳选择页面：手柄外壳和手柄中框均为必选，振扬、欧升腾、BO5外壳需选择款式
             if (currentSection === 1 && currentSection < totalSections - 1) {
@@ -2397,15 +2473,15 @@
             }
 
             // 摇杆选配页面：摇杆本体和减阻尼均为必选
-            if (currentSection === 3 && currentSection < totalSections - 1) {
+            if (currentSection === 4 && currentSection < totalSections - 1) {
                 const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
                 const dampingRadio = document.querySelector('input[type="radio"][name="damping"]:checked');
                 canNext = !!stickRadio && !!dampingRadio;
             }
 
             // 十字键/交互键改装页面：显示的子模块必须选择
-            if ((currentSection === 4 || currentSection === 5) && currentSection < totalSections - 1) {
-                const prefix = currentSection === 4 ? 'dpad' : 'interact';
+            if ((currentSection === 5 || currentSection === 6) && currentSection < totalSections - 1) {
+                const prefix = currentSection === 5 ? 'dpad' : 'interact';
                 ['force', 'config', 'color'].forEach(suffix => {
                     const module = document.getElementById(`${prefix}-${suffix}-module`);
                     if (module && module.style.display !== 'none') {
@@ -2417,7 +2493,7 @@
             }
 
             // 肩键改装页面：显示的子模块必须选择
-            if (currentSection === 6 && currentSection < totalSections - 1) {
+            if (currentSection === 7 && currentSection < totalSections - 1) {
                 ['force', 'config'].forEach(suffix => {
                     const module = document.getElementById(`shoulder-${suffix}-module`);
                     if (module && module.style.display !== 'none') {
@@ -2429,7 +2505,7 @@
             }
 
             // 扳机键改装页面：显示的子模块必须选择
-            if (currentSection === 7 && currentSection < totalSections - 1) {
+            if (currentSection === 8 && currentSection < totalSections - 1) {
                 const configModule = document.getElementById('trigger-config-module');
                 if (configModule && configModule.style.display !== 'none') {
                     const configChecked = configModule.querySelector('input[type="radio"][name="trigger-config"]:checked');
@@ -2438,7 +2514,7 @@
             }
 
             // 背键改装方案页面：勾选微动背键时必须选择键帽和背键位置(4个背键时需选2个位置)
-            if (currentSection === 8 && currentSection < totalSections - 1) {
+            if (currentSection === 9 && currentSection < totalSections - 1) {
                 const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
                 if (backkeyCountRadio) {
                     const count = parseInt(backkeyCountRadio.value);
@@ -2460,7 +2536,9 @@
                 container.innerHTML = '<div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>';
             }
             const progressBar = document.getElementById('progressBar');
-            const percentage = ((currentSection) / (totalSections - 1)) * 100;
+            const visibleSections = getVisibleSectionIndices();
+            const pos = Math.max(0, visibleSections.indexOf(currentSection));
+            const percentage = (pos / (visibleSections.length - 1)) * 100;
             progressBar.style.width = Math.max(0, Math.min(100, percentage)) + '%';
         }
 
@@ -2474,11 +2552,14 @@
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             const progress = document.getElementById('progress');
+            const visibleSections = getVisibleSectionIndices();
+            const currentPos = visibleSections.indexOf(index);
+            const lastVisible = visibleSections[visibleSections.length - 1];
             
-            prevBtn.disabled = index === 0;
-            progress.textContent = `第 ${index + 1}/${totalSections} 步：${sectionTitles[index]}`;
+            prevBtn.disabled = index === visibleSections[0];
+            progress.textContent = `第 ${currentPos + 1}/${visibleSections.length} 步：${sectionTitles[index]}`;
             
-            if (index === totalSections - 1) {
+            if (index === lastVisible) {
                 nextBtn.textContent = '复制订单配置';
                 nextBtn.removeEventListener('click', nextSection);
                 nextBtn.addEventListener('click', showConfirm);
@@ -2495,7 +2576,7 @@
             const skipBtn = document.getElementById('skipBtn');
             const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
             const isErGai = mbRadio && mbRadio.getAttribute('data-name') === '二改手柄';
-            if (isErGai && index !== 0 && index !== totalSections - 1) {
+            if (isErGai && index !== visibleSections[0] && index !== lastVisible) {
                 skipBtn.style.display = '';
             } else {
                 skipBtn.style.display = 'none';
@@ -2504,24 +2585,26 @@
             // 二改要求输入框：仅在选择了"二改手柄"且在订单确认页面时显示
             const ergaiReqGroup = document.getElementById('ergai-requirement-group');
             if (ergaiReqGroup) {
-                ergaiReqGroup.style.display = (isErGai && index === totalSections - 1) ? '' : 'none';
+                ergaiReqGroup.style.display = (isErGai && index === lastVisible) ? '' : 'none';
             }
 
             updateSummary();
             if (index === 2) updateGnsOnlyVisibility();
+            // 进入选配升级页面时，按所选主板刷新可选项
+            if (index === 3) updateUpgradeVisibility();
             // 进入摇杆选配页面时，确保默认勾选和描述文字正确显示
-            if (index === 3) {
+            if (index === 4) {
                 const checkedStick = document.querySelector('input[type="radio"][name="stick"]:checked');
                 if (checkedStick) {
                     toggleStickDamping(checkedStick);
                 }
             }
             // 进入扳机键改装页面时，更新选项可用性
-            if (index === 7) {
+            if (index === 8) {
                 updateTriggerState();
             }
             // 进入背键改装方案页面时，确保DSE相关禁用、价格累计显示正确
-            if (index === 8) {
+            if (index === 9) {
                 toggleDseKeycap();
                 updateBackkeyCountPrice();
             }
@@ -2539,7 +2622,7 @@
                     input.checked = false;
                 });
                 // 触发页面特定的重置逻辑
-                if (currentSection === 8) {
+                if (currentSection === 9) {
                     // 背键页面需要重置键帽和位置状态
                     positionOrder = [];
                     document.querySelectorAll('#backkey-position-section input[type="checkbox"]').forEach(cb => {
@@ -2561,7 +2644,7 @@
                     const oupianDesc = document.getElementById('oupian-desc');
                     if (oupianDesc) oupianDesc.style.display = 'none';
                 }
-                if (currentSection === 3) {
+                if (currentSection === 4) {
                     // 摇杆页面重置减阻尼提示
                     const tmrNotice = document.getElementById('tmr-notice');
                     if (tmrNotice) tmrNotice.style.display = 'none';
@@ -2572,19 +2655,21 @@
                 }
             }
             updateSummary();
-            showSection(currentSection + 1);
+            const target = adjacentSection(1);
+            if (target !== null) showSection(target);
         }
 
         function prevSection() {
-            if (currentSection > 0) {
-                showSection(currentSection - 1);
+            const target = adjacentSection(-1);
+            if (target !== null) {
+                showSection(target);
             }
         }
 
         function nextSection() {
             if (currentSection < totalSections - 1) {
                 const sectionCheckboxes = document.querySelectorAll(`#section-${currentSection} input:checked`);
-                if (sectionCheckboxes.length === 0 && currentSection !== 2 && currentSection !== 8) {
+                if (sectionCheckboxes.length === 0 && currentSection !== 2 && currentSection !== 3 && currentSection !== 9) {
                     showMessage('请至少选择一个项目', 'error');
                     return;
                 }
@@ -2628,7 +2713,7 @@
                     }
                 }
                 // 摇杆选配页面：摇杆本体和减阻尼均为必选
-                if (currentSection === 3) {
+                if (currentSection === 4) {
                     const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
                     const dampingRadio = document.querySelector('input[type="radio"][name="damping"]:checked');
                     if (!stickRadio) {
@@ -2641,8 +2726,8 @@
                     }
                 }
                 // 十字键/交互键改装页面：显示的子模块必须选择
-                if (currentSection === 4 || currentSection === 5) {
-                    const prefix = currentSection === 4 ? 'dpad' : 'interact';
+                if (currentSection === 5 || currentSection === 6) {
+                    const prefix = currentSection === 5 ? 'dpad' : 'interact';
                     const labels = { force: '微动力度', config: '大微动配置', color: '按键颜色' };
                     for (const suffix of ['force', 'config', 'color']) {
                         const module = document.getElementById(`${prefix}-${suffix}-module`);
@@ -2657,7 +2742,7 @@
                     }
                 }
                 // 肩键改装页面：显示的子模块必须选择
-                if (currentSection === 6) {
+                if (currentSection === 7) {
                     const labels = { force: '微动力度', config: '大微动配置' };
                     for (const suffix of ['force', 'config']) {
                         const module = document.getElementById(`shoulder-${suffix}-module`);
@@ -2672,7 +2757,7 @@
                     }
                 }
                 // 扳机键改装页面：大微动配置必须选择
-                if (currentSection === 7) {
+                if (currentSection === 8) {
                     const configModule = document.getElementById('trigger-config-module');
                     if (configModule && configModule.style.display !== 'none') {
                         const configChecked = configModule.querySelector('input[type="radio"][name="trigger-config"]:checked');
@@ -2683,7 +2768,7 @@
                     }
                 }
                 // 背键改装方案页面：勾选微动背键时必须选择键帽和背键位置
-                if (currentSection === 8) {
+                if (currentSection === 9) {
                     const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
                     if (backkeyCountRadio) {
                         const count = parseInt(backkeyCountRadio.value);
@@ -2700,7 +2785,8 @@
                         }
                     }
                 }
-                showSection(currentSection + 1);
+                const target = adjacentSection(1);
+                if (target !== null) showSection(target);
             }
         }
 
@@ -3326,7 +3412,7 @@
                 'bo5.jpg','direct.jpg','direct-key.jpg','direct-plug.jpg','direction-hotkey.jpg',
                 'dse.jpg','dse1.jpg','dsea.jpg','dseb.jpg','fn.jpg',
                 'gns.jpg','hs.jpg','hs2.jpg','suiovo.jpg','proshock.jpg','ost.jpg','zfy.jpg','oupian.jpg',
-                'plug.jpg','round.jpg','round1.jpg','screen.jpg','share.jpg','slice.jpg','stick.jpg','typec.jpg','wechat.jpg'
+                'plug.jpg','reciver.jpg','round.jpg','round1.jpg','screen.jpg','share.jpg','slice.jpg','stick.jpg','touchpad.jpg','typec.jpg','wechat.jpg'
             ];
             images.forEach(name => {
                 const img = new Image();
