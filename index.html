@@ -1333,6 +1333,7 @@
         <img id="imagePreviewImg" src="" alt="图片预览">
     </div>
 
+    <script src="prices.js"></script>
     <script>
         let currentSection = 0;
         const totalSections = 11;
@@ -1424,7 +1425,7 @@
             const joystickCheckbox = document.getElementById('joystick-microswitch');
             const joystickPriceSpan = document.getElementById('joystick-microswitch-price');
             if (joystickCheckbox && joystickPriceSpan) {
-                const price = isGns ? 60 : 100;
+                const price = isGns ? PRICES['摇杆下压微动@GNS'] : PRICES['摇杆下压微动@默认'];
                 joystickCheckbox.setAttribute('data-price', price);
                 joystickPriceSpan.textContent = price + '元';
             }
@@ -1445,7 +1446,7 @@
                     menuCheckbox.disabled = false;
                     menuNotice.classList.remove('show');
                 }
-                const menuPrice = isErGai ? 60 : 40;
+                const menuPrice = isErGai ? PRICES['菜单背包微动@二改'] : PRICES['菜单背包微动@默认'];
                 menuCheckbox.setAttribute('data-price', menuPrice);
                 if (menuPriceSpan) menuPriceSpan.textContent = menuPrice + '元';
             }
@@ -1454,16 +1455,16 @@
             const psCheckbox = document.getElementById('ps-microswitch');
             const psPriceSpan = document.getElementById('ps-microswitch-price');
             if (psCheckbox) {
-                const psPrice = isErGai ? 50 : 30;
+                const psPrice = isErGai ? PRICES['PS键微动@二改'] : PRICES['PS键微动@默认'];
                 psCheckbox.setAttribute('data-price', psPrice);
                 if (psPriceSpan) psPriceSpan.textContent = psPrice + '元';
             }
 
             // 摇杆本体价格：二改手柄时alps80/DS13MAX100/JS13PRO+100，其他保持默认
             const stickPrices = {
-                'alps蓝边摇杆': { default: 60, ergai: 80, spanId: 'stick-alps-price' },
-                'DS13MAX摇杆': { default: 80, ergai: 100, spanId: 'stick-ds13-price' },
-                'JS13PRO+摇杆': { default: 80, ergai: 100, spanId: 'stick-js13-price' }
+                'alps蓝边摇杆': { default: PRICES['alps蓝边摇杆'], ergai: PRICES['alps蓝边摇杆@二改'], spanId: 'stick-alps-price' },
+                'DS13MAX摇杆': { default: PRICES['DS13MAX摇杆'], ergai: PRICES['DS13MAX摇杆@二改'], spanId: 'stick-ds13-price' },
+                'JS13PRO+摇杆': { default: PRICES['JS13PRO+摇杆'], ergai: PRICES['JS13PRO+摇杆@二改'], spanId: 'stick-js13-price' }
             };
             Object.keys(stickPrices).forEach(stickName => {
                 const cfg = stickPrices[stickName];
@@ -1541,14 +1542,14 @@
             const originalOption = document.getElementById('dpad-original-option');
             if (type === '原装软胶垫') {
                 originalOption.style.display = 'flex';
-                // 黑色/白色20元，原装按键0元
+                // 黑色/白色按配置加价，原装按键0元
                 colorModule.querySelectorAll('input[type="radio"]').forEach(r => {
                     const name = r.getAttribute('data-name');
-                    r.setAttribute('data-price', name === '原装按键' ? 0 : 20);
+                    r.setAttribute('data-price', name === '原装按键' ? 0 : PRICES['按键颜色加价']);
                 });
                 colorModule.querySelectorAll('.item-price').forEach((span, idx) => {
                     const radio = colorModule.querySelectorAll('input[type="radio"]')[idx];
-                    span.textContent = (radio.getAttribute('data-name') === '原装按键' ? 0 : 20) + '元';
+                    span.textContent = (radio.getAttribute('data-name') === '原装按键' ? 0 : PRICES['按键颜色加价']) + '元';
                 });
                 // 默认选中原装按键
                 const defaultOriginal = colorModule.querySelector('input[type="radio"][data-name="原装按键"]');
@@ -1658,15 +1659,15 @@
             const originalOption = document.getElementById('interact-original-option');
             if (type === '原装软胶垫') {
                 originalOption.style.display = 'flex';
-                // 黑色/白色20元，原装按键0元
+                // 黑色/白色按配置加价，原装按键0元
                 colorModule.querySelectorAll('input[type="radio"]').forEach(r => {
                     const name = r.getAttribute('data-name');
-                    r.setAttribute('data-price', name === '原装按键' ? 0 : 20);
+                    r.setAttribute('data-price', name === '原装按键' ? 0 : PRICES['按键颜色加价']);
                     r.disabled = false;
                 });
                 colorModule.querySelectorAll('.item-price').forEach((span, idx) => {
                     const radio = colorModule.querySelectorAll('input[type="radio"]')[idx];
-                    span.textContent = (radio.getAttribute('data-name') === '原装按键' ? 0 : 20) + '元';
+                    span.textContent = (radio.getAttribute('data-name') === '原装按键' ? 0 : PRICES['按键颜色加价']) + '元';
                 });
                 // 默认选中原装按键
                 const defaultOriginal = colorModule.querySelector('input[type="radio"][data-name="原装按键"]');
@@ -1986,21 +1987,21 @@
             const hasDsebMetal = dsebMetalCb && dsebMetalCb.checked;
 
             if (count === 2) {
-                prices['DSE金属豆子键帽'] = 20;
-                prices['DSE金属拨片键帽'] = 20;
+                prices['DSE金属豆子键帽'] = PRICES['DSE金属键帽@2个背键'];
+                prices['DSE金属拨片键帽'] = PRICES['DSE金属键帽@2个背键'];
             } else { // count === 4
                 if (hasDseMetal && hasDsebMetal) {
-                    prices['DSE金属豆子键帽'] = 40;
-                    prices['DSE金属拨片键帽'] = 40;
+                    prices['DSE金属豆子键帽'] = PRICES['DSE金属键帽@4个背键_双选'];
+                    prices['DSE金属拨片键帽'] = PRICES['DSE金属键帽@4个背键_双选'];
                 } else if (hasDseMetal) {
-                    prices['DSE金属豆子键帽'] = 60;
-                    prices['DSE金属拨片键帽'] = 60; // 未勾选时本身不收费，但显示潜在价格
+                    prices['DSE金属豆子键帽'] = PRICES['DSE金属键帽@4个背键_单选'];
+                    prices['DSE金属拨片键帽'] = PRICES['DSE金属键帽@4个背键_单选']; // 未勾选时本身不收费，但显示潜在价格
                 } else if (hasDsebMetal) {
-                    prices['DSE金属豆子键帽'] = 60; // 未勾选时本身不收费，但显示潜在价格
-                    prices['DSE金属拨片键帽'] = 60;
+                    prices['DSE金属豆子键帽'] = PRICES['DSE金属键帽@4个背键_单选']; // 未勾选时本身不收费，但显示潜在价格
+                    prices['DSE金属拨片键帽'] = PRICES['DSE金属键帽@4个背键_单选'];
                 } else {
-                    prices['DSE金属豆子键帽'] = 60;
-                    prices['DSE金属拨片键帽'] = 60;
+                    prices['DSE金属豆子键帽'] = PRICES['DSE金属键帽@4个背键_单选'];
+                    prices['DSE金属拨片键帽'] = PRICES['DSE金属键帽@4个背键_单选'];
                 }
             }
             return prices;
@@ -3423,7 +3424,46 @@
             setTimeout(() => { el.className = 'message'; }, 4000);
         }
 
+        // 从 prices.js 的 PRICES / PRICES_BY_VALUE 应用所有静态价格到页面
+        function applyPrices() {
+            if (typeof PRICES === 'undefined') return;
+            // 按 data-name 应用
+            document.querySelectorAll('input[data-name][data-price]').forEach(el => {
+                const name = el.getAttribute('data-name');
+                if (PRICES.hasOwnProperty(name)) {
+                    el.setAttribute('data-price', PRICES[name]);
+                    const label = el.closest('label');
+                    if (label) {
+                        const span = label.querySelector('.item-price');
+                        if (span) span.textContent = PRICES[name] + '元';
+                    }
+                }
+            });
+            // 按 name + value 应用（BO5款式、其他外壳，无 data-name）
+            if (typeof PRICES_BY_VALUE !== 'undefined') {
+                Object.keys(PRICES_BY_VALUE).forEach(inputName => {
+                    document.querySelectorAll(`input[name="${inputName}"]`).forEach(el => {
+                        const price = PRICES_BY_VALUE[inputName][el.value];
+                        if (price === undefined) return;
+                        el.setAttribute('data-price', price);
+                        // 其他外壳的标签文本中含价格，同步更新
+                        if (inputName === 'other-shell') {
+                            const label = el.closest('label');
+                            if (label) {
+                                label.childNodes.forEach(node => {
+                                    if (node.nodeType === Node.TEXT_NODE && node.nodeValue.trim()) {
+                                        node.nodeValue = ' ' + el.value + ' (' + price + '元)';
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
         // 默认勾选DS13MAX摇杆
+        applyPrices();
         const defaultStick = document.querySelector('input[type="radio"][data-name="DS13MAX摇杆"]');
         if (defaultStick) {
             defaultStick.checked = true;
