@@ -14,9 +14,20 @@
             line-height: 1.6;
             padding: 20px 0;
         }
-        .container {
-            max-width: 920px;
+        .page-layout {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 24px;
+            max-width: 1324px;
             margin: 0 auto;
+            padding: 0 20px;
+        }
+        .container {
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: 920px;
+            margin: 0;
             padding: 0 20px;
         }
         h1 {
@@ -318,85 +329,13 @@
             transform: none;
             box-shadow: none;
         }
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            animation: fadeIn 0.3s ease;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        .modal {
-            background: #fff;
-            border-radius: 20px;
-            padding: 32px;
-            max-width: 520px;
-            width: 92%;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 80px rgba(0,0,0,0.25);
-            animation: scaleIn 0.3s ease;
-        }
         @keyframes scaleIn {
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
-        }
-        .modal h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #2d3748;
-            font-size: 22px;
-            font-weight: 700;
-        }
-        .modal-summary {
-            background: #f7fafc;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            line-height: 2;
-            border: 1px solid #e2e8f0;
-        }
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-        .modal-buttons button {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        .btn-copy {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
-            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
-        }
-        .btn-copy:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102,126,234,0.4);
-        }
-        .btn-cancel {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-        .btn-cancel:hover {
-            background: #cbd5e0;
         }
         .message {
             text-align: center;
@@ -584,33 +523,49 @@
             .progress-steps { padding: 8px 12px; }
         }
 
-        /* Progress bar */
+        /* 配置页面跳转标签：滚动到顶部后固定 */
         .progress-steps {
+            position: sticky;
+            top: 20px;
+            z-index: 940;
             display: flex;
-            justify-content: center;
-            margin-bottom: 28px;
-            padding: 12px 20px;
-            background: rgba(255,255,255,0.1);
+            flex-wrap: nowrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 10px 12px;
+            background: rgba(255,255,255,0.92);
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            overflow-y: hidden;
         }
-        .progress-bar-container {
-            width: 100%;
-            max-width: 750px;
-            height: 10px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 5px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        .step-tab {
+            flex: 1 1 0;
+            min-width: 0;
+            padding: 6px 4px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            background: #fff;
+            color: #4a5568;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #48bb78, #38a169);
-            border-radius: 5px;
-            transition: width 0.4s ease;
-            box-shadow: 0 0 10px rgba(72,187,120,0.5);
+        .step-tab:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+        .step-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(102,126,234,0.35);
         }
 
         /* Footer note */
@@ -619,40 +574,248 @@
             color: rgba(255,255,255,0.7);
             font-size: 12px;
             margin-top: 36px;
-            padding: 16px;
+            padding: 12px 16px;
             background: rgba(255,255,255,0.05);
             border-radius: 12px;
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* 右下角微信联系浮动卡片（固定定位，不随滚动移动，固定尺寸） */
-        .wechat-float {
-            position: fixed;
-            right: 16px;
-            bottom: 16px;
-            z-index: 900;
-            width: 200px;
-            background: #f5f5f5;
-            border-radius: 12px;
-            padding: 8px 8px 6px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-            text-align: center;
-            box-sizing: border-box;
+        /* 折叠说明（位于底部说明板块内） */
+        .faq-list {
+            margin-top: 0;
+            display: flex;
+            flex-direction: column;
         }
-        .wechat-float img {
-            width: 100%;
-            border-radius: 8px;
-            display: block;
+        .faq-item {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            overflow: hidden;
+        }
+        .faq-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 4px;
             cursor: pointer;
+            color: #fff;
+            font-size: 14px;
+            font-weight: normal;
+            text-align: left;
+            line-height: 1.4;
+            user-select: none;
+            border-top: 1px solid rgba(255,255,255,0.08);
         }
-        .wechat-float .wechat-float-text {
+        .faq-item:first-child .faq-title {
+            border-top: none;
+        }
+        .faq-toggle {
+            font-size: 18px;
+            line-height: 1;
+            color: rgba(255,255,255,0.85);
+            flex-shrink: 0;
+            margin-left: 12px;
+            transition: transform 0.3s ease;
+        }
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+        }
+        .faq-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 4px;
+            color: rgba(255,255,255,0.8);
+            font-size: 13px;
+            line-height: 1.6;
+            text-align: left;
+        }
+        .faq-item.open .faq-content {
+            max-height: 200px;
+            padding: 2px 4px 8px;
+        }
+        .config-panel {
+            position: sticky;
+            top: 20px;
+            right: auto;
+            flex: 0 0 340px;
+            width: 340px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            overflow: hidden;
+            z-index: 950;
+        }
+        .config-panel-header {
+            padding: 16px 20px 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            flex: 0 0 auto;
+        }
+        .config-panel-header h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .config-panel-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 12px;
+            opacity: 0.85;
+        }
+        .config-panel-body {
+            padding: 14px 20px 18px;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+            flex: 1 1 auto;
+        }
+        .config-panel-body > :not(.summary-list) {
+            flex: 0 0 auto;
+        }
+        .config-panel .summary-list {
+            flex: 1 1 auto;
+            min-height: 120px;
+            max-height: 260px;
+            margin-bottom: 8px;
+            padding: 0;
+            background: transparent;
+            border: none;
+            font-size: 13px;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .config-panel .summary-item {
+            padding: 7px 0;
+            gap: 12px;
+        }
+        .config-panel .summary-item:hover {
+            background: transparent;
+            padding-left: 0;
+            padding-right: 0;
+            margin: 0;
+            border-radius: 0;
+        }
+        .config-panel .summary-item span:first-child {
+            flex: 1 1 auto;
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+        .config-panel .summary-item span:last-child {
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+        .config-panel .total-price {
+            font-size: 16px;
+            color: #000;
+            margin: 10px 0 12px;
+            padding-top: 10px;
+        }
+        #ergai-requirement-group label {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        #ergai-requirement-group {
+            margin-bottom: 10px;
+        }
+        .config-panel textarea {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f7fafc;
+            font-family: inherit;
+            font-size: 13px;
+            color: #333;
+        }
+        .config-panel textarea {
+            min-height: 56px;
+            resize: vertical;
+        }
+        .panel-toast {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px 18px;
+            border-radius: 20px;
+            background: rgba(56,161,105,0.95);
+            color: #fff;
+            font-size: 13px;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            z-index: 10;
+            pointer-events: none;
+        }
+        .panel-toast.error {
+            background: rgba(229,62,62,0.95);
+        }
+        .missing-required {
+            margin: 2px 0 8px;
+            color: #ed8936;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+        .missing-error {
+            margin: 0 0 8px;
+            color: #e53e3e;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        .config-submit {
+            padding: 13px;
+            font-size: 15px;
+        }
+        .config-tip {
+            margin-top: 8px;
+            text-align: center;
             font-size: 11px;
-            color: #555;
-            line-height: 1.3;
-            margin-top: 4px;
+            color: #a0aec0;
         }
-        @media (max-width: 768px) {
-            .wechat-float { width: 88px; }
+        .config-wechat {
+            display: block;
+            /* 面板宽 340px，取其 50%（170px）；内容区宽 300px（左右各有 20px 内边距），故补 20px */
+            width: calc(50% + 20px);
+            margin: 10px auto 0;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        @media (max-width: 900px) {
+            body {
+                padding-right: 0;
+                padding-bottom: calc(42vh + 24px);
+            }
+            .config-panel {
+                position: fixed;
+                top: auto;
+                left: 12px;
+                right: 12px;
+                bottom: 12px;
+                width: auto;
+                max-height: 42vh;
+            }
+            .config-panel-header { padding: 12px 16px 10px; }
+            .config-panel-header h2 { font-size: 16px; }
+            .config-panel-body {
+                padding: 10px 16px 14px;
+                display: block;
+                overflow-y: auto;
+            }
+            .config-panel .summary-list {
+                max-height: none;
+                overflow: visible;
+            }
+            .config-wechat { max-width: 140px; }
         }
 
         /* Image container styling */
@@ -766,9 +929,10 @@
     </style>
 </head>
 <body>
+    <div class="page-layout">
     <div class="container">
-        <h1>DS4手柄改装订单系统</h1>
-        <p class="subtitle">请按照步骤选择需要的改装项目，配置完成后可复制订单信息，点击图片可放大查看细节</p>
+        <h1 id="pageTitle">DS4手柄改装订单系统</h1>
+        <p class="subtitle" id="pageSubtitle">请按照步骤选择需要的改装项目，右侧实时显示已选配置与总价，点击图片可放大查看细节</p>
 
         <div id="message" class="message"></div>
 
@@ -1175,7 +1339,7 @@
 
         <!-- Step 10: 背键改装方案 -->
         <div class="section" id="section-9">
-            <div class="section-title">【背键改装方案】</div>
+            <div class="section-title">【背键改装】</div>
             <div class="section-hint">请选择背键配置（如不需要背键可跳过）</div>
 
             <div class="shell-module">
@@ -1271,60 +1435,61 @@
             </div>
         </div>
 
-        <!-- Step 11: 订单汇总与用户信息 -->
-        <div class="section" id="section-10">
-            <div class="section-title">【订单确认】</div>
-            
-            <div class="user-info" style="margin-bottom:20px;">
-                <div class="form-group">
-                    <label for="username">昵称 <span style="color:red;">*</span></label>
-                    <input type="text" id="username" placeholder="请填写昵称用于下单排号（必填）" required>
-                </div>
-            </div>
-
-            <div id="ergai-requirement-group" style="margin-bottom:20px;display:none;">
-                <div class="form-group">
-                    <label for="ergai-requirement">二改要求</label>
-                    <textarea id="ergai-requirement" placeholder="如有特殊要求请在此说明（非必填）"></textarea>
-                </div>
-            </div>
-
-            <div class="summary-box">
-                <div class="summary-title">改装项目清单</div>
-                <div class="summary-list" id="summaryList">
-                    <p style="color:#999;">尚未选择任何项目</p>
-                </div>
-                <div class="total-price">总计: <span id="totalPrice">0</span> 元</div>
-            </div>
-
-            <button class="btn-submit" style="margin-top:20px;" onclick="showConfirm()">📋 复制订单配置</button>
-        </div>
-
         <div class="nav-bar">
             <button class="nav-btn prev" id="prevBtn" disabled>◀ 上一选择</button>
             <button class="nav-btn next" id="nextBtn">下一选择 ▶</button>
             <button class="nav-btn skip" id="skipBtn" style="display:none;" onclick="skipSection()">二改跳过</button>
         </div>
 
-        <div class="footer-note">DS4手柄改装订单系统</div>
-    </div>
-
-    <!-- 右下角微信联系浮动卡片（固定定位，固定尺寸） -->
-    <div class="wechat-float">
-        <img src="pic/wechat.jpg" alt="微信二维码" onclick="openImagePreview(this.src)">
-        <div class="wechat-float-text">改装请联系<br>花明楼微信号预约</div>
-    </div>
-
-    <!-- 确认弹窗 -->
-    <div class="modal-overlay" id="confirmModal">
-        <div class="modal">
-            <div id="modalContent" style="text-align:center;">
-                <img src="pic/wechat.jpg" alt="微信二维码" id="wechatImg" onclick="openImagePreview(this.src)" style="max-width: 100%; max-height: 55vh; width: auto; height: auto; border-radius: 10px; margin-bottom: 12px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); object-fit: contain;">
-                <p style="font-size: 14px; color: #4a5568; margin-bottom: 12px; line-height: 1.6;">已复制订单内容，请扫码添加微信并发送给UP。</p>
-                <div class="modal-buttons">
-                    <button class="btn-cancel" onclick="closeModal()">关闭</button>
+        <div class="footer-note">
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-title" onclick="this.parentElement.classList.toggle('open')">
+                        <span>关于制作周期</span><span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-content">按预订顺序逐一改装，轮到时会提前发信息最终确认改装配置，确认后2周发货。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-title" onclick="this.parentElement.classList.toggle('open')">
+                        <span>关于物流费用</span><span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-content">手柄寄过来自行承担邮费，改装满 ¥400 顺丰包邮。</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-title" onclick="this.parentElement.classList.toggle('open')">
+                        <span>关于售后质量</span><span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-content">手柄整体3个月质保，摇杆一个月质保。质保期外按配件成本收费。</div>
                 </div>
             </div>
+        </div>
+    </div>
+
+        <!-- 已选配置单：与左侧配置区同排显示，滚动时固定 -->
+        <div class="config-panel" id="configPanel">
+            <div class="config-panel-header">
+                <h2>已选配置单</h2>
+                <div class="config-panel-meta">
+                    <span>DS4 手柄改装</span>
+                    <span id="selectedCount">已选 0 项</span>
+                </div>
+            </div>
+            <div class="config-panel-body">
+                <div class="summary-list" id="summaryList">
+                    <p style="color:#999;">尚未选择任何项目</p>
+                </div>
+                <div id="missingRequired" class="missing-required" style="display:none;"></div>
+                <div id="missingError" class="missing-error" style="display:none;"></div>
+                <div class="total-price">预计总价: <span id="totalPrice">0</span> 元</div>
+                <div id="ergai-requirement-group" style="display:none;">
+                    <label for="ergai-requirement">二改要求</label>
+                    <textarea id="ergai-requirement" placeholder="如有特殊要求请在此说明（非必填）"></textarea>
+                </div>
+                <button class="btn-submit config-submit" onclick="showConfirm()">📋 生成并复制订单</button>
+                <p class="config-tip">复制订单并发送给工作室</p>
+                <img src="pic/wechat.jpg" alt="微信二维码" class="config-wechat" onclick="openImagePreview(this.src)">
+            </div>
+            <div id="panelToast" class="panel-toast" style="display:none;"></div>
         </div>
     </div>
 
@@ -1336,8 +1501,8 @@
     <script src="prices.js"></script>
     <script>
         let currentSection = 0;
-        const totalSections = 11;
-        const sectionTitles = ['手柄主板', '外壳选择', '其他配件', '选配升级', '摇杆选配', '十字键改装', '交互键改装', '肩键改装', '扳机键改装', '背键改装方案', '订单确认'];
+        const totalSections = 10;
+        const sectionTitles = ['手柄主板', '外壳选择', '其他配件', '选配升级', '摇杆选配', '十字键改装', '交互键改装', '肩键改装', '扳机键改装', '背键改装'];
         
         function toggleMotherboardDesc(el) {
             document.querySelectorAll('#section-0 .item-desc').forEach(d => d.classList.remove('show'));
@@ -2483,100 +2648,22 @@
 
         function updateSelection() {
             const nextBtn = document.getElementById('nextBtn');
-            const sectionInputs = document.querySelectorAll(`#section-${currentSection} input:checked`);
-            let canNext = sectionInputs.length > 0 || currentSection >= totalSections - 1 || currentSection === 2 || currentSection === 3 || currentSection === 9;
-
-            // 外壳选择页面：手柄外壳和手柄中框均为必选，振扬、欧升腾、BO5外壳需选择款式
-            if (currentSection === 1 && currentSection < totalSections - 1) {
-                const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
-                const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
-                canNext = !!shellRadio && !!midframeRadio;
-                if (shellRadio) {
-                    const shellName = shellRadio.getAttribute('data-name');
-                    if (shellName === '振飞扬国产外壳') {
-                        const colorRadio = document.querySelector('input[type="radio"][name="shell-color-zfy"]:checked');
-                        canNext = canNext && !!colorRadio;
-                    } else if (shellName === '欧升腾国产类肤壳') {
-                        const colorRadio = document.querySelector('input[type="radio"][name="shell-color-ost"]:checked');
-                        canNext = canNext && !!colorRadio;
-                    } else if (shellName === 'BO5国产外壳') {
-                        const bo5StyleRadio = document.querySelector('input[type="radio"][name="bo5-style"]:checked');
-                        canNext = canNext && !!bo5StyleRadio;
-                    } else if (shellName === '其他外壳') {
-                        const otherShellRadio = document.querySelector('input[type="radio"][name="other-shell"]:checked');
-                        canNext = canNext && !!otherShellRadio;
-                    }
-                }
-            }
-
-            // 摇杆选配页面：摇杆本体和减阻尼均为必选
-            if (currentSection === 4 && currentSection < totalSections - 1) {
-                const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
-                const dampingRadio = document.querySelector('input[type="radio"][name="damping"]:checked');
-                canNext = !!stickRadio && !!dampingRadio;
-            }
-
-            // 十字键/交互键改装页面：显示的子模块必须选择
-            if ((currentSection === 5 || currentSection === 6) && currentSection < totalSections - 1) {
-                const prefix = currentSection === 5 ? 'dpad' : 'interact';
-                ['force', 'config', 'color'].forEach(suffix => {
-                    const module = document.getElementById(`${prefix}-${suffix}-module`);
-                    if (module && module.style.display !== 'none') {
-                        const radioName = `${prefix}-${suffix}`;
-                        const radioChecked = module.querySelector(`input[type="radio"][name="${radioName}"]:checked`);
-                        if (!radioChecked) canNext = false;
-                    }
-                });
-            }
-
-            // 肩键改装页面：显示的子模块必须选择
-            if (currentSection === 7 && currentSection < totalSections - 1) {
-                ['force', 'config'].forEach(suffix => {
-                    const module = document.getElementById(`shoulder-${suffix}-module`);
-                    if (module && module.style.display !== 'none') {
-                        const radioName = `shoulder-${suffix}`;
-                        const radioChecked = module.querySelector(`input[type="radio"][name="${radioName}"]:checked`);
-                        if (!radioChecked) canNext = false;
-                    }
-                });
-            }
-
-            // 扳机键改装页面：显示的子模块必须选择
-            if (currentSection === 8 && currentSection < totalSections - 1) {
-                const configModule = document.getElementById('trigger-config-module');
-                if (configModule && configModule.style.display !== 'none') {
-                    const configChecked = configModule.querySelector('input[type="radio"][name="trigger-config"]:checked');
-                    if (!configChecked) canNext = false;
-                }
-            }
-
-            // 背键改装方案页面：勾选微动背键时必须选择键帽和背键位置(4个背键时需选2个位置)
-            if (currentSection === 9 && currentSection < totalSections - 1) {
-                const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
-                if (backkeyCountRadio) {
-                    const count = parseInt(backkeyCountRadio.value);
-                    const keycapChecked = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').length;
-                    const positionChecked = document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked').length;
-                    const requiredPositions = count === 4 ? 2 : 1;
-                    if (keycapChecked === 0 || positionChecked < requiredPositions) {
-                        canNext = false;
-                    }
-                }
-            }
-
-            nextBtn.disabled = !canNext;
+            if (nextBtn) nextBtn.disabled = false;
+            updateSummary();
+            updateProgressSteps();
         }
 
         function updateProgressSteps() {
             const container = document.getElementById('progressSteps');
-            if (!container.children.length) {
-                container.innerHTML = '<div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>';
-            }
-            const progressBar = document.getElementById('progressBar');
+            if (!container) return;
             const visibleSections = getVisibleSectionIndices();
-            const pos = Math.max(0, visibleSections.indexOf(currentSection));
-            const percentage = (pos / (visibleSections.length - 1)) * 100;
-            progressBar.style.width = Math.max(0, Math.min(100, percentage)) + '%';
+            container.innerHTML = visibleSections.map(index =>
+                `<button class="step-tab${index === currentSection ? ' active' : ''}" onclick="jumpToSection(${index})">${sectionTitles[index]}</button>`
+            ).join('');
+        }
+
+        function jumpToSection(index) {
+            if (index !== currentSection) showSection(index);
         }
 
         function showSection(index) {
@@ -2595,9 +2682,14 @@
             
             prevBtn.disabled = index === visibleSections[0];
             progress.textContent = `第 ${currentPos + 1}/${visibleSections.length} 步：${sectionTitles[index]}`;
+
+            // 标题与说明仅在首页显示，其他页面顶部直接显示标签栏
+            const isFirstPage = index === visibleSections[0];
+            document.getElementById('pageTitle').style.display = isFirstPage ? '' : 'none';
+            document.getElementById('pageSubtitle').style.display = isFirstPage ? '' : 'none';
             
             if (index === lastVisible) {
-                nextBtn.textContent = '复制订单配置';
+                nextBtn.textContent = '生成并复制订单';
                 nextBtn.removeEventListener('click', nextSection);
                 nextBtn.addEventListener('click', showConfirm);
             } else {
@@ -2609,20 +2701,20 @@
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            // 二改跳过按钮：仅在选择了"二改手柄"且非主板/订单确认页面时显示
+            // 二改跳过按钮：仅在选择了"二改手柄"且非主板页面时显示
             const skipBtn = document.getElementById('skipBtn');
             const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
             const isErGai = mbRadio && mbRadio.getAttribute('data-name') === '二改手柄';
-            if (isErGai && index !== visibleSections[0] && index !== lastVisible) {
+            if (isErGai && index !== visibleSections[0]) {
                 skipBtn.style.display = '';
             } else {
                 skipBtn.style.display = 'none';
             }
 
-            // 二改要求输入框：仅在选择了"二改手柄"且在订单确认页面时显示
+            // 二改要求输入框：选择"二改手柄"后始终显示在配置单面板中
             const ergaiReqGroup = document.getElementById('ergai-requirement-group');
             if (ergaiReqGroup) {
-                ergaiReqGroup.style.display = (isErGai && index === lastVisible) ? '' : 'none';
+                ergaiReqGroup.style.display = isErGai ? '' : 'none';
             }
 
             updateSummary();
@@ -2704,127 +2796,64 @@
         }
 
         function nextSection() {
-            if (currentSection < totalSections - 1) {
-                const sectionCheckboxes = document.querySelectorAll(`#section-${currentSection} input:checked`);
-                if (sectionCheckboxes.length === 0 && currentSection !== 2 && currentSection !== 3 && currentSection !== 9) {
-                    showMessage('请至少选择一个项目', 'error');
-                    return;
+            const target = adjacentSection(1);
+            if (target !== null) showSection(target);
+        }
+
+        // 收集未选择的必选项目
+        function getMissingRequired() {
+            const missing = [];
+            const checkedRadio = name => document.querySelector(`input[type="radio"][name="${name}"]:checked`);
+
+            if (!checkedRadio('motherboard')) missing.push('主板');
+
+            const shellRadio = checkedRadio('shell');
+            if (!shellRadio) {
+                missing.push('手柄外壳');
+            } else {
+                const shellName = shellRadio.getAttribute('data-name');
+                if (shellName === '振飞扬国产外壳') {
+                    if (!checkedRadio('shell-color-zfy')) missing.push('外壳颜色');
+                } else if (shellName === '欧升腾国产类肤壳') {
+                    if (!checkedRadio('shell-color-ost')) missing.push('外壳颜色');
+                } else if (shellName === 'BO5国产外壳') {
+                    if (!checkedRadio('bo5-style')) missing.push('BO5外壳款式');
+                } else if (shellName === '其他外壳') {
+                    if (!checkedRadio('other-shell')) missing.push('其他外壳类型');
                 }
-                // 外壳选择页面：手柄外壳和手柄中框均为必选，振飞扬、欧升腾、BO5、其他外壳需选择选项
-                if (currentSection === 1) {
-                    const shellRadio = document.querySelector('input[type="radio"][name="shell"]:checked');
-                    const midframeRadio = document.querySelector('input[type="radio"][name="midframe"]:checked');
-                    if (!shellRadio) {
-                        showMessage('请选择手柄外壳', 'error');
-                        return;
-                    }
-                    if (!midframeRadio) {
-                        showMessage('请选择手柄中框', 'error');
-                        return;
-                    }
-                    const shellName = shellRadio.getAttribute('data-name');
-                    if (shellName === '振飞扬国产外壳') {
-                        const colorRadio = document.querySelector('input[type="radio"][name="shell-color-zfy"]:checked');
-                        if (!colorRadio) {
-                            showMessage('请选择外壳颜色', 'error');
-                            return;
-                        }
-                    } else if (shellName === '欧升腾国产类肤壳') {
-                        const colorRadio = document.querySelector('input[type="radio"][name="shell-color-ost"]:checked');
-                        if (!colorRadio) {
-                            showMessage('请选择外壳颜色', 'error');
-                            return;
-                        }
-                    } else if (shellName === 'BO5国产外壳') {
-                        const bo5StyleRadio = document.querySelector('input[type="radio"][name="bo5-style"]:checked');
-                        if (!bo5StyleRadio) {
-                            showMessage('请选择BO5外壳款式', 'error');
-                            return;
-                        }
-                    } else if (shellName === '其他外壳') {
-                        const otherShellRadio = document.querySelector('input[type="radio"][name="other-shell"]:checked');
-                        if (!otherShellRadio) {
-                            showMessage('请选择其他外壳类型', 'error');
-                            return;
-                        }
-                    }
-                }
-                // 摇杆选配页面：摇杆本体和减阻尼均为必选
-                if (currentSection === 4) {
-                    const stickRadio = document.querySelector('input[type="radio"][name="stick"]:checked');
-                    const dampingRadio = document.querySelector('input[type="radio"][name="damping"]:checked');
-                    if (!stickRadio) {
-                        showMessage('请选择摇杆本体', 'error');
-                        return;
-                    }
-                    if (!dampingRadio) {
-                        showMessage('请选择摇杆减阻尼', 'error');
-                        return;
-                    }
-                }
-                // 十字键/交互键改装页面：显示的子模块必须选择
-                if (currentSection === 5 || currentSection === 6) {
-                    const prefix = currentSection === 5 ? 'dpad' : 'interact';
-                    const labels = { force: '微动力度', config: '大微动配置', color: '按键颜色' };
-                    for (const suffix of ['force', 'config', 'color']) {
-                        const module = document.getElementById(`${prefix}-${suffix}-module`);
-                        if (module && module.style.display !== 'none') {
-                            const radioName = `${prefix}-${suffix}`;
-                            const radioChecked = module.querySelector(`input[type="radio"][name="${radioName}"]:checked`);
-                            if (!radioChecked) {
-                                showMessage(`请选择${labels[suffix]}`, 'error');
-                                return;
-                            }
-                        }
-                    }
-                }
-                // 肩键改装页面：显示的子模块必须选择
-                if (currentSection === 7) {
-                    const labels = { force: '微动力度', config: '大微动配置' };
-                    for (const suffix of ['force', 'config']) {
-                        const module = document.getElementById(`shoulder-${suffix}-module`);
-                        if (module && module.style.display !== 'none') {
-                            const radioName = `shoulder-${suffix}`;
-                            const radioChecked = module.querySelector(`input[type="radio"][name="${radioName}"]:checked`);
-                            if (!radioChecked) {
-                                showMessage(`请选择${labels[suffix]}`, 'error');
-                                return;
-                            }
-                        }
-                    }
-                }
-                // 扳机键改装页面：大微动配置必须选择
-                if (currentSection === 8) {
-                    const configModule = document.getElementById('trigger-config-module');
-                    if (configModule && configModule.style.display !== 'none') {
-                        const configChecked = configModule.querySelector('input[type="radio"][name="trigger-config"]:checked');
-                        if (!configChecked) {
-                            showMessage('请选择大微动配置', 'error');
-                            return;
-                        }
-                    }
-                }
-                // 背键改装方案页面：勾选微动背键时必须选择键帽和背键位置
-                if (currentSection === 9) {
-                    const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
-                    if (backkeyCountRadio) {
-                        const count = parseInt(backkeyCountRadio.value);
-                        const keycapChecked = document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked');
-                        const positionChecked = document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked');
-                        const requiredPositions = count === 4 ? 2 : 1;
-                        if (keycapChecked.length === 0) {
-                            showMessage('请选择键帽', 'error');
-                            return;
-                        }
-                        if (positionChecked.length < requiredPositions) {
-                            showMessage(`请选择${requiredPositions}个背键位置`, 'error');
-                            return;
-                        }
-                    }
-                }
-                const target = adjacentSection(1);
-                if (target !== null) showSection(target);
             }
+            if (!checkedRadio('midframe')) missing.push('手柄中框');
+
+            if (!checkedRadio('stick')) missing.push('摇杆本体');
+            if (!checkedRadio('damping')) missing.push('摇杆减阻尼');
+
+            const pageRequirements = [
+                { section: 5, prefix: 'dpad', name: '十字键改装' },
+                { section: 6, prefix: 'interact', name: '交互键改装' },
+                { section: 7, prefix: 'shoulder', name: '肩键改装' },
+                { section: 8, prefix: 'trigger', name: '扳机键改装' }
+            ];
+            const subLabels = { force: '微动力度', config: '大微动配置', color: '按键颜色' };
+            pageRequirements.forEach(page => {
+                const section = document.getElementById('section-' + page.section);
+                if (!section) return;
+                if (!section.querySelector('input:checked')) missing.push(page.name);
+                Object.keys(subLabels).forEach(suffix => {
+                    const module = document.getElementById(page.prefix + '-' + suffix + '-module');
+                    if (module && module.style.display !== 'none') {
+                        if (!checkedRadio(page.prefix + '-' + suffix)) missing.push(subLabels[suffix]);
+                    }
+                });
+            });
+
+            const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
+            if (backkeyCountRadio) {
+                const requiredPositions = parseInt(backkeyCountRadio.value) === 4 ? 2 : 1;
+                if (document.querySelectorAll('#backkey-keycap-section input[type="checkbox"]:checked').length === 0) missing.push('键帽');
+                if (document.querySelectorAll('#backkey-position-section input[type="checkbox"]:checked').length < requiredPositions) missing.push('背键位置');
+            }
+
+            return Array.from(new Set(missing));
         }
 
         function updateSummary() {
@@ -3046,38 +3075,52 @@
                 ).join('');
             }
 
+            const missingEl = document.getElementById('missingRequired');
+            if (missingEl) {
+                const missing = getMissingRequired();
+                if (missing.length) {
+                    // 按配置页面先后顺序，一次只显示一条提示
+                    missingEl.innerHTML = `<div>请选择${missing[0]}项目</div>`;
+                    missingEl.style.display = '';
+                } else {
+                    missingEl.innerHTML = '';
+                    missingEl.style.display = 'none';
+                }
+            }
+
             document.getElementById('totalPrice').textContent = total;
+            const countEl = document.getElementById('selectedCount');
+            if (countEl) countEl.textContent = `已选 ${items.length} 项`;
         }
 
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        // 面板内居中提示，成功提示3秒后自动隐藏
+        let panelToastTimer = null;
+        function setConfigError(msg, ok) {
+            const el = document.getElementById('panelToast');
+            if (!el) return false;
+            clearTimeout(panelToastTimer);
+            el.textContent = msg || '';
+            el.classList.toggle('error', !ok);
+            el.style.display = msg ? 'block' : 'none';
+            if (msg && ok) {
+                panelToastTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
+            }
+            return false;
         }
 
-        function validateUserInput(username) {
-            if (!username || !username.trim()) {
-                showMessage('请填写昵称', 'error');
-                return false;
-            }
-            const dangerousChars = /[<>"'`;()=&%$#@!^*[\]{}|\\]/;
-            if (username.length > 50) {
-                showMessage('姓名不能超过50个字符', 'error');
-                return false;
-            }
-            if (dangerousChars.test(username)) {
-                showMessage('姓名包含非法字符，请修改后重试', 'error');
-                return false;
-            }
-            return true;
+        // 必选项缺失提示：显示3秒后自动消失
+        let missingErrorTimer = null;
+        function showMissingError() {
+            const el = document.getElementById('missingError');
+            if (!el) return;
+            el.textContent = '存在未选择的必选项目，请检查';
+            el.style.display = '';
+            clearTimeout(missingErrorTimer);
+            missingErrorTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
         }
 
         function showConfirm() {
-            const username = document.getElementById('username').value.trim();
-
-            if (!validateUserInput(username)) {
-                return;
-            }
+            setConfigError('');
 
             const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
             const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
@@ -3090,29 +3133,17 @@
             const backkeyCountRadio = document.querySelector('input[type="checkbox"][data-group="backkey-count"]:checked');
             const extraShoulderRadio = document.querySelector('input[type="checkbox"][data-group="extra-shoulder"]:checked');
 
-            let hasSelection = false;
-            checkboxes.forEach(cb => {
-                if (cb.closest('#backkey-keycap-section') || cb.closest('#backkey-position-section')) return;
-                hasSelection = true;
-            });
-            if (!hasSelection && !mbRadio && !shellRadio && !midframeRadio && !stickRadio && !dpadRadio && !interactRadio && !backkeyCountRadio && !extraShoulderRadio) {
-                showMessage('请至少选择一个改装项目', 'error');
+            const missingRequired = getMissingRequired();
+            if (missingRequired.length) {
+                showMissingError();
                 return;
             }
 
             const total = document.getElementById('totalPrice').textContent;
-            const displayName = username || '未填写';
-            let html = `<strong>用户:</strong> ${escapeHtml(displayName)}<br>`;
-            html += `<hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">`;
-            html += `<strong>改装项目:</strong><br>`;
-            
-            let orderText = `用户: ${displayName}\n`;
-            orderText += `==========\n`;
-            orderText += `改装项目:\n`;
+            let orderText = `改装项目:\n`;
 
             // 主板
             if (mbRadio) {
-                html += `• ${mbRadio.getAttribute('data-name')} = ${mbRadio.getAttribute('data-price')}元<br>`;
                 orderText += `• ${mbRadio.getAttribute('data-name')} = ${mbRadio.getAttribute('data-price')}元\n`;
             }
 
@@ -3129,10 +3160,8 @@
                     if (bo5StyleRadio) {
                         const bo5Style = bo5StyleRadio.value;
                         const bo5Price = bo5StyleRadio.getAttribute('data-price');
-                        html += `• ${shellName} ${bo5Style} = ${bo5Price}元<br>`;
                         orderText += `• ${shellName} ${bo5Style} = ${bo5Price}元\n`;
                     } else {
-                        html += `• ${shellName} = 0元<br>`;
                         orderText += `• ${shellName} = 0元\n`;
                     }
                 // 其他外壳需要从选项获取价格
@@ -3141,22 +3170,18 @@
                     if (otherShellRadio) {
                         const otherShell = otherShellRadio.value;
                         const otherPrice = otherShellRadio.getAttribute('data-price');
-                        html += `• ${shellName} ${otherShell} = ${otherPrice}元<br>`;
                         orderText += `• ${shellName} ${otherShell} = ${otherPrice}元\n`;
                     } else {
-                        html += `• ${shellName} = 0元<br>`;
                         orderText += `• ${shellName} = 0元\n`;
                     }
                 } else {
                     const shellPrice = shellRadio.getAttribute('data-price');
-                    html += `• ${color ? `${shellName} ${color}` : shellName} = ${shellPrice}元<br>`;
                     orderText += `• ${color ? `${shellName} ${color}` : shellName} = ${shellPrice}元\n`;
                 }
             }
 
             // 中框
             if (midframeRadio) {
-                html += `• ${midframeRadio.getAttribute('data-name')} = ${midframeRadio.getAttribute('data-price')}元<br>`;
                 orderText += `• ${midframeRadio.getAttribute('data-name')} = ${midframeRadio.getAttribute('data-price')}元\n`;
             }
 
@@ -3172,7 +3197,6 @@
                     dampingPrice = parseInt(dampingRadio.getAttribute('data-price'));
                 }
                 const combinedName = dampingName && dampingName !== '原装阻尼' ? `${stickName} ${dampingName}` : stickName;
-                html += `• ${combinedName} = ${parseInt(stickPrice) + dampingPrice}元<br>`;
                 orderText += `• ${combinedName} = ${parseInt(stickPrice) + dampingPrice}元\n`;
             }
 
@@ -3187,7 +3211,6 @@
                 if (dpadConfigRadio) extraInfo.push(dpadConfigRadio.getAttribute('data-name'));
                 const dpadColorRadio = document.querySelector('input[type="radio"][name="dpad-color"]:checked');
                 if (dpadColorRadio) extraInfo.push(dpadColorRadio.getAttribute('data-name'));
-                html += `• 十字键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元<br>`;
                 orderText += `• 十字键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元\n`;
             }
 
@@ -3202,7 +3225,6 @@
                 if (interactConfigRadio) extraInfo.push(interactConfigRadio.getAttribute('data-name'));
                 const interactColorRadio = document.querySelector('input[type="radio"][name="interact-color"]:checked');
                 if (interactColorRadio) extraInfo.push(interactColorRadio.getAttribute('data-name'));
-                html += `• 交互键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元<br>`;
                 orderText += `• 交互键 ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元\n`;
             }
 
@@ -3222,7 +3244,6 @@
                     extraInfo.push(cb.getAttribute('data-name'));
                     extraPrice += parseInt(cb.getAttribute('data-price')) || 0;
                 });
-                html += `• 微动背键 ${countName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${countPrice + extraPrice}元<br>`;
                 orderText += `• 微动背键 ${countName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${countPrice + extraPrice}元\n`;
             }
 
@@ -3230,7 +3251,6 @@
             if (extraShoulderRadio) {
                 const name = extraShoulderRadio.getAttribute('data-name');
                 const price = extraShoulderRadio.getAttribute('data-price');
-                html += `• ${name} = ${price}元<br>`;
                 orderText += `• ${name} = ${price}元\n`;
             }
 
@@ -3244,7 +3264,6 @@
                 if (shoulderForceRadio) extraInfo.push(shoulderForceRadio.getAttribute('data-name'));
                 const shoulderConfigRadio = document.querySelector('input[type="radio"][name="shoulder-config"]:checked');
                 if (shoulderConfigRadio) extraInfo.push(shoulderConfigRadio.getAttribute('data-name'));
-                html += `• ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元<br>`;
                 orderText += `• ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元\n`;
             }
 
@@ -3256,7 +3275,6 @@
                 let extraInfo = [];
                 const triggerConfigRadio = document.querySelector('input[type="radio"][name="trigger-config"]:checked');
                 if (triggerConfigRadio) extraInfo.push(triggerConfigRadio.getAttribute('data-name'));
-                html += `• ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元<br>`;
                 orderText += `• ${typeName}${extraInfo.length ? ' ' + extraInfo.join(' ') : ''} = ${typePrice}元\n`;
             }
 
@@ -3270,7 +3288,6 @@
                         r.name === 'interact-type' || r.name === 'interact-force' || r.name === 'interact-config' || r.name === 'interact-color' ||
                         r.name === 'shoulder' || r.name === 'shoulder-force' || r.name === 'shoulder-config' ||
                         r.name === 'trigger' || r.name === 'trigger-config') return;
-                html += `• ${name} = ${r.getAttribute('data-price')}元<br>`;
                 orderText += `• ${name} = ${r.getAttribute('data-price')}元\n`;
             });
 
@@ -3280,38 +3297,25 @@
                 if (cb.closest('#backkey-keycap-section') || cb.closest('#backkey-position-section')) return;
                 if (cb.getAttribute('data-group')) return; // handled separately
                 const price = cb.getAttribute('data-price');
-                html += `• ${name} = ${price}元<br>`;
                 orderText += `• ${name} = ${price}元\n`;
             });
 
             // 二改要求
             const ergaiReqText = document.getElementById('ergai-requirement') ? document.getElementById('ergai-requirement').value.trim() : '';
             if (isErGaiConfirmed && ergaiReqText) {
-                html += `<hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">`;
-                html += `<strong>二改要求:</strong><br>`;
-                html += `${escapeHtml(ergaiReqText)}<br>`;
                 orderText += `----------\n`;
                 orderText += `二改要求:\n${ergaiReqText}\n`;
             }
 
-            html += `<hr style="margin:10px 0;border:none;border-top:1px solid #ddd;">`;
-            html += `<strong style="color:#e74c3c;font-size:18px;">总计: ${total} 元</strong>`;
-
             orderText += `==========\n`;
             orderText += `总计: ${total} 元`;
 
-            // 直接复制订单内容到剪贴板，然后显示微信二维码弹窗
+            // 直接复制订单内容到剪贴板
             navigator.clipboard.writeText(orderText).then(() => {
-                document.getElementById('confirmModal').classList.add('active');
-            }).catch(err => {
-                // 复制失败仍显示弹窗，提示用户
-                document.getElementById('confirmModal').classList.add('active');
-                showMessage('复制失败，请手动复制订单信息', 'error');
+                setConfigError('订单已复制，请发送给工作室', true);
+            }).catch(() => {
+                setConfigError('复制失败，请手动复制订单信息');
             });
-        }
-
-        function closeModal() {
-            document.getElementById('confirmModal').classList.remove('active');
         }
 
         function openImagePreview(src) {
