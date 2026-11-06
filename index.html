@@ -518,7 +518,7 @@
             .nav-btn { padding: 10px 16px; font-size: 13px; }
             .section { padding: 16px; }
             .item { padding: 10px 12px; }
-            .container { padding: 0 12px; }
+            .container { padding: 0 6px; }
             h1 { font-size: 22px; }
             .progress-steps { padding: 8px 12px; }
         }
@@ -781,6 +781,12 @@
             font-size: 11px;
             color: #a0aec0;
         }
+        /* 桌面端：仅显示生成并复制订单，隐藏移动端复制微信号按键与移动端按钮文字 */
+        .bottom-actions { display: block; }
+        .btn-copy-wechat { display: none; }
+        .submit-text-mobile { display: none; }
+        .submit-text-desktop { display: inline; }
+        .panel-close { display: none; }
         .config-wechat {
             display: block;
             /* 面板宽 340px，取其 50%（170px）；内容区宽 300px（左右各有 20px 内边距），故补 20px */
@@ -791,31 +797,192 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.12);
         }
         @media (max-width: 900px) {
+            .page-layout {
+                flex-direction: column;
+                padding: 0;
+                gap: 16px;
+            }
+            .container {
+                width: 100%;
+                max-width: none;
+                padding: 0 6px;
+            }
             body {
+                padding-top: 0;
                 padding-right: 0;
-                padding-bottom: calc(42vh + 24px);
+                padding-bottom: 64px;
             }
+            h1 { margin-top: 16px; }
+            /* 标签栏：移动端全页面宽度，按键按文字尺寸，可横滑 */
+            .progress-steps {
+                position: sticky;
+                top: 0;
+                margin-left: -6px;
+                margin-right: -6px;
+                border-radius: 0;
+                padding: 8px 12px;
+            }
+            .step-tab {
+                flex: 0 0 auto;
+                min-width: auto;
+                padding: 6px 12px;
+            }
+            /* 已选配置单：默认不占位，仅保留底部操作栏固定可见 */
             .config-panel {
-                position: fixed;
-                top: auto;
-                left: 12px;
-                right: 12px;
-                bottom: 12px;
-                width: auto;
-                max-height: 42vh;
+                position: static;
+                width: 100%;
+                flex: 0 0 auto;
+                height: 0;
+                overflow: visible;
+                background: transparent;
+                border: none;
+                box-shadow: none;
             }
-            .config-panel-header { padding: 12px 16px 10px; }
-            .config-panel-header h2 { font-size: 16px; }
+            .config-panel-header,
+            .config-panel-body > :not(.bottom-bar) {
+                display: none;
+            }
             .config-panel-body {
-                padding: 10px 16px 14px;
+                padding: 0;
                 display: block;
-                overflow-y: auto;
+                overflow: visible;
             }
             .config-panel .summary-list {
                 max-height: none;
                 overflow: visible;
             }
-            .config-wechat { max-width: 140px; }
+            .config-wechat { display: none; }
+            .config-tip { display: none; }
+            .panel-close { display: none; }
+
+            /* 打开后：已选配置单悬浮显示 */
+            body.mobile-panel-open::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 960;
+            }
+            body.mobile-panel-open .config-panel {
+                position: fixed;
+                top: 56px;
+                left: 12px;
+                right: 12px;
+                bottom: 72px;
+                width: auto;
+                height: auto;
+                display: flex;
+                flex-direction: column;
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+                z-index: 965;
+                overflow: hidden;
+            }
+            body.mobile-panel-open .config-panel-header {
+                display: flex;
+                position: relative;
+                padding: 12px 40px 10px 16px;
+            }
+            body.mobile-panel-open .config-panel-header h2 { font-size: 16px; }
+            body.mobile-panel-open .panel-close {
+                display: block;
+                position: absolute;
+                top: 8px;
+                right: 10px;
+                width: 28px;
+                height: 28px;
+                border: none;
+                background: #f1f3f5;
+                color: #666;
+                font-size: 18px;
+                line-height: 1;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+            body.mobile-panel-open .config-panel-body {
+                display: flex;
+                flex-direction: column;
+                flex: 1 1 auto;
+                min-height: 0;
+                padding: 10px 16px 14px;
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+            body.mobile-panel-open .config-panel-body > :not(.bottom-bar):not(.config-tip):not(.config-wechat) {
+                display: block;
+            }
+            body.mobile-panel-open .summary-list {
+                flex: 0 0 auto;
+                overflow: visible;
+                max-height: none;
+            }
+            body.mobile-panel-open .btn-copy-wechat {
+                display: none;
+            }
+            /* 底部操作栏：预计总价（左）+ 复制微信号 + 生成配置（右），同行固定 */
+            .bottom-bar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 12px;
+                padding: 10px 12px;
+                background: #fff;
+                border-top: 1px solid #eee;
+                z-index: 966;
+                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            }
+            .bottom-bar .total-price {
+                flex: 0 1 auto;
+                margin: 0;
+                padding: 0;
+                border: none;
+                background: transparent;
+                font-size: 14px;
+                display: flex;
+                align-items: baseline;
+                gap: 6px;
+                min-width: 0;
+                white-space: nowrap;
+            }
+            .bottom-bar .total-price #totalPrice {
+                font-size: 22px;
+                font-weight: 800;
+                color: #e53e3e;
+            }
+            .bottom-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .btn-copy-wechat {
+                display: inline-block;
+                flex: 0 0 auto;
+                padding: 10px 16px;
+                background: #f5b301;
+                color: #fff;
+                border: none;
+                border-radius: 10px;
+                font-size: 15px;
+                font-weight: 700;
+                cursor: pointer;
+                box-shadow: 0 4px 14px rgba(245,179,1,0.4);
+            }
+            .submit-text-desktop { display: none; }
+            .submit-text-mobile { display: inline; }
+            .bottom-bar .config-submit {
+                flex: 0 0 auto;
+                width: auto;
+                margin: 0;
+                padding: 10px 18px;
+                font-size: 15px;
+                border-radius: 10px;
+                box-shadow: 0 4px 14px rgba(72,187,120,0.35);
+            }
         }
 
         /* Image container styling */
@@ -1473,6 +1640,7 @@
                     <span>DS4 手柄改装</span>
                     <span id="selectedCount">已选 0 项</span>
                 </div>
+                <button type="button" class="panel-close" onclick="closeMobilePanel()">×</button>
             </div>
             <div class="config-panel-body">
                 <div class="summary-list" id="summaryList">
@@ -1480,12 +1648,20 @@
                 </div>
                 <div id="missingRequired" class="missing-required" style="display:none;"></div>
                 <div id="missingError" class="missing-error" style="display:none;"></div>
-                <div class="total-price">预计总价: <span id="totalPrice">0</span> 元</div>
                 <div id="ergai-requirement-group" style="display:none;">
                     <label for="ergai-requirement">二改要求</label>
                     <textarea id="ergai-requirement" placeholder="如有特殊要求请在此说明（非必填）"></textarea>
                 </div>
-                <button class="btn-submit config-submit" onclick="showConfirm()">📋 生成并复制订单</button>
+                <div class="bottom-bar">
+                    <div class="total-price">预计总价: <span id="totalPrice">0</span> 元</div>
+                    <div class="bottom-actions">
+                        <button type="button" class="btn-copy-wechat" onclick="copyWechatId()">复制微信号</button>
+                        <button class="btn-submit config-submit" onclick="handleConfigAction()">
+                            <span class="submit-text-desktop">📋 生成并复制订单</span>
+                            <span class="submit-text-mobile">生成配置</span>
+                        </button>
+                    </div>
+                </div>
                 <p class="config-tip">复制订单并发送给工作室</p>
                 <img src="pic/wechat.jpg" alt="微信二维码" class="config-wechat" onclick="openImagePreview(this.src)">
             </div>
@@ -3119,6 +3295,64 @@
             missingErrorTimer = setTimeout(() => { el.style.display = 'none'; }, 3000);
         }
 
+        // 移动端：生成配置按键 → 弹出已选配置单；面板已打开时执行复制
+        function isMobileView() {
+            return window.innerWidth <= 900;
+        }
+        function openMobilePanel() {
+            document.body.classList.add('mobile-panel-open');
+            const txt = document.querySelector('.submit-text-mobile');
+            if (txt) txt.textContent = '复制配置信息';
+        }
+        function closeMobilePanel() {
+            document.body.classList.remove('mobile-panel-open');
+            const txt = document.querySelector('.submit-text-mobile');
+            if (txt) txt.textContent = '生成配置';
+        }
+        function handleConfigAction() {
+            if (!isMobileView()) {
+                showConfirm();
+                return;
+            }
+            if (document.body.classList.contains('mobile-panel-open')) {
+                showConfirm();
+            } else {
+                openMobilePanel();
+            }
+        }
+        // 点击遮罩关闭
+        document.addEventListener('click', function (e) {
+            if (document.body.classList.contains('mobile-panel-open') && e.target === document.body) {
+                closeMobilePanel();
+            }
+        });
+
+        // 复制微信号到剪贴板
+        function copyWechatId() {
+            const id = '19118823884';
+            const done = () => setConfigError('微信号已复制：' + id, true);
+            const fail = () => {
+                const ta = document.createElement('textarea');
+                ta.value = id;
+                ta.style.position = 'fixed';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    if (document.execCommand('copy')) { done(); }
+                    else { setConfigError('复制失败，请手动复制：' + id, false); }
+                } catch (e) {
+                    setConfigError('复制失败，请手动复制：' + id, false);
+                }
+                document.body.removeChild(ta);
+            };
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(id).then(done).catch(fail);
+            } else {
+                fail();
+            }
+        }
+
         function showConfirm() {
             setConfigError('');
 
@@ -3313,6 +3547,7 @@
             // 直接复制订单内容到剪贴板
             navigator.clipboard.writeText(orderText).then(() => {
                 setConfigError('订单已复制，请发送给工作室', true);
+                if (isMobileView()) closeMobilePanel();
             }).catch(() => {
                 setConfigError('复制失败，请手动复制订单信息');
             });
