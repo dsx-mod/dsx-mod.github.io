@@ -1494,8 +1494,8 @@
             .bottom-bar .config-submit { box-shadow: 0 10px 28px rgba(70, 185, 221, 0.3); }
         }
 
-        /* ===== 亮色主题（跟随系统 prefers-color-scheme） ===== */
-        @media (prefers-color-scheme: light) {
+        /* ===== 亮色主题（跟随系统；无明暗设置或浏览器不支持时默认亮色） ===== */
+        @media (prefers-color-scheme: light), (not all and (prefers-color-scheme: dark)) {
             :root {
                 --bg-0: #eef3f8;
                 --line: rgba(23, 58, 88, 0.12);
@@ -1632,7 +1632,7 @@
             .progress-steps::-webkit-scrollbar-thumb { background: rgba(8, 145, 178, 0.22); }
         }
 
-        @media (max-width: 900px) and (prefers-color-scheme: light) {
+        @media (max-width: 900px) and (not (prefers-color-scheme: dark)) {
             .config-panel {
                 background: transparent;
                 border: none;
