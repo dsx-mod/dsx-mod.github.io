@@ -1337,13 +1337,14 @@
             <div class="shell-module">
                 <label class="item upgrade-item" data-boards="GNS明日香主板,氦闪2主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="触摸板" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">触摸板</span></div><span class="item-price">60元</span></label>
                 <label class="item upgrade-item" data-boards="GNS明日香主板,ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="显示屏" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">显示屏</span></div><span class="item-price">60元</span></label>
-                <label class="item upgrade-item" data-boards="GNS明日香主板,ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="蓝牙模块" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">蓝牙模块</span></div><span class="item-price">60元</span></label>
-                <label class="item upgrade-item" data-boards="GNS明日香主板,ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="2.4G无线模式" data-price="80" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">2.4G无线模式</span></div><span class="item-price">80元</span></label>
+                <label class="item upgrade-item" data-boards="ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="蓝牙模块" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">蓝牙模块</span></div><span class="item-price">60元</span></label>
+                <label class="item upgrade-item" data-boards="GNS明日香主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="无线及蓝牙模块" data-price="100" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">无线及蓝牙模块</span></div><span class="item-price">100元</span></label>
+                <label class="item upgrade-item" data-boards="ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="2.4G无线模块" data-price="80" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">2.4G无线模块</span></div><span class="item-price">80元</span></label>
                 <label class="item upgrade-item" data-boards="ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="体感陀螺仪" data-price="80" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">体感陀螺仪</span></div><span class="item-price">80元</span></label>
                 <div class="accessory-images">
                     <img id="img-touchpad" src="pic/touchpad.jpg" alt="触摸板" style="display:none;">
                     <img id="img-upgrade-screen" src="pic/screen.jpg" alt="显示屏" style="display:none;">
-                    <img id="img-reciver" src="pic/reciver.jpg" alt="2.4G无线模式" style="display:none;">
+                    <img id="img-reciver" src="pic/reciver.jpg" alt="无线及蓝牙模块" style="display:none;">
                 </div>
             </div>
         </div>
@@ -2769,12 +2770,20 @@
         }
 
         function updateUpgradeImages() {
-            const map = { '触摸板': 'img-touchpad', '显示屏': 'img-upgrade-screen', '2.4G无线模式': 'img-reciver' };
+            const map = { '触摸板': 'img-touchpad', '显示屏': 'img-upgrade-screen' };
             Object.keys(map).forEach(name => {
                 const cb = document.querySelector(`#section-3 input[type="checkbox"][data-name="${name}"]`);
                 const img = document.getElementById(map[name]);
                 if (cb && img) img.style.display = cb.checked ? 'block' : 'none';
             });
+            // 无线相关模块（GNS为无线及蓝牙模块，ProShock为2.4G无线模块）共用同一张图
+            const wirelessCbs = document.querySelectorAll('#section-3 input[type="checkbox"][data-name="无线及蓝牙模块"], #section-3 input[type="checkbox"][data-name="2.4G无线模块"]');
+            const reciverImg = document.getElementById('img-reciver');
+            if (reciverImg) {
+                let checked = false;
+                wirelessCbs.forEach(cb => { if (cb.checked) checked = true; });
+                reciverImg.style.display = checked ? 'block' : 'none';
+            }
         }
 
         function toggleUpgradeOption(el) {
@@ -2787,11 +2796,11 @@
                 } else if (name === '显示屏') {
                     const other = document.querySelector('#section-3 input[type="checkbox"][data-name="触摸板"]');
                     if (other) other.checked = false;
-                } else if (name === '蓝牙模块' || name === '2.4G无线模式' || name === '体感陀螺仪') {
-                    // ProShock主板：蓝牙模块、2.4G无线模式、体感陀螺仪互斥（三选一）
+                } else if (name === '蓝牙模块' || name === '无线及蓝牙模块' || name === '2.4G无线模块' || name === '体感陀螺仪') {
+                    // ProShock主板：蓝牙模块、2.4G无线模块、体感陀螺仪互斥（三选一）
                     const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
                     if (mbRadio && mbRadio.getAttribute('data-name') === 'ProShock主板') {
-                        ['蓝牙模块', '2.4G无线模式', '体感陀螺仪'].forEach(other => {
+                        ['蓝牙模块', '无线及蓝牙模块', '2.4G无线模块', '体感陀螺仪'].forEach(other => {
                             if (other === name) return;
                             // 只取消当前页面上可见的选项
                             const otherCb = document.querySelector(`#section-3 input[type="checkbox"][data-name="${other}"]`);
