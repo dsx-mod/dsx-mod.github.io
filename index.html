@@ -1114,6 +1114,7 @@
         body {
             font-family: var(--font-body);
             color: var(--text-1);
+            isolation: isolate;
             background:
                 radial-gradient(1200px 640px at 10% -12%, rgba(92, 200, 234, 0.16), transparent 62%),
                 radial-gradient(900px 700px at 92% -4%, rgba(96, 165, 250, 0.12), transparent 58%),
@@ -1133,9 +1134,9 @@
             -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 78%);
             mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 78%);
             pointer-events: none;
-            z-index: 0;
+            z-index: -1;
         }
-        .page-layout { position: relative; z-index: 1; }
+        .page-layout { position: relative; }
         ::selection { background: rgba(139, 220, 245, 0.28); color: #fff; }
 
         h1 {
