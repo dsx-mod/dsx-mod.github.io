@@ -1723,10 +1723,10 @@
             
             <label class="item">
                 <div class="item-left">
-                    <input type="radio" name="motherboard" data-name="自备主板" data-price="0" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <input type="radio" name="motherboard" data-name="自备主板" data-price="30" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
                     <span class="item-name">自备主板</span>
                 </div>
-                <span class="item-price">0元</span>
+                <span class="item-price">30元</span>
             </label>
 
             <label class="item">
@@ -1907,6 +1907,7 @@
                 <label class="item upgrade-item" data-boards="GNS明日香主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="无线及蓝牙模块" data-price="100" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">无线及蓝牙模块</span></div><span class="item-price">100元</span></label>
                 <label class="item upgrade-item" data-boards="ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="2.4G无线模块" data-price="80" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">2.4G无线模块</span></div><span class="item-price">80元</span></label>
                 <label class="item upgrade-item" data-boards="ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="体感陀螺仪" data-price="80" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">体感陀螺仪</span></div><span class="item-price">80元</span></label>
+                <label class="item upgrade-item" data-boards="氦闪2主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="震动马达" data-price="10" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">震动马达</span></div><span class="item-price">10元</span></label>
                 <div class="accessory-images">
                     <img id="img-touchpad" src="pic/touchpad.jpg" alt="触摸板" style="display:none;">
                     <img id="img-upgrade-screen" src="pic/screen.jpg" alt="显示屏" style="display:none;">
@@ -2740,10 +2741,10 @@
                 normalNotice.classList.remove('show');
             }
 
-            // 双切热插拔微动：GNS主板或氦闪2主板可选
+            // 双切热插拔微动：GNS主板、氦闪2主板或自备主板可选
             const dualRadio = document.querySelector('input[name="trigger"][data-name="扳机键改装 双切热插拔微动"]');
             const dualNotice = document.getElementById('trigger-dual-notice');
-            if (mbName !== 'GNS明日香主板' && mbName !== '氦闪2主板') {
+            if (mbName !== 'GNS明日香主板' && mbName !== '氦闪2主板' && mbName !== '自备主板') {
                 dualRadio.disabled = true;
                 dualNotice.classList.add('show');
                 if (dualRadio.checked) {
@@ -3311,7 +3312,7 @@
         }
 
         // 选配升级页面所属的主板
-        const UPGRADE_BOARDS = ['GNS明日香主板', 'ProShock主板', '氦闪2主板'];
+        const UPGRADE_BOARDS = ['GNS明日香主板', 'ProShock主板', '氦闪2主板', '自备主板'];
 
         function isUpgradeEligible() {
             const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
@@ -3324,7 +3325,8 @@
             document.querySelectorAll('#section-3 .upgrade-item').forEach(label => {
                 const cb = label.querySelector('input[type="checkbox"]');
                 const boards = (label.getAttribute('data-boards') || '').split(',');
-                if (boards.indexOf(board) !== -1) {
+                // 自备主板：所有选配升级选项均可选择
+                if (board === '自备主板' || boards.indexOf(board) !== -1) {
                     label.style.display = '';
                 } else {
                     if (cb) cb.checked = false;
