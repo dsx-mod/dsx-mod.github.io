@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DS4手柄改装订单系统</title>
+    <title>花明楼改装-手柄改装配置系统</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
@@ -1664,7 +1664,7 @@
 <body>
     <div class="page-layout">
     <div class="container">
-        <h1 id="pageTitle">DS4手柄改装订单系统</h1>
+        <h1 id="pageTitle">花明楼改装-手柄改装配置系统</h1>
         <p class="subtitle" id="pageSubtitle">请按照步骤选择需要的改装项目，右侧实时显示已选配置与总价，点击图片可放大查看细节</p>
 
         <div id="message" class="message"></div>
@@ -1872,7 +1872,7 @@
             <div class="section-title">【其他配件】</div>
 
             <div class="shell-module">
-                <label class="item"><div class="item-left"><input type="checkbox" data-name="微动排线插座升级" data-price="50" data-section="2" onchange="toggleSocketDesc(this); toggleAccessoryImage(this, 'img-plug'); updateSelection()"><span class="item-name">微动排线插座升级</span></div><span class="item-price">50元</span></label>
+                <label class="item" id="socket-upgrade-item"><div class="item-left"><input type="checkbox" data-name="微动排线插座升级" data-price="50" data-section="2" onchange="toggleSocketDesc(this); toggleAccessoryImage(this, 'img-plug'); updateSelection()"><span class="item-name">微动排线插座升级</span></div><span class="item-price">50元</span></label>
                 <div class="item-desc" id="socket-desc">花明楼排线自带插座，无需选择。仅为老排线升级使用。</div>
                 <label class="item"><div class="item-left"><input type="checkbox" id="typec-checkbox" data-name="TYPEC接口制作" data-price="50" data-section="2" onchange="toggleAccessoryImage(this, 'img-typec'); updateSelection()"><span class="item-name">TYPEC接口制作</span></div><span class="item-price">50元</span></label>
                 <div class="item-desc" id="typec-notice" style="display:none;">振飞扬外壳自带TYPEC接口，无需额外制作</div>
@@ -2205,7 +2205,7 @@
             <div class="config-panel-header">
                 <h2>已选配置单</h2>
                 <div class="config-panel-meta">
-                    <span>DS4 手柄改装</span>
+                    <span>花明楼改装</span>
                     <span id="selectedCount">已选 0 项</span>
                 </div>
                 <button type="button" class="panel-close" onclick="closeMobilePanel()">×</button>
@@ -3307,6 +3307,22 @@
                     el.style.display = 'none';
                 }
             });
+            // 微动排线插座升级：仅主板选择二改手柄时可选
+            const erGaiSelected = document.querySelector('input[type="radio"][data-name="二改手柄"]:checked');
+            const socketItem = document.getElementById('socket-upgrade-item');
+            if (socketItem) {
+                const socketCb = socketItem.querySelector('input[type="checkbox"]');
+                if (erGaiSelected) {
+                    socketItem.style.display = '';
+                } else {
+                    if (socketCb && socketCb.checked) {
+                        socketCb.checked = false;
+                        toggleSocketDesc(socketCb);
+                        toggleAccessoryImage(socketCb, 'img-plug');
+                    }
+                    socketItem.style.display = 'none';
+                }
+            }
             updateSummary();
             updateMicroswitchState();
         }
