@@ -1723,11 +1723,12 @@
             
             <label class="item">
                 <div class="item-left">
-                    <input type="radio" name="motherboard" data-name="自备主板" data-price="30" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
+                    <input type="radio" name="motherboard" data-name="自备主板" data-price="0" data-section="0" onchange="toggleMotherboardDesc(this); updateSelection()">
                     <span class="item-name">自备主板</span>
                 </div>
-                <span class="item-price">30元</span>
+                <span class="item-price">0元</span>
             </label>
+            <div class="item-desc" id="desc-zibei">自备非全新需要收20元处理费</div>
 
             <label class="item">
                 <div class="item-left">
@@ -1858,6 +1859,7 @@
                             <label class="option-label bo5-option"><input type="radio" name="other-shell" value="喷漆外壳" data-price="50" disabled onchange="updateOtherPrice(); updateSelection()"> 喷漆外壳 (50元)</label>
                         </div>
                         <div class="item-desc" id="oupian-desc" style="display:none; margin-top:10px;">推荐藕片定制涂装喷漆。价格包含邮寄喷漆快递费，一个原装外壳，外壳处理费，外壳喷漆费另计约300~400元/个。</div>
+                        <div class="item-desc" id="zibei-shell-desc" style="display:none; margin-top:10px;">使用外壳存在公差较大，卡键等问题时，将加收20元处理费</div>
                     </div>
                 </div>
             </div>
@@ -2268,6 +2270,8 @@
             } else if (name === 'ProShock主板') {
                 descId = 'desc-proshock';
                 imgSrc = 'pic/proshock.jpg';
+            } else if (name === '自备主板') {
+                descId = 'desc-zibei';
             }
             if (descId) document.getElementById(descId).classList.add('show');
             
@@ -3268,6 +3272,7 @@
             const otherShellRadio = document.querySelector('input[type="radio"][name="other-shell"]:checked');
             const priceEl = document.getElementById('other-price');
             const oupianDesc = document.getElementById('oupian-desc');
+            const zibeiShellDesc = document.getElementById('zibei-shell-desc');
             const shellImg = document.getElementById('shell-img');
             const shellImgContainer = document.getElementById('shell-image');
             
@@ -3284,6 +3289,9 @@
                     if (oupianDesc) oupianDesc.style.display = 'none';
                     shellImg.src = '';
                     shellImgContainer.style.display = 'none';
+                }
+                if (zibeiShellDesc) {
+                    zibeiShellDesc.style.display = otherShellRadio.value === '自备外壳' ? 'block' : 'none';
                 }
             }
             updateSummary();
