@@ -1659,6 +1659,104 @@
                 border-color: var(--line);
             }
         }
+
+        /* ===== 移动端：步骤标签两行固定换行 + 悬浮翻页键（对齐小程序） ===== */
+        @media (max-width: 900px) {
+            /* 标签：每行 5 个，第 6 个起换行，不再横向滑动 */
+            .progress-steps {
+                flex-wrap: wrap;
+                gap: 5px;
+                overflow: visible;
+                overflow-x: visible;
+                padding: 8px 10px;
+            }
+            .step-tab {
+                flex: 0 0 calc((100% - 20px) / 5);
+                width: calc((100% - 20px) / 5);
+                min-width: 0;
+                max-width: none;
+                height: 30px;
+                line-height: 30px;
+                padding: 0;
+                font-size: 11px;
+                border-radius: 8px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            /* 翻页行不再占位，按钮改为悬浮 */
+            .nav-bar {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: calc(70px + env(safe-area-inset-bottom));
+                display: block;
+                margin: 0;
+                padding: 0;
+                z-index: 967;
+                pointer-events: none;
+            }
+            .nav-bar .nav-btn {
+                position: absolute;
+                bottom: 0;
+                width: 44px;
+                min-width: 44px;
+                max-width: 44px;
+                height: 44px;
+                min-height: 44px;
+                max-height: 44px;
+                padding: 0;
+                margin: 0;
+                border: none;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0;
+                line-height: 1;
+                gap: 0;
+                pointer-events: auto;
+                box-shadow: 0 10px 28px rgba(70, 185, 221, 0.3);
+            }
+            .nav-bar .nav-btn.prev {
+                left: 10px;
+                background: linear-gradient(135deg, #8fe3f7, #46b9dd);
+                color: #05202b;
+            }
+            .nav-bar .nav-btn.next {
+                right: 10px;
+                background: linear-gradient(135deg, #8fe3f7, #46b9dd);
+                color: #05202b;
+            }
+            .nav-bar .nav-btn.skip {
+                right: calc(10px + 44px + 20px);
+                background: #f5a642;
+                color: #3a2306;
+                box-shadow: 0 10px 28px rgba(245, 166, 66, 0.3);
+            }
+            .nav-bar .nav-btn.prev::before {
+                content: '←';
+                font-size: 20px;
+                font-weight: 700;
+            }
+            .nav-bar .nav-btn.next::before {
+                content: '→';
+                font-size: 20px;
+                font-weight: 700;
+            }
+            .nav-bar .nav-btn.skip::before {
+                content: '跳过';
+                font-size: 12px;
+                font-weight: 700;
+            }
+            .nav-bar .nav-btn:disabled {
+                opacity: 0.35;
+                box-shadow: none;
+            }
+            /* 打开已选配置弹层时隐藏悬浮键，避免压住弹层 */
+            body.mobile-panel-open .nav-bar { display: none; }
+            /* 底部为悬浮键与固定操作栏留出空间 */
+            body { padding-bottom: 130px; }
+        }
     </style>
 </head>
 <body>

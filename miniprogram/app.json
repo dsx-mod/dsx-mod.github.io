@@ -1,0 +1,19 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "花明楼改装",
+    "navigationBarBackgroundColor": "#0f1a24",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0f1a24",
+    "backgroundColorTop": "#0f1a24",
+    "backgroundColorBottom": "#0f1a24",
+    "backgroundTextStyle": "dark"
+  },
+  "darkmode": true,
+  "themeLocation": "theme.json",
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}

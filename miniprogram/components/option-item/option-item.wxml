@@ -1,0 +1,7 @@
+<view class="row {{checked ? 'on' : ''}} {{disabled ? 'dis' : ''}}" bindtap="onTap">
+  <view class="left">
+    <view class="mark {{type}} {{checked ? 'checked' : ''}}"></view>
+    <text class="name">{{name}}</text>
+  </view>
+  <text wx:if="{{priceText}}" class="price {{priceText === '0 元' && zeroMuted ? 'zero' : ''}}">{{priceText}}</text>
+</view>

@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "花明楼改装",
+  "usingComponents": {
+    "option-item": "/components/option-item/option-item"
+  }
+}

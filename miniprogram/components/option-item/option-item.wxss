@@ -1,0 +1,125 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 88rpx;
+  padding: 16rpx 20rpx;
+  margin-bottom: 10rpx;
+  border-radius: 24rpx;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1rpx solid transparent;
+  transition: all 0.15s ease;
+}
+
+.row.on {
+  background: rgba(139, 220, 245, 0.07);
+  border-color: rgba(139, 220, 245, 0.26);
+  box-shadow: inset 0 0 0 1rpx rgba(139, 220, 245, 0.08);
+}
+
+.row.dis {
+  opacity: 0.45;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.mark {
+  width: 34rpx;
+  height: 34rpx;
+  border: 3rpx solid var(--line-strong, rgba(148, 197, 227, 0.3));
+  background: transparent;
+  margin-right: 18rpx;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.mark.radio {
+  border-radius: 50%;
+}
+
+.mark.checkbox {
+  border-radius: 8rpx;
+}
+
+.mark.checked {
+  border-color: var(--ice-strong, #5cc8ea);
+  background: var(--ice-strong, #5cc8ea);
+}
+
+.mark.radio.checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #05202b;
+  transform: translate(-50%, -50%);
+}
+
+.mark.checkbox.checked::after {
+  content: '';
+  position: absolute;
+  left: 9rpx;
+  top: 3rpx;
+  width: 8rpx;
+  height: 16rpx;
+  border: solid #05202b;
+  border-width: 0 4rpx 4rpx 0;
+  transform: rotate(45deg);
+}
+
+.name {
+  font-size: 28rpx;
+  color: var(--text-1, #c2d2e0);
+  word-break: break-all;
+}
+
+.row.on .name {
+  color: var(--ice, #8bdcf5);
+}
+
+.price {
+  font-size: 26rpx;
+  color: var(--ice, #8bdcf5);
+  font-family: 'Bahnschrift', 'DIN Alternate', 'SF Pro Display', sans-serif;
+  font-weight: 600;
+  letter-spacing: 1rpx;
+  margin-left: 16rpx;
+  flex-shrink: 0;
+}
+
+.price.zero {
+  color: var(--text-3, #64788c);
+  font-weight: 400;
+}
+
+@media (prefers-color-scheme: light) {
+  .row {
+    background: rgba(23, 58, 88, 0.02);
+  }
+
+  .row.on {
+    background: rgba(8, 145, 178, 0.06);
+    border-color: rgba(8, 145, 178, 0.24);
+  }
+
+  .mark.checked {
+    border-color: var(--ice-strong, #0891b2);
+    background: var(--ice-strong, #0891b2);
+  }
+
+  .mark.radio.checked::after {
+    background: #ffffff;
+  }
+
+  .mark.checkbox.checked::after {
+    border-color: #ffffff;
+  }
+}

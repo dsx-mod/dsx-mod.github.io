@@ -1,0 +1,601 @@
+﻿<!-- 只读分享视图：接收方看到的配置单 -->
+<block wx:if="{{readOnly}}">
+  <view class="hero">
+    <view class="hero-title">配置单</view>
+    <view class="hero-sub">好友分享的改装配置 · 价格按本地数据还原</view>
+  </view>
+
+  <view class="card">
+    <view wx:for="{{summary.items}}" wx:key="name" class="srow">
+      <text class="sname">{{item.name}}</text>
+      <text class="sprice">{{item.price}} 元</text>
+    </view>
+    <view wx:if="{{!summary.items.length}}" class="hint-text">这份配置没有可展示的项目</view>
+    <view class="total-row">
+      <text>预计总价</text>
+      <text class="total">¥{{summary.total}}</text>
+    </view>
+  </view>
+
+  <view class="ro-actions">
+    <button class="btn primary" open-type="share">分享配置</button>
+    <button class="btn ghost" bindtap="onUseAsTemplate">以此为模板重新配置</button>
+  </view>
+</block>
+
+<!-- 配置视图 -->
+<block wx:else>
+  <view class="hero" wx:if="{{step === 0}}">
+    <view class="hero-title">花明楼改装-手柄改装配置系统</view>
+    <view class="hero-sub">请按照步骤选择需要的改装项目，实时统计价格，点击图片可放大查看细节</view>
+  </view>
+
+  <view class="nav {{step === 0 ? '' : 'nav-flush'}}">
+    <view class="tabs">
+      <view
+        wx:for="{{steps}}"
+        wx:key="index"
+        class="tab {{item.active ? 'on' : ''}}"
+        data-index="{{item.index}}"
+        bindtap="onJump"
+      >{{item.title}}</view>
+    </view>
+  </view>
+  <view wx:if="{{step !== 0}}" class="nav-spacer"></view>
+
+  <view class="progress">{{progressText}}</view>
+
+  <!-- 1. 主板 -->
+  <view class="card" wx:if="{{step === 0}}">
+    <view class="section-title">【手柄主板】</view>
+    <view class="section-hint">请选择主板类型（单选，必选项）</view>
+    <block wx:for="{{mbOptions}}" wx:key="name">
+      <option-item
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-name="{{item.name}}"
+        bind:change="onTapMotherboard"
+      />
+      <view wx:if="{{item.checked && item.desc}}" class="hint-text">{{item.desc}}</view>
+    </block>
+
+    <image
+      wx:if="{{mbImage}}"
+      class="shot"
+      src="{{mbImage}}"
+      mode="widthFix"
+      data-src="{{mbImage}}"
+      bindtap="onPreview"
+    />
+
+    <view class="group-title">成品欣赏</view>
+    <scroll-view class="gallery" scroll-x>
+      <image
+        wx:for="{{gallery}}"
+        wx:key="*this"
+        class="thumb"
+        src="{{item}}"
+        mode="aspectFill"
+        data-src="{{item}}"
+        bindtap="onPreview"
+      />
+    </scroll-view>
+  </view>
+
+  <!-- 2. 外壳 -->
+  <view class="card" wx:if="{{step === 1}}">
+    <view class="section-title">【壳体选择】</view>
+
+    <view class="group-title">手柄中框选择（二选一）</view>
+    <option-item
+      wx:for="{{midframeOptions}}"
+      wx:key="name"
+      name="{{item.name}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      data-name="{{item.name}}"
+      bind:change="onTapMidframe"
+    />
+
+    <view class="group-title">外壳选择（四选一）</view>
+    <block wx:for="{{shells}}" wx:key="name" wx:for-item="sh">
+      <option-item
+        name="{{sh.name}}"
+        price-text="{{sh.priceText}}"
+        checked="{{sh.selected}}"
+        data-name="{{sh.name}}"
+        bind:change="onTapShell"
+      />
+
+      <block wx:if="{{sh.selected}}">
+        <view wx:if="{{sh.desc}}" class="hint-text">{{sh.desc}}</view>
+
+        <view wx:if="{{sh.colors.length}}" class="chips">
+          <view
+            wx:for="{{sh.colors}}"
+            wx:key="value"
+            wx:for-item="c"
+            class="chip {{c.checked ? 'on' : ''}} {{c.disabled ? 'dis' : ''}}"
+            data-value="{{c.value}}"
+            data-shell="{{sh.name}}"
+            bindtap="onTapShellColor"
+          >{{c.value}}</view>
+        </view>
+
+        <view wx:if="{{sh.styles.length}}" class="chips">
+          <view
+            wx:for="{{sh.styles}}"
+            wx:key="value"
+            wx:for-item="c"
+            class="chip {{c.checked ? 'on' : ''}} {{c.disabled ? 'dis' : ''}}"
+            data-value="{{c.value}}"
+            data-shell="{{sh.name}}"
+            bindtap="onTapBo5Style"
+          >{{c.value}} · {{c.priceText}}</view>
+        </view>
+
+        <view wx:if="{{sh.backShells.length}}" class="chips">
+          <view
+            wx:for="{{sh.backShells}}"
+            wx:key="value"
+            wx:for-item="c"
+            class="chip {{c.checked ? 'on' : ''}} {{c.disabled ? 'dis' : ''}}"
+            data-value="{{c.value}}"
+            data-shell="{{sh.name}}"
+            bindtap="onTapBo5Style"
+          >{{c.value}} · {{c.priceText}}</view>
+        </view>
+
+        <view wx:if="{{sh.otherOptions.length}}" class="chips">
+          <view
+            wx:for="{{sh.otherOptions}}"
+            wx:key="value"
+            wx:for-item="c"
+            class="chip {{c.checked ? 'on' : ''}} {{c.disabled ? 'dis' : ''}}"
+            data-value="{{c.value}}"
+            data-shell="{{sh.name}}"
+            bindtap="onTapOtherShell"
+          >{{c.value}} · {{c.priceText}}</view>
+        </view>
+      </block>
+    </block>
+
+    <image
+      wx:if="{{shellImage}}"
+      class="shot"
+      src="{{shellImage}}"
+      mode="widthFix"
+      data-src="{{shellImage}}"
+      bindtap="onPreview"
+    />
+  </view>
+
+  <!-- 3. 其他配件 -->
+  <view class="card" wx:if="{{step === 2}}">
+    <view class="section-title">【其他配件】</view>
+
+    <block wx:for="{{accessories}}" wx:key="name">
+      <option-item
+        type="checkbox"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        disabled="{{item.disabled}}"
+        data-index="{{index}}"
+        bind:change="onToggleAccessory"
+      />
+      <view wx:if="{{item.showNote}}" class="hint-text">{{item.note}}</view>
+      <image
+        wx:if="{{item.checked && item.img}}"
+        class="shot"
+        src="{{item.img}}"
+        mode="widthFix"
+        data-src="{{item.img}}"
+        bindtap="onPreview"
+      />
+    </block>
+  </view>
+
+  <!-- 4. 选配升级 -->
+  <view class="card" wx:if="{{step === 3}}">
+    <view class="section-title">【选配升级】</view>
+    <view class="section-hint">以下升级配件按所选主板显示，可按需选配（可不选）</view>
+
+    <option-item
+      wx:for="{{upgrades}}"
+      wx:key="name"
+      type="checkbox"
+      name="{{item.name}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      data-index="{{index}}"
+      bind:change="onToggleUpgrade"
+    />
+    <view wx:if="{{!upgrades.length}}" class="hint-text">当前主板没有可选的升级项</view>
+  </view>
+
+  <!-- 5. 摇杆 -->
+  <view class="card" wx:if="{{step === 4}}">
+    <view class="section-title">【摇杆选配】</view>
+    <view class="section-hint">请选择摇杆类型</view>
+
+    <view class="group-title">摇杆本体（四选一）</view>
+    <block wx:for="{{stickOptions}}" wx:key="name">
+      <option-item
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-name="{{item.name}}"
+        bind:change="onTapStick"
+      />
+      <view wx:if="{{item.checked && item.desc}}" class="hint-text">{{item.desc}}</view>
+    </block>
+
+    <view class="group-title">摇杆减阻尼（五选一）</view>
+    <view wx:if="{{stickNotice}}" class="warn-text">{{stickNotice}}</view>
+    <option-item
+      wx:for="{{dampingOptions}}"
+      wx:key="name"
+      name="{{item.label}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      disabled="{{item.disabled}}"
+      data-name="{{item.name}}"
+      bind:change="onTapDamping"
+    />
+  </view>
+
+  <!-- 6. 十字键 -->
+  <view class="card" wx:if="{{step === 5}}">
+    <view class="section-title">【十字键改装】</view>
+    <view class="section-hint">请选择十字键改装方案</view>
+
+    <view class="group-title">微动类型（四选一）</view>
+    <option-item
+      wx:for="{{dpad.types}}"
+      wx:key="name"
+      name="{{item.name}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      data-key="dpad"
+      data-name="{{item.name}}"
+      bind:change="onTapModuleType"
+    />
+
+    <block wx:if="{{dpad.showForce}}">
+      <view class="group-title">微动力度选择（四选一）</view>
+      <option-item
+        wx:for="{{dpad.forceOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-key="dpad"
+        data-name="{{item.name}}"
+        bind:change="onTapModuleForce"
+      />
+    </block>
+
+    <block wx:if="{{dpad.showConfig}}">
+      <view class="group-title">大微动配置选择（二选一）</view>
+      <option-item
+        wx:for="{{dpad.configOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-key="dpad"
+        data-name="{{item.name}}"
+        bind:change="onTapModuleConfig"
+      />
+    </block>
+
+    <block wx:if="{{dpad.types.length && dpad.colorOptions.length}}">
+      <view class="group-title">按键颜色（二选一）</view>
+      <option-item
+        wx:for="{{dpad.colorOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        disabled="{{item.disabled}}"
+        data-key="dpad"
+        data-name="{{item.name}}"
+        bind:change="onTapModuleColor"
+      />
+    </block>
+
+    <image wx:if="{{dpad.typeImg}}" class="shot" src="{{dpad.typeImg}}" mode="widthFix" data-src="{{dpad.typeImg}}" bindtap="onPreview" />
+    <image wx:if="{{dpad.colorImg}}" class="shot" src="{{dpad.colorImg}}" mode="widthFix" data-src="{{dpad.colorImg}}" bindtap="onPreview" />
+  </view>
+
+  <!-- 7. 交互键 -->
+  <view class="card" wx:if="{{step === 6}}">
+    <view class="section-title">【交互键改装】</view>
+    <view class="section-hint">请选择交互键改装方案</view>
+
+    <view class="group-title">微动类型（四选一）</view>
+    <option-item
+      wx:for="{{interact.types}}"
+      wx:key="name"
+      name="{{item.name}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      data-key="interact"
+      data-name="{{item.name}}"
+      bind:change="onTapModuleType"
+    />
+
+    <block wx:if="{{interact.showForce}}">
+      <view class="group-title">微动力度选择（四选一）</view>
+      <option-item
+        wx:for="{{interact.forceOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-key="interact"
+        data-name="{{item.name}}"
+        bind:change="onTapModuleForce"
+      />
+    </block>
+
+    <block wx:if="{{interact.showConfig}}">
+      <view class="group-title">大微动配置选择（二选一）</view>
+      <option-item
+        wx:for="{{interact.configOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-key="interact"
+        data-name="{{item.name}}"
+        bind:change="onTapModuleConfig"
+      />
+    </block>
+
+    <block wx:if="{{interact.types.length && interact.colorOptions.length}}">
+      <view class="group-title">按键颜色（二选一）</view>
+      <option-item
+        wx:for="{{interact.colorOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        disabled="{{item.disabled}}"
+        data-key="interact"
+        data-name="{{item.name}}"
+        bind:change="onTapModuleColor"
+      />
+    </block>
+
+    <image wx:if="{{interact.typeImg}}" class="shot" src="{{interact.typeImg}}" mode="widthFix" data-src="{{interact.typeImg}}" bindtap="onPreview" />
+    <image wx:if="{{interact.colorImg}}" class="shot" src="{{interact.colorImg}}" mode="widthFix" data-src="{{interact.colorImg}}" bindtap="onPreview" />
+  </view>
+
+  <!-- 8. 肩键 -->
+  <view class="card" wx:if="{{step === 7}}">
+    <view class="section-title">【肩键改装】</view>
+    <view class="section-hint">请选择肩键改装方案（四选一）</view>
+    <option-item
+      wx:for="{{shoulder.types}}"
+      wx:key="name"
+      name="{{item.label}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      data-name="{{item.name}}"
+      bind:change="onTapShoulderType"
+    />
+
+    <block wx:if="{{shoulder.showForce}}">
+      <view class="group-title">微动力度选择（四选一）</view>
+      <option-item
+        wx:for="{{shoulder.forceOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-name="{{item.name}}"
+        bind:change="onTapShoulderForce"
+      />
+    </block>
+
+    <block wx:if="{{shoulder.showConfig}}">
+      <view class="group-title">大微动配置选择（二选一）</view>
+      <option-item
+        wx:for="{{shoulder.configOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-name="{{item.name}}"
+        bind:change="onTapShoulderConfig"
+      />
+    </block>
+
+    <image wx:if="{{shoulder.img}}" class="shot" src="{{shoulder.img}}" mode="widthFix" data-src="{{shoulder.img}}" bindtap="onPreview" />
+  </view>
+
+  <!-- 9. 扳机键 -->
+  <view class="card" wx:if="{{step === 8}}">
+    <view class="section-title">【扳机键改装】</view>
+    <view class="section-hint">请选择扳机键改装方案（四选一）</view>
+    <view wx:if="{{trigger.normalNotice}}" class="warn-text">{{trigger.normalNotice}}</view>
+    <view wx:if="{{trigger.dualNotice}}" class="warn-text">{{trigger.dualNotice}}</view>
+
+    <option-item
+      wx:for="{{trigger.types}}"
+      wx:key="name"
+      name="{{item.label}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      disabled="{{item.disabled}}"
+      data-index="{{index}}"
+      bind:change="onTapTriggerType"
+    />
+
+    <block wx:if="{{trigger.showConfig}}">
+      <view class="group-title">大微动配置选择（二选一）</view>
+      <option-item
+        wx:for="{{trigger.configOptions}}"
+        wx:key="name"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-name="{{item.name}}"
+        bind:change="onTapTriggerConfig"
+      />
+    </block>
+
+    <image wx:if="{{trigger.img}}" class="shot" src="{{trigger.img}}" mode="widthFix" data-src="{{trigger.img}}" bindtap="onPreview" />
+  </view>
+
+  <!-- 10. 背键 -->
+  <view class="card" wx:if="{{step === 9}}">
+    <view class="section-title">【背键改装】</view>
+    <view class="section-hint">请选择背键配置（如不需要背键可跳过）</view>
+
+    <view class="group-title">额外肩键</view>
+    <option-item
+      wx:for="{{backkey.extraShoulders}}"
+      wx:key="name"
+      type="checkbox"
+      name="{{item.name}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      data-name="{{item.name}}"
+      bind:change="onTapExtraShoulder"
+    />
+
+    <view class="group-title">微动背键</view>
+    <view class="chips">
+      <view
+        wx:for="{{backkey.counts}}"
+        wx:key="value"
+        wx:for-item="c"
+        class="chip {{c.checked ? 'on' : ''}}"
+        data-value="{{c.value}}"
+        bindtap="onTapBackkeyCount"
+      >{{c.name}} · {{c.priceText}}</view>
+    </view>
+    <view class="count-line">当前背键：<text class="price-text">{{backkey.countPriceText}}</text></view>
+
+    <block wx:if="{{backkey.showSub}}">
+      <view class="group-title">键帽选择</view>
+      <option-item
+        wx:for="{{backkey.keycaps}}"
+        wx:key="name"
+        type="checkbox"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-name="{{item.name}}"
+        bind:change="onTapKeycap"
+      />
+
+      <view class="group-title">背键位置</view>
+      <view class="hint-text">背键34号位置为DSE金属豆子与拨片键帽使用，其他键帽如需在34号位请与UP说明</view>
+      <option-item
+        wx:for="{{backkey.positions}}"
+        wx:key="name"
+        type="checkbox"
+        name="{{item.name}}"
+        checked="{{item.checked}}"
+        disabled="{{item.disabled}}"
+        data-name="{{item.name}}"
+        bind:change="onTapPosition"
+      />
+    </block>
+
+    <view class="group-title">特殊背键</view>
+    <option-item
+      wx:for="{{backkey.specials}}"
+      wx:key="name"
+      type="checkbox"
+      name="{{item.name}}"
+      price-text="{{item.priceText}}"
+      checked="{{item.checked}}"
+      data-name="{{item.name}}"
+      bind:change="onToggleSpecial"
+    />
+
+    <view class="group-title">背键芯片</view>
+    <option-item
+      type="checkbox"
+      name="HEN版本芯片"
+      price-text="{{backkey.henPriceText}}"
+      checked="{{backkey.henChecked}}"
+      data-name="HEN版本芯片"
+      bind:change="onToggleSpecial"
+    />
+    <view wx:if="{{backkey.henChecked}}" class="hint-text">改装主板自带背键映射芯片，但本芯片可以额外支持8背键，并支持按键连发、组合键、宏编辑</view>
+
+    <block wx:for="{{backkey.images}}" wx:key="*this">
+      <image class="shot" src="{{item}}" mode="widthFix" data-src="{{item}}" bindtap="onPreview" />
+    </block>
+  </view>
+
+  <view class="fab prev {{isFirst ? 'dis' : ''}}" bindtap="onPrev">←</view>
+  <view class="fab-right">
+    <view class="fab-skip" wx:if="{{canSkip}}" bindtap="onSkip">跳过</view>
+    <view class="fab next" bindtap="onNext">→</view>
+  </view>
+
+  <view class="bottom-space"></view>
+
+  <view class="bar">
+    <view class="bar-info" bindtap="onOpenPanel">
+      <text class="bar-total">合计 ¥{{summary.total}}</text>
+      <text class="bar-sub">已选 {{summary.count}} 项{{missingCount ? ' · 还有 ' + missingCount + ' 项未选' : ''}}</text>
+    </view>
+    <view class="bar-actions">
+      <button class="bar-btn ghost" bindtap="onCopyOrder">复制配置单</button>
+      <button class="bar-btn share" open-type="share">分享配置</button>
+    </view>
+  </view>
+</block>
+
+<!-- 配置单弹层 -->
+<view wx:if="{{showPanel}}" class="mask" bindtap="onClosePanel">
+  <view class="panel" catchtap="noop">
+    <view class="panel-head">
+      <view>
+        <view class="panel-title">已选配置单</view>
+        <view class="panel-meta">花明楼改装 · 已选 {{summary.count}} 项</view>
+      </view>
+      <view class="panel-close" bindtap="onClosePanel">×</view>
+    </view>
+
+    <scroll-view class="panel-body" scroll-y>
+      <view wx:for="{{summary.items}}" wx:key="name" class="srow">
+        <text class="sname">{{item.name}}</text>
+        <text class="sprice">{{item.price}} 元</text>
+      </view>
+      <view wx:if="{{!summary.items.length}}" class="hint-text">尚未选择任何项目</view>
+      <view wx:if="{{missingCount}}" class="warn-text">请选择{{summary.missing[0]}}项目</view>
+
+      <block wx:if="{{isErGai}}">
+        <view class="group-title">二改要求</view>
+        <textarea
+          class="ta"
+          value="{{ergaiRequirement}}"
+          placeholder="如有特殊要求请在此说明（非必填）"
+          bindinput="onErgaiInput"
+        />
+      </block>
+    </scroll-view>
+
+    <view class="panel-foot">
+      <view class="panel-total">预计总价 <text class="total">¥{{summary.total}}</text></view>
+      <button class="bar-btn ghost" bindtap="onCopyOrder">复制配置单</button>
+      <button class="bar-btn share" open-type="share" disabled="{{missingCount > 0}}">分享配置</button>
+    </view>
+  </view>
+</view>
+
+<!-- 图片预览 -->
+<view wx:if="{{previewSrc}}" class="preview" bindtap="onClosePreview">
+  <image class="preview-img" src="{{previewSrc}}" mode="aspectFit" />
+</view>
+
