@@ -202,16 +202,24 @@
     <view class="section-title">【选配升级】</view>
     <view class="section-hint">以下升级配件按所选主板显示，可按需选配（可不选）</view>
 
-    <option-item
-      wx:for="{{upgrades}}"
-      wx:key="name"
-      type="checkbox"
-      name="{{item.name}}"
-      price-text="{{item.priceText}}"
-      checked="{{item.checked}}"
-      data-index="{{index}}"
-      bind:change="onToggleUpgrade"
-    />
+    <block wx:for="{{upgrades}}" wx:key="name">
+      <option-item
+        type="checkbox"
+        name="{{item.name}}"
+        price-text="{{item.priceText}}"
+        checked="{{item.checked}}"
+        data-index="{{index}}"
+        bind:change="onToggleUpgrade"
+      />
+      <image
+        wx:if="{{item.checked && item.img}}"
+        class="shot"
+        src="{{item.img}}"
+        mode="widthFix"
+        data-src="{{item.img}}"
+        bindtap="onPreview"
+      />
+    </block>
     <view wx:if="{{!upgrades.length}}" class="hint-text">当前主板没有可选的升级项</view>
   </view>
 

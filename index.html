@@ -2001,7 +2001,7 @@
             <div class="section-hint">以下升级配件按所选主板显示，可按需选配（可不选）</div>
 
             <div class="shell-module">
-                <label class="item upgrade-item" data-boards="GNS明日香主板,氦闪2主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="触摸板" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">触摸板</span></div><span class="item-price">60元</span></label>
+                <label class="item upgrade-item" data-boards="氦闪2主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="触摸板" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">触摸板</span></div><span class="item-price">60元</span></label>
                 <label class="item upgrade-item" data-boards="GNS明日香主板,ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="显示屏" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">显示屏</span></div><span class="item-price">60元</span></label>
                 <label class="item upgrade-item" data-boards="ProShock主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="蓝牙模块" data-price="60" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">蓝牙模块</span></div><span class="item-price">60元</span></label>
                 <label class="item upgrade-item" data-boards="GNS明日香主板" style="display:none;"><div class="item-left"><input type="checkbox" data-name="无线及蓝牙模块" data-price="100" data-section="3" onchange="toggleUpgradeOption(this)"><span class="item-name">无线及蓝牙模块</span></div><span class="item-price">100元</span></label>
@@ -3460,6 +3460,13 @@
         }
 
         function updateUpgradeImages() {
+            const mbRadio = document.querySelector('input[type="radio"][name="motherboard"]:checked');
+            const board = mbRadio ? mbRadio.getAttribute('data-name') : '';
+            // 显示屏：ProShock 用 shockled 图，其余主板用 screen 图
+            const screenImg = document.getElementById('img-upgrade-screen');
+            if (screenImg) {
+                screenImg.src = board === 'ProShock主板' ? 'pic/shockled.jpg' : 'pic/screen.jpg';
+            }
             const map = { '触摸板': 'img-touchpad', '显示屏': 'img-upgrade-screen' };
             Object.keys(map).forEach(name => {
                 const cb = document.querySelector(`#section-3 input[type="checkbox"][data-name="${name}"]`);

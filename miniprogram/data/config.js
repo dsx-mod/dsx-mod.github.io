@@ -85,8 +85,8 @@ const ACCESSORIES = [
 ];
 
 const UPGRADES = [
-  { name: '触摸板', boards: ['GNS明日香主板', '氦闪2主板'], img: IMG + 'touchpad.jpg' },
-  { name: '显示屏', boards: ['GNS明日香主板', 'ProShock主板'], img: IMG + 'screen.jpg' },
+  { name: '触摸板', boards: ['氦闪2主板'], img: IMG + 'touchpad.jpg' },
+  { name: '显示屏', boards: ['GNS明日香主板', 'ProShock主板'], img: IMG + 'screen.jpg', imgByBoard: { 'ProShock主板': IMG + 'shockled.jpg' } },
   { name: '蓝牙模块', boards: ['ProShock主板'] },
   { name: '无线及蓝牙模块', boards: ['GNS明日香主板'], img: IMG + 'reciver.jpg' },
   { name: '2.4G无线模块', boards: ['ProShock主板'], img: IMG + 'reciver.jpg' },

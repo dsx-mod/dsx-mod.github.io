@@ -155,6 +155,7 @@ Page({
 
       upgrades: priceLib.visibleUpgrades(s).map(u => ({
         name: u.name,
+        img: (u.imgByBoard && u.imgByBoard[s.motherboard]) || u.img || '',
         checked: s.upgrades.indexOf(u.name) !== -1,
         priceText: yuan(priceLib.base(u.name))
       })),
